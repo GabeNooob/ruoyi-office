@@ -73,3 +73,6 @@ functions/mock
 screenshot
 .firebase
 sessionStore
+
+# pdm
+sql/ruoyi-office/.back_ruoyi-office
