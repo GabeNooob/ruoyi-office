@@ -75,7 +75,20 @@ spring:
           predicates: # 断言，作为路由的匹配条件，对应 RouteDefinition 数组
             - Path=/app-api/oa/**
           filters:
-            - RewritePath=/app-api/oa/v3/api-docs, /v3/api-docs            -
+            - RewritePath=/app-api/oa/v3/api-docs, /v3/api-docs
+        ## hrm-server 服务
+        - id: hrm-admin-api # 路由的编号
+          uri: grayLb://hrm-server
+          predicates: # 断言，作为路由的匹配条件，对应 RouteDefinition 数组
+            - Path=/admin-api/hrm/**
+          filters:
+            - RewritePath=/admin-api/hrm/v3/api-docs, /v3/api-docs
+        - id: hrm-app-api # 路由的编号
+          uri: grayLb://hrm-server
+          predicates: # 断言，作为路由的匹配条件，对应 RouteDefinition 数组
+            - Path=/app-api/hrm/**
+          filters:
+            - RewritePath=/app-api/hrm/v3/api-docs, /v3/api-docs
         ## member-server 服务
         - id: member-admin-api # 路由的编号
           uri: grayLb://member-server
@@ -222,6 +235,12 @@ knife4j:
       - name: infra-server
         service-name: infra-server
         url: /admin-api/infra/v3/api-docs
+      - name: oa-server
+        service-name: oa-server
+        url: /admin-api/oa/v3/api-docs
+      - name: hrm-server
+        service-name: hrm-server
+        url: /admin-api/hrm/v3/api-docs
       - name: member-server
         service-name: member-server
         url: /admin-api/member/v3/api-docs

@@ -1,19 +1,19 @@
-package cn.iocoder.yudao.module.oa.framework.security.config;
+package cn.iocoder.yudao.module.hrm.framework.security.config;
 
 import cn.iocoder.yudao.framework.security.config.AuthorizeRequestsCustomizer;
-import cn.iocoder.yudao.module.oa.enums.ApiConstants;
+import cn.iocoder.yudao.module.hrm.enums.ApiConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 
 /**
- * oa 模块的 Security 配置
+ * hrm 模块的 Security 配置
  */
-@Configuration(proxyBeanMethods = false, value = "oaSecurityConfiguration")
+@Configuration(proxyBeanMethods = false, value = "hrmSecurityConfiguration")
 public class SecurityConfiguration {
 
-    @Bean(value = "oaAuthorizeRequestsCustomizer")
+    @Bean(value = "hrmAuthorizeRequestsCustomizer")
     public AuthorizeRequestsCustomizer authorizeRequestsCustomizer() {
         return new AuthorizeRequestsCustomizer() {
 
