@@ -36,10 +36,12 @@ public class CarPageReqVO extends PageParam {
     private BigDecimal barePrice;
 
     @Schema(description = "交强险到期日期")
-    private LocalDateTime forceInsurance;
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
+    private LocalDateTime[] forceInsurance;
 
     @Schema(description = "商业险到期日期")
-    private LocalDateTime businessInsurance;
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
+    private LocalDateTime[] businessInsurance;
 
     @Schema(description = "年检日期")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
