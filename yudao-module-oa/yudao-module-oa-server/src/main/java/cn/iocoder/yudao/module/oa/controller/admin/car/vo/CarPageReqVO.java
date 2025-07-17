@@ -28,6 +28,9 @@ public class CarPageReqVO extends PageParam {
     @Schema(description = "分类")
     private Long carCls;
 
+    @Schema(description = "状态（0空闲 1停用 2使用中）")
+    private Integer status;
+
     @Schema(description = "品牌型号")
     private String brand;
 

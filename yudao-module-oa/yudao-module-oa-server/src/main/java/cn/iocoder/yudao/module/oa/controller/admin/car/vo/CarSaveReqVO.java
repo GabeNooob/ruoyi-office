@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.oa.controller.admin.car.vo;
 
+import cn.iocoder.yudao.framework.excel.core.convert.DictConvert;
+import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -28,6 +30,10 @@ public class CarSaveReqVO {
     @Schema(description = "分类", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "分类不能为空")
     private Long carCls;
+
+    @Schema(description = "状态（0空闲 1停用 2使用中）", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "状态不能为空")
+    private Integer status;
 
     @Schema(description = "品牌型号", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "品牌型号不能为空")

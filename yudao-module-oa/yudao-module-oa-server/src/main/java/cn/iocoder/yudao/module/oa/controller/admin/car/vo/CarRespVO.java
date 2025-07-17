@@ -32,13 +32,18 @@ public class CarRespVO {
 
     @Schema(description = "车型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty(value = "车型", converter = DictConvert.class)
-    @DictFormat("oa_car_type") // TODO 代码优化：建议设置到对应的 DictTypeConstants 枚举类中
+    @DictFormat("oa_car_type")
     private Long carType;
 
     @Schema(description = "分类", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty(value = "分类", converter = DictConvert.class)
-    @DictFormat("oa_car_cls") // TODO 代码优化：建议设置到对应的 DictTypeConstants 枚举类中
+    @DictFormat("oa_car_cls")
     private Long carCls;
+
+    @Schema(description = "状态（0空闲 1停用 2使用中）")
+    @ExcelProperty(value = "状态", converter = DictConvert.class)
+    @DictFormat("oa_car_use_status")
+    private Integer status;
 
     @Schema(description = "品牌型号", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("品牌型号")
@@ -50,7 +55,6 @@ public class CarRespVO {
 
     @Schema(description = "裸车价", example = "1610")
     @ExcelProperty("裸车价")
-    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
     private BigDecimal barePrice;
 
     @Schema(description = "交强险到期日期")
@@ -65,6 +69,7 @@ public class CarRespVO {
 
     @Schema(description = "年检日期")
     @ExcelProperty("年检日期")
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
     private LocalDate yearCheckDate;
 
     @Schema(description = "上传照片", example = "https://www.iocoder.cn")
