@@ -1,13 +1,15 @@
 package cn.iocoder.yudao.module.oa.controller.admin.car.vo;
 
 import lombok.*;
-import java.util.*;
+
+import java.time.LocalDate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import java.math.BigDecimal;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
+import static cn.iocoder.yudao.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY;
 import static cn.iocoder.yudao.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND;
 
 @Schema(description = "管理后台 - 车辆信息分页 Request VO")
@@ -36,16 +38,16 @@ public class CarPageReqVO extends PageParam {
     private BigDecimal barePrice;
 
     @Schema(description = "交强险到期日期")
-    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
-    private LocalDateTime[] forceInsurance;
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate[] forceInsuranceDate;
 
     @Schema(description = "商业险到期日期")
-    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
-    private LocalDateTime[] businessInsurance;
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate[] businessInsuranceDate;
 
     @Schema(description = "年检日期")
-    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
-    private LocalDateTime[] yearCheckDate;
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate[] yearCheckDate;
 
     @Schema(description = "上传照片", example = "https://www.iocoder.cn")
     private String picUrl;

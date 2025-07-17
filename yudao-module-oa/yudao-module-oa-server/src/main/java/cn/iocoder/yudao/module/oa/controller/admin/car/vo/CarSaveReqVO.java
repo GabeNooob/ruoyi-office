@@ -2,11 +2,10 @@ package cn.iocoder.yudao.module.oa.controller.admin.car.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import java.util.*;
+
+import java.time.LocalDate;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
-import org.springframework.format.annotation.DateTimeFormat;
-import java.time.LocalDateTime;
 
 @Schema(description = "管理后台 - 车辆信息新增/修改 Request VO")
 @Data
@@ -41,13 +40,13 @@ public class CarSaveReqVO {
     private BigDecimal barePrice;
 
     @Schema(description = "交强险到期日期")
-    private LocalDateTime forceInsurance;
+    private LocalDate forceInsuranceDate;
 
     @Schema(description = "商业险到期日期")
-    private LocalDateTime businessInsurance;
+    private LocalDate businessInsuranceDate;
 
     @Schema(description = "年检日期")
-    private LocalDateTime yearCheckDate;
+    private LocalDate yearCheckDate;
 
     @Schema(description = "上传照片", example = "https://www.iocoder.cn")
     private String picUrl;

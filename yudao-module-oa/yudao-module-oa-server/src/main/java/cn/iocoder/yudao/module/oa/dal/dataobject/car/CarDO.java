@@ -1,13 +1,9 @@
 package cn.iocoder.yudao.module.oa.dal.dataobject.car;
 
 import lombok.*;
-import java.util.*;
+
+import java.time.LocalDate;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.LocalDateTime;
-import java.time.LocalDateTime;
-import java.time.LocalDateTime;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.*;
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 
@@ -66,15 +62,15 @@ public class CarDO extends BaseDO {
     /**
      * 交强险到期日期
      */
-    private LocalDateTime forceInsurance;
+    private LocalDate forceInsuranceDate;
     /**
      * 商业险到期日期
      */
-    private LocalDateTime businessInsurance;
+    private LocalDate businessInsuranceDate;
     /**
      * 年检日期
      */
-    private LocalDateTime yearCheckDate;
+    private LocalDate yearCheckDate;
     /**
      * 上传照片
      */

@@ -1,14 +1,17 @@
 package cn.iocoder.yudao.module.oa.controller.admin.car.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import java.util.*;
+
+import java.time.LocalDate;
 import java.math.BigDecimal;
-import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import com.alibaba.excel.annotation.*;
 import cn.iocoder.yudao.framework.excel.core.annotations.DictFormat;
 import cn.iocoder.yudao.framework.excel.core.convert.DictConvert;
+
+import static cn.iocoder.yudao.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY;
 
 @Schema(description = "管理后台 - 车辆信息 Response VO")
 @Data
@@ -47,19 +50,22 @@ public class CarRespVO {
 
     @Schema(description = "裸车价", example = "1610")
     @ExcelProperty("裸车价")
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
     private BigDecimal barePrice;
 
     @Schema(description = "交强险到期日期")
     @ExcelProperty("交强险到期日期")
-    private LocalDateTime forceInsurance;
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate forceInsuranceDate;
 
     @Schema(description = "商业险到期日期")
     @ExcelProperty("商业险到期日期")
-    private LocalDateTime businessInsurance;
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate businessInsuranceDate;
 
     @Schema(description = "年检日期")
     @ExcelProperty("年检日期")
-    private LocalDateTime yearCheckDate;
+    private LocalDate yearCheckDate;
 
     @Schema(description = "上传照片", example = "https://www.iocoder.cn")
     @ExcelProperty("上传照片")
