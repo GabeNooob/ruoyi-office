@@ -22,4 +22,6 @@ public class DeptRespDTO {
     @Schema(description = "部门状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer status; // 参见 CommonStatusEnum 枚举
 
+    @Schema(description = "组织类型", example = "0")
+    private String orgType;
 }

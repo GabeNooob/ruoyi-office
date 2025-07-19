@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.system.controller.admin.dept.vo.dept;
 
+import cn.iocoder.yudao.framework.excel.core.annotations.DictFormat;
+import cn.iocoder.yudao.module.system.enums.DictTypeConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -32,6 +34,10 @@ public class DeptRespVO {
 
     @Schema(description = "状态,见 CommonStatusEnum 枚举", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer status;
+
+    @Schema(description = "组织类型", example = "0")
+    @DictFormat(DictTypeConstants.DEPT_ORG_TYPE)
+    private String orgType;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "时间戳格式")
     private LocalDateTime createTime;

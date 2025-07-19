@@ -6,6 +6,7 @@ import cn.iocoder.yudao.module.system.api.sms.dto.code.SmsCodeSendReqDTO;
 import cn.iocoder.yudao.module.system.api.sms.dto.code.SmsCodeUseReqDTO;
 import cn.iocoder.yudao.module.system.api.social.dto.SocialUserBindReqDTO;
 import cn.iocoder.yudao.module.system.controller.admin.auth.vo.*;
+import cn.iocoder.yudao.module.system.dal.dataobject.dept.DeptDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.MenuDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.permission.RoleDO;
@@ -29,8 +30,19 @@ public interface AuthConvert {
     AuthLoginRespVO convert(OAuth2AccessTokenDO bean);
 
     default AuthPermissionInfoRespVO convert(AdminUserDO user, List<RoleDO> roleList, List<MenuDO> menuList) {
+        return convert(user, roleList, menuList, null);
+    }
+
+    default AuthPermissionInfoRespVO convert(AdminUserDO user, List<RoleDO> roleList, List<MenuDO> menuList, DeptDO company) {
+        AuthPermissionInfoRespVO.UserVO userVO = BeanUtils.toBean(user, AuthPermissionInfoRespVO.UserVO.class);
+        // 设置公司信息
+        if (company != null) {
+            userVO.setCompanyId(company.getId());
+            userVO.setCompanyName(company.getName());
+        }
+
         return AuthPermissionInfoRespVO.builder()
-                .user(BeanUtils.toBean(user, AuthPermissionInfoRespVO.UserVO.class))
+                .user(userVO)
                 .roles(convertSet(roleList, RoleDO::getCode))
                 // 权限标识信息
                 .permissions(convertSet(menuList, MenuDO::getPermission))
@@ -38,6 +50,29 @@ public interface AuthConvert {
                 .menus(buildMenuTree(menuList))
                 .build();
     }
+
+    default AuthPermissionInfoRespVO convert(AdminUserDO user, List<RoleDO> roleList, List<MenuDO> menuList, DeptDO company, DeptDO dept) {
+        AuthPermissionInfoRespVO.UserVO userVO = BeanUtils.toBean(user, AuthPermissionInfoRespVO.UserVO.class);
+        // 设置公司信息
+        if (company != null) {
+            userVO.setCompanyId(company.getId());
+            userVO.setCompanyName(company.getName());
+        }
+        // 设置部门信息
+        if (dept != null) {
+            userVO.setDeptName(dept.getName());
+        }
+
+        return AuthPermissionInfoRespVO.builder()
+                .user(userVO)
+                .roles(convertSet(roleList, RoleDO::getCode))
+                // 权限标识信息
+                .permissions(convertSet(menuList, MenuDO::getPermission))
+                // 菜单树
+                .menus(buildMenuTree(menuList))
+                .build();
+    }
+
 
     AuthPermissionInfoRespVO.MenuVO convertTreeNode(MenuDO menu);
 

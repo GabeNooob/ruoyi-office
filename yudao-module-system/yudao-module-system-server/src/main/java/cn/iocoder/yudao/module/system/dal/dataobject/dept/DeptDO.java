@@ -63,4 +63,10 @@ public class DeptDO extends TenantBaseDO {
      */
     private Integer status;
 
+    /**
+     * 组织类型
+     *
+     * 0-部门 1-公司
+     */
+    private String orgType;
 }

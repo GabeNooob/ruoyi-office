@@ -114,4 +114,13 @@ public interface DeptService {
      */
     void validateDeptList(Collection<Long> ids);
 
+    /**
+     * 获得用户所属的公司
+     * 从用户所在部门开始，向上查找第一个组织类型为1（公司）的部门
+     *
+     * @param deptId 部门编号
+     * @return 公司部门信息，如果找不到则返回 null
+     */
+    DeptDO getUserCompany(Long deptId);
+
 }

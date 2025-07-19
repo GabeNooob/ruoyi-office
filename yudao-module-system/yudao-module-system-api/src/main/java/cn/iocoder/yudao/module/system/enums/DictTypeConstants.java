@@ -14,6 +14,7 @@ public interface DictTypeConstants {
 
     String USER_SEX = "system_user_sex"; // 用户性别
     String DATA_SCOPE = "system_data_scope"; // 数据范围
+    String DEPT_ORG_TYPE = "system_dept_org_type"; // 部门组织类型
 
     String LOGIN_TYPE = "system_login_type"; // 登录日志的类型
     String LOGIN_RESULT = "system_login_result"; // 登录结果

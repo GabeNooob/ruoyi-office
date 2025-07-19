@@ -220,4 +220,43 @@ public class DeptServiceImpl implements DeptService {
         });
     }
 
+
+    @Override
+    public DeptDO getUserCompany(Long deptId) {
+        if (deptId == null) {
+            return null;
+        }
+
+        DeptDO currentDept = deptMapper.selectById(deptId);
+        if (currentDept == null) {
+            return null;
+        }
+
+        // 从当前部门开始，向上查找第一个组织类型为1（公司）的部门
+        for (int i = 0; i < Short.MAX_VALUE; i++) {
+            // 检查当前部门是否为公司类型
+            if ("1".equals(currentDept.getOrgType())) {
+                return currentDept;
+            }
+
+            // 如果当前部门不是公司类型，查找父部门
+            Long parentId = currentDept.getParentId();
+            if (parentId == null || DeptDO.PARENT_ID_ROOT.equals(parentId)) {
+                // 已经到根部门，没有找到公司类型
+                break;
+            }
+
+            // 查询父部门
+            DeptDO parentDept = deptMapper.selectById(parentId);
+            if (parentDept == null) {
+                // 父部门不存在
+                break;
+            }
+
+            currentDept = parentDept;
+        }
+
+        // 没有找到公司类型的部门
+        return null;
+    }
 }
