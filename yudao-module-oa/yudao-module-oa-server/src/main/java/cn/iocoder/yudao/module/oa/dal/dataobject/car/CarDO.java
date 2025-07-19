@@ -27,6 +27,17 @@ public class CarDO extends BaseDO {
      */
     @TableId
     private Long id;
+    
+    /**
+     * 公司ID
+     */
+    private Long companyId;
+    
+    /**
+     * 公司名称
+     */
+    private String companyName;
+    
     /**
      * 车牌号
      */

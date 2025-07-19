@@ -13,4 +13,7 @@ public class DeptListReqVO {
     @Schema(description = "展示状态，参见 CommonStatusEnum 枚举类", example = "1")
     private Integer status;
 
+    @Schema(description = "组织类型", example = "1")
+    private String orgType;
+
 }

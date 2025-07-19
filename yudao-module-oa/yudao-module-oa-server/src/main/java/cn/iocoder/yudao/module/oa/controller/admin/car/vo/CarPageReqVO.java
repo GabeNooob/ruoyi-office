@@ -16,6 +16,12 @@ import static cn.iocoder.yudao.framework.common.util.date.DateUtils.FORMAT_YEAR_
 @Data
 public class CarPageReqVO extends PageParam {
 
+    @Schema(description = "公司ID")
+    private Long companyId;
+
+    @Schema(description = "公司名称")
+    private String companyName;
+
     @Schema(description = "车牌号")
     private String carNo;
 

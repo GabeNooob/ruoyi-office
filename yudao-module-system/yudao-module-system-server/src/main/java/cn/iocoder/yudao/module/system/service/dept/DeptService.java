@@ -61,6 +61,14 @@ public interface DeptService {
     List<DeptDO> getDeptList(DeptListReqVO reqVO);
 
     /**
+     * 筛选公司列表
+     *
+     * @param reqVO 筛选条件请求 VO
+     * @return 公司列表
+     */
+    List<DeptDO> getCompanyList(DeptListReqVO reqVO);
+
+    /**
      * 获得指定编号的部门 Map
      *
      * @param ids 部门编号数组

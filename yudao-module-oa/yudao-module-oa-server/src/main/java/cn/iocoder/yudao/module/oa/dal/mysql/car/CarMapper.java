@@ -19,6 +19,8 @@ public interface CarMapper extends BaseMapperX<CarDO> {
 
     default PageResult<CarDO> selectPage(CarPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CarDO>()
+                .eqIfPresent(CarDO::getCompanyId, reqVO.getCompanyId())
+                .likeIfPresent(CarDO::getCompanyName, reqVO.getCompanyName())
                 .likeIfPresent(CarDO::getCarNo, reqVO.getCarNo())
                 .likeIfPresent(CarDO::getCarName, reqVO.getCarName())
                 .eqIfPresent(CarDO::getStatus, reqVO.getStatus())

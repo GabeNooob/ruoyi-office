@@ -16,6 +16,14 @@ public class CarSaveReqVO {
     @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "18149")
     private Long id;
 
+    @Schema(description = "公司ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "公司ID不能为空")
+    private Long companyId;
+
+    @Schema(description = "公司名称", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotEmpty(message = "公司名称不能为空")
+    private String companyName;
+
     @Schema(description = "车牌号", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "车牌号不能为空")
     private String carNo;
