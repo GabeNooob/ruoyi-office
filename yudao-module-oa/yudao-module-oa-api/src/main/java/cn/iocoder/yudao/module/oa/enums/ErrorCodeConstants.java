@@ -12,5 +12,6 @@ public interface ErrorCodeConstants {
     // ========== oa车辆管理 1-101-000-000 ============
     ErrorCode CAR_NOT_EXISTS = new ErrorCode(1_101_000_000, "车辆信息不存在");
 
-
+    // ========== 用车申请单 TODO 补充编号 ==========
+    ErrorCode CAR_APPLY_BILL_NOT_EXISTS = new ErrorCode(1_101_000_001, "用车申请单不存在");
 }
