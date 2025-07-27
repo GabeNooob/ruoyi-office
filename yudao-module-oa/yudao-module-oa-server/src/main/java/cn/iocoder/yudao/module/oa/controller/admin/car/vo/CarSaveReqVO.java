@@ -1,7 +1,5 @@
 package cn.iocoder.yudao.module.oa.controller.admin.car.vo;
 
-import cn.iocoder.yudao.framework.excel.core.convert.DictConvert;
-import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
