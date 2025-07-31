@@ -51,6 +51,9 @@ public class CarApplyBillSaveReqVO {
     @Schema(description = "备注", example = "你猜")
     private String remark;
 
+    @Schema(description = "创建人")
+    private String creator;
+
     @Schema(description = "创建者姓名", example = "芋艿")
     private String creatorName;
 

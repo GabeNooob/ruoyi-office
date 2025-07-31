@@ -1,6 +1,8 @@
 package cn.iocoder.yudao.module.oa.service.car;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
+import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -32,12 +34,39 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
     @Resource
     private CarApplyBillMapper carApplyBillMapper;
 
+    @Resource
+    private BpmProcessInstanceApi processInstanceApi;
+
+    /**
+     * OA 用车申请单对应的流程定义 KEY
+     */
+    public static final String PROCESS_KEY = "oa_car_apply_bill";
+
     @Override
     public Long createCarApplyBill(CarApplyBillSaveReqVO createReqVO) {
         // 插入
         CarApplyBillDO carApplyBill = BeanUtils.toBean(createReqVO, CarApplyBillDO.class);
         carApplyBillMapper.insert(carApplyBill);
 
+        // 返回
+        return carApplyBill.getId();
+    }
+
+    @Override
+    public Long submitCarApplyBill(CarApplyBillSaveReqVO createReqVO) {
+        // 插入
+        CarApplyBillDO carApplyBill = BeanUtils.toBean(createReqVO, CarApplyBillDO.class);
+        carApplyBillMapper.insert(carApplyBill);
+
+        // 发起 BPM 流程
+        Map<String, Object> processInstanceVariables = new HashMap<>();
+        String processInstanceId = processInstanceApi.createProcessInstance(Long.valueOf(createReqVO.getCreator()),
+                new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(PROCESS_KEY)
+                        .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(carApplyBill.getId()))
+                        ).getCheckedData();
+
+        // 将工作流的编号，更新到 OA 请假单中
+        carApplyBillMapper.updateById(new CarApplyBillDO().setId(carApplyBill.getId()).setProcessInstanceId(processInstanceId));
         // 返回
         return carApplyBill.getId();
     }

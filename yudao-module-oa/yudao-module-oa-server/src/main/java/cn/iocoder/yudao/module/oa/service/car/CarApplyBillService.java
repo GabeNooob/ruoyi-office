@@ -23,6 +23,14 @@ public interface CarApplyBillService {
     Long createCarApplyBill(@Valid CarApplyBillSaveReqVO createReqVO);
 
     /**
+     * 提交用车申请单
+     *
+     * @param createReqVO 创建信息
+     * @return 编号
+     */
+    Long submitCarApplyBill(CarApplyBillSaveReqVO createReqVO);
+
+    /**
      * 更新用车申请单
      *
      * @param updateReqVO 更新信息
@@ -58,5 +66,6 @@ public interface CarApplyBillService {
      * @return 用车申请单分页
      */
     PageResult<CarApplyBillDO> getCarApplyBillPage(CarApplyBillPageReqVO pageReqVO);
+
 
 }
