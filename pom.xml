@@ -17,6 +17,7 @@
         <module>yudao-module-system</module>
         <module>yudao-module-infra</module>
         <module>yudao-module-oa</module>
+        <module>yudao-module-asset</module>
         <module>yudao-module-hrm</module>
         <module>yudao-module-member</module>
         <module>yudao-module-bpm</module>
@@ -28,6 +29,7 @@
         <module>yudao-module-erp</module>
         <module>yudao-module-ai</module>
         <module>yudao-module-iot</module>
+
     </modules>
 
     <name>${project.artifactId}</name>
