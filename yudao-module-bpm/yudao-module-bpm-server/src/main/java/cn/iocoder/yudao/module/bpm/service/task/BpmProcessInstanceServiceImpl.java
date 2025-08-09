@@ -27,6 +27,7 @@ import cn.iocoder.yudao.module.bpm.enums.task.BpmProcessInstanceStatusEnum;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmReasonEnum;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.candidate.BpmTaskCandidateInvoker;
+import cn.iocoder.yudao.module.bpm.service.notification.BpmNotificationManager;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmTaskCandidateStrategyEnum;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmnModelConstants;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmnVariableConstants;
@@ -120,6 +121,9 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
 
     @Resource
     private BpmProcessIdRedisDAO processIdRedisDAO;
+    
+    @Resource
+    private BpmNotificationManager notificationManager;
 
     // ========== Query 查询相关方法 ==========
 
@@ -955,11 +959,14 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
                     BpmProcessInstanceConvert.INSTANCE.buildProcessInstanceRejectMessage(instance, reason));
         }
 
-        // 3. 发送流程实例的状态事件
+        // 3. 发送流程实例的状态事件（保持兼容性）
         processInstanceEventPublisher.sendProcessInstanceResultEvent(
                 BpmProcessInstanceConvert.INSTANCE.buildProcessInstanceStatusEvent(this, instance, status));
 
-        // 4. 流程后置通知
+        // 4. 发送跨服务通知
+        notificationManager.sendProcessStatusNotification(instance, status);
+
+        // 5. 流程后置通知
         if (Objects.equals(status, BpmProcessInstanceStatusEnum.APPROVE.getStatus())) {
             BpmProcessDefinitionInfoDO processDefinitionInfo = processDefinitionService.
                     getProcessDefinitionInfo(instance.getProcessDefinitionId());

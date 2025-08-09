@@ -1,25 +1,23 @@
 package cn.iocoder.yudao.module.oa.service.car;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import cn.iocoder.yudao.module.oa.controller.admin.car.vo.*;
 import cn.iocoder.yudao.module.oa.dal.dataobject.car.CarApplyBillDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
-import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 
 import cn.iocoder.yudao.module.oa.dal.mysql.car.CarApplyBillMapper;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.convertList;
-import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.diffList;
+import static cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants.OA_LEAVE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
 
 /**
@@ -27,6 +25,7 @@ import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
  *
  * @author 芋道源码
  */
+@Slf4j
 @Service
 @Validated
 public class CarApplyBillServiceImpl implements CarApplyBillService {
@@ -56,7 +55,7 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
     public Long submitCarApplyBill(CarApplyBillSaveReqVO createReqVO) {
         // 插入
         CarApplyBillDO carApplyBill = BeanUtils.toBean(createReqVO, CarApplyBillDO.class);
-        carApplyBillMapper.insert(carApplyBill);
+        carApplyBillMapper.insertOrUpdate(carApplyBill);
 
         // 发起 BPM 流程
         Map<String, Object> processInstanceVariables = new HashMap<>();
@@ -109,6 +108,34 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
     @Override
     public PageResult<CarApplyBillDO> getCarApplyBillPage(CarApplyBillPageReqVO pageReqVO) {
         return carApplyBillMapper.selectPage(pageReqVO);
+    }
+
+    @Override
+    public void updateProcessStatus(Long id, Integer status) {
+        log.info("[updateProcessStatus] 更新用车申请单流程状态，id: {}, status: {}", id, status);
+        
+        // 校验用车申请单存在
+        validateCarApplyBillExists(id);
+        
+        // 更新流程状态
+        CarApplyBillDO updateObj = new CarApplyBillDO();
+        updateObj.setId(id);
+        updateObj.setProcessStatus(status);
+        carApplyBillMapper.updateById(updateObj);
+        
+        log.info("[updateProcessStatus] 用车申请单流程状态更新成功，id: {}, status: {}", id, status);
+    }
+
+    @Override
+    public void updateBillStatus(Long id, Integer status) {
+        validateLeaveExists(id);
+        carApplyBillMapper.updateById(new CarApplyBillDO().setId(id).setProcessStatus(status));
+    }
+
+    private void validateLeaveExists(Long id) {
+        if (carApplyBillMapper.selectById(id) == null) {
+            throw exception(OA_LEAVE_NOT_EXISTS);
+        }
     }
 
 }

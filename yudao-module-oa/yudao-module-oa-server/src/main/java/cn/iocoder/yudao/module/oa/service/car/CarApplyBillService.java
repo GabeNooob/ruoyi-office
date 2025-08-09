@@ -67,5 +67,20 @@ public interface CarApplyBillService {
      */
     PageResult<CarApplyBillDO> getCarApplyBillPage(CarApplyBillPageReqVO pageReqVO);
 
+    /**
+     * 更新用车申请单的流程状态
+     *
+     * @param id 用车申请单编号
+     * @param status 流程状态
+     */
+    void updateProcessStatus(Long id, Integer status);
 
+
+    /**
+     * 更新用车申请单的状态
+     *
+     * @param id 用车申请单编号
+     * @param status 状态
+     */
+    void updateBillStatus(Long id, Integer status);
 }

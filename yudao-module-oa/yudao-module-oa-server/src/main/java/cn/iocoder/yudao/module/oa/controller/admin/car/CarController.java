@@ -29,7 +29,7 @@ import cn.iocoder.yudao.module.oa.controller.admin.car.vo.*;
 import cn.iocoder.yudao.module.oa.dal.dataobject.car.CarDO;
 import cn.iocoder.yudao.module.oa.service.car.CarService;
 
-@Tag(name = "管理后台 - 车辆信息")
+@Tag(name = "OA协同办公 - 车辆信息")
 @RestController
 @RequestMapping("/oa/car")
 @Validated

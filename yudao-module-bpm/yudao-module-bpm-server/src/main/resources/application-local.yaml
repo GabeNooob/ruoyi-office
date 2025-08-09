@@ -136,3 +136,21 @@ yudao:
     mock-enable: true
   access-log: # 访问日志的配置项
     enable: false
+  bpm:
+    notification:
+      # 默认通知方式使用MQ
+      default-type: local
+      # 异步处理
+      async: true
+      # MQ 通知配置
+      mq:
+        enabled: true
+      # Feign 通知配置（如果需要的话）
+      feign:
+        enabled: true
+      # 流程特定配置
+      process-config:
+        # 用车申请单使用 MQ 通知
+        oa_car_apply_bill: mq
+        # 请假流程使用 MQ 通知
+        oa_leave: mq
