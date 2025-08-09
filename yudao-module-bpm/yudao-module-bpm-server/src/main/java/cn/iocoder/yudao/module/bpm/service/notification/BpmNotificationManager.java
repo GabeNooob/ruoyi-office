@@ -130,8 +130,8 @@ public class BpmNotificationManager {
      */
     private BpmNotificationTypeEnum getNotificationType(String processDefinitionKey) {
         // 1. 查找流程特定配置
-        String configType = processNotificationConfig.get(processDefinitionKey);
-        if (StrUtil.isNotBlank(configType)) {
+        if(processNotificationConfig != null && processNotificationConfig.containsKey(processDefinitionKey)) {
+            String configType = processNotificationConfig.get(processDefinitionKey);
             return BpmNotificationTypeEnum.getByCode(configType);
         }
 

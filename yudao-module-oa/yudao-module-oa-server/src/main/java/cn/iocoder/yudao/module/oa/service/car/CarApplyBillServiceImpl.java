@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.oa.service.car;
 
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
+import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
@@ -54,7 +55,8 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
     @Override
     public Long submitCarApplyBill(CarApplyBillSaveReqVO createReqVO) {
         // 插入
-        CarApplyBillDO carApplyBill = BeanUtils.toBean(createReqVO, CarApplyBillDO.class);
+        CarApplyBillDO carApplyBill = BeanUtils.toBean(createReqVO, CarApplyBillDO.class)
+                .setProcessStatus(BpmTaskStatusEnum.RUNNING.getStatus());
         carApplyBillMapper.insertOrUpdate(carApplyBill);
 
         // 发起 BPM 流程
