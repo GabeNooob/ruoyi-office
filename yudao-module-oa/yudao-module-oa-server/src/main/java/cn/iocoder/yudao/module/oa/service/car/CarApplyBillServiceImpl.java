@@ -1,8 +1,11 @@
 package cn.iocoder.yudao.module.oa.service.car;
 
+import cn.iocoder.yudao.framework.common.enums.SystemEnum;
+import cn.iocoder.yudao.framework.common.util.bill.BillCodeUtils;
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
+import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
@@ -17,7 +20,6 @@ import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 import cn.iocoder.yudao.module.oa.dal.mysql.car.CarApplyBillMapper;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.convertList;
 import static cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants.OA_LEAVE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
 
@@ -37,13 +39,12 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
     @Resource
     private BpmProcessInstanceApi processInstanceApi;
 
-    /**
-     * OA 用车申请单对应的流程定义 KEY
-     */
-    public static final String PROCESS_KEY = "oa_car_apply_bill";
 
     @Override
     public Long createCarApplyBill(CarApplyBillSaveReqVO createReqVO) {
+        // 插入
+        String billCode = BillCodeUtils.generateBillCode(SystemEnum.OA, OaBillTypeEnum.OA_CAR_APPLY_BILL);
+        createReqVO.setBillCode(billCode);
         // 插入
         CarApplyBillDO carApplyBill = BeanUtils.toBean(createReqVO, CarApplyBillDO.class);
         carApplyBillMapper.insert(carApplyBill);
@@ -62,7 +63,7 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
         // 发起 BPM 流程
         Map<String, Object> processInstanceVariables = new HashMap<>();
         String processInstanceId = processInstanceApi.createProcessInstance(Long.valueOf(createReqVO.getCreator()),
-                new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(PROCESS_KEY)
+                new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(OaBillTypeEnum.OA_CAR_APPLY_BILL.getProcessDefinitionKey())
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(carApplyBill.getId()))
                         ).getCheckedData();
 

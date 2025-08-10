@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.oa.service.car;
 
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusEvent;
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusEventListener;
+import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ public class CarApplyBpmStatusListener extends BpmProcessInstanceStatusEventList
 
     @Override
     protected String getProcessDefinitionKey() {
-        return CarApplyBillServiceImpl.PROCESS_KEY;
+        return OaBillTypeEnum.OA_CAR_APPLY_BILL.getProcessDefinitionKey();
     }
 
     @Override

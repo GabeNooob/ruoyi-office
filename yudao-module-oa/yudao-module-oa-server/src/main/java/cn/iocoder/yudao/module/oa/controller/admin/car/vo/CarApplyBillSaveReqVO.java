@@ -14,8 +14,7 @@ public class CarApplyBillSaveReqVO {
     @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1882")
     private Long id;
 
-    @Schema(description = "单据编号", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "单据编号不能为空")
+    @Schema(description = "单据编号", requiredMode = Schema.RequiredMode.AUTO)
     private String billCode;
 
     @Schema(description = "流程实例编号", example = "16629")

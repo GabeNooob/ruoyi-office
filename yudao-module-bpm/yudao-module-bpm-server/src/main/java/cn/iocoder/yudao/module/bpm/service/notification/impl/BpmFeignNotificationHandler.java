@@ -1,18 +1,15 @@
 package cn.iocoder.yudao.module.bpm.service.notification.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusMessage;
 import cn.iocoder.yudao.module.bpm.api.event.BpmNotificationTypeEnum;
 import cn.iocoder.yudao.module.bpm.service.notification.BpmNotificationHandler;
-import cn.iocoder.yudao.module.oa.api.workflow.OaFeignNotificationApi;
+import cn.iocoder.yudao.module.oa.api.process.OaFeignNotificationApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * Feign 通知处理器
