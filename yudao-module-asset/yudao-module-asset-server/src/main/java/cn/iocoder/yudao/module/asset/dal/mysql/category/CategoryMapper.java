@@ -30,10 +30,12 @@ public interface CategoryMapper extends BaseMapperX<CategoryDO> {
                 .orderByDesc(CategoryDO::getId));
     }
 
-	default CategoryDO selectByParentIdAndCategoryName(Long parentId, String categoryName) {
-	    return selectOne(CategoryDO::getParentId, parentId, CategoryDO::getCategoryName, categoryName);
+	default CategoryDO selectByParentIdAndCategoryName(String categoryName) {
+	    return selectOne(CategoryDO::getCategoryName, categoryName);
 	}
-
+    default CategoryDO selectByCategoryCode(String categoryCode) {
+        return selectOne(CategoryDO::getCategoryCode, categoryCode);
+    }
     default Long selectCountByParentId(Long parentId) {
         return selectCount(CategoryDO::getParentId, parentId);
     }

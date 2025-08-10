@@ -15,7 +15,17 @@ public interface ErrorCodeConstants {
     ErrorCode CATEGORY_EXITS_CHILDREN = new ErrorCode(1_102_002_000, "存在存在子资产类别，无法删除");
     ErrorCode CATEGORY_PARENT_NOT_EXITS = new ErrorCode(1_102_003_000,"父级资产类别不存在");
     ErrorCode CATEGORY_PARENT_ERROR = new ErrorCode(1_102_004_000, "不能设置自己为父资产类别");
-    ErrorCode CATEGORY_CATEGORY_NAME_DUPLICATE = new ErrorCode(1_102_005_000, "已经存在该类别名称的资产类别");
-    ErrorCode CATEGORY_PARENT_IS_CHILD = new ErrorCode(1_102_006_000, "不能设置自己的子Category为父Category");
+    ErrorCode CATEGORY_CATEGORY_NAME_DUPLICATE = new ErrorCode(1_102_005_000, "资产类别名称已经存在");
+    ErrorCode CATEGORY_CATEGORY_CODE_DUPLICATE = new ErrorCode(1_102_006_000, "资产类别编码已经存在");
+    ErrorCode CATEGORY_PARENT_IS_CHILD = new ErrorCode(1_102_007_000, "不能设置自己的子Category为父Category");
+
+
+    // ========== 物品信息 ==========
+    ErrorCode GOODS_NOT_EXISTS = new ErrorCode(1_103_001_000, "物品信息不存在");
+    ErrorCode GOODS_CODE_DUPLICATE = new ErrorCode(1_103_002_000, "物品编码已经存在");
+
+
+    // ========== 资产信息 ==========
+    ErrorCode INFO_NOT_EXISTS = new ErrorCode(1_104_001_000, "资产信息不存在");
 
 }

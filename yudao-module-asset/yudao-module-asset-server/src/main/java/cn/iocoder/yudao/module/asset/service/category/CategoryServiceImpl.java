@@ -37,7 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
         // 校验上级id的有效性
         validateParentCategory(null, createReqVO.getParentId());
         // 校验类别名称的唯一性
-        validateCategoryCategoryNameUnique(null, createReqVO.getParentId(), createReqVO.getCategoryName());
+        validateCategoryCategoryNameUnique(null, createReqVO.getCategoryName());
+        // 校验类别编码的唯一性
+        validateCategoryCategoryCodeUnique(null, createReqVO.getCategoryCode());
 
         // 插入
         CategoryDO category = BeanUtils.toBean(createReqVO, CategoryDO.class);
@@ -54,8 +56,9 @@ public class CategoryServiceImpl implements CategoryService {
         // 校验上级id的有效性
         validateParentCategory(updateReqVO.getId(), updateReqVO.getParentId());
         // 校验类别名称的唯一性
-        validateCategoryCategoryNameUnique(updateReqVO.getId(), updateReqVO.getParentId(), updateReqVO.getCategoryName());
-
+        validateCategoryCategoryNameUnique(updateReqVO.getId(), updateReqVO.getCategoryName());
+        // 校验类别编码的唯一性
+        validateCategoryCategoryCodeUnique(updateReqVO.getId(), updateReqVO.getCategoryCode());
         // 更新
         CategoryDO updateObj = BeanUtils.toBean(updateReqVO, CategoryDO.class);
         categoryMapper.updateById(updateObj);
@@ -114,8 +117,8 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
-    private void validateCategoryCategoryNameUnique(Long id, Long parentId, String categoryName) {
-        CategoryDO category = categoryMapper.selectByParentIdAndCategoryName(parentId, categoryName);
+    private void validateCategoryCategoryNameUnique(Long id,String categoryName) {
+        CategoryDO category = categoryMapper.selectByParentIdAndCategoryName(categoryName);
         if (category == null) {
             return;
         }
@@ -125,6 +128,19 @@ public class CategoryServiceImpl implements CategoryService {
         }
         if (!Objects.equals(category.getId(), id)) {
             throw exception(CATEGORY_CATEGORY_NAME_DUPLICATE);
+        }
+    }
+    private void validateCategoryCategoryCodeUnique(Long id, String categoryName) {
+        CategoryDO category = categoryMapper.selectByCategoryCode(categoryName);
+        if (category == null) {
+            return;
+        }
+        // 如果 id 为空，说明不用比较是否为相同 id 的资产类别
+        if (id == null) {
+            throw exception(CATEGORY_CATEGORY_CODE_DUPLICATE);
+        }
+        if (!Objects.equals(category.getId(), id)) {
+            throw exception(CATEGORY_CATEGORY_CODE_DUPLICATE);
         }
     }
 
