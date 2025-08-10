@@ -41,10 +41,17 @@
             <artifactId>yudao-module-hrm-server</artifactId>
             <version>${revision}</version>
         </dependency>
-
+        <!-- 资产模块 -->
         <dependency>
             <groupId>cn.iocoder.cloud</groupId>
             <artifactId>yudao-module-asset-server</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- 仓库管理模块 -->
+        <dependency>
+            <groupId>cn.iocoder.cloud</groupId>
+            <artifactId>yudao-module-wms-server</artifactId>
             <version>${revision}</version>
         </dependency>
 

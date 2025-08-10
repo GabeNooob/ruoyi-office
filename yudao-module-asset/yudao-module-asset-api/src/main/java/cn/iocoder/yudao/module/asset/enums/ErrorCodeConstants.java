@@ -17,7 +17,7 @@ public interface ErrorCodeConstants {
     ErrorCode CATEGORY_PARENT_ERROR = new ErrorCode(1_102_004_000, "不能设置自己为父资产类别");
     ErrorCode CATEGORY_CATEGORY_NAME_DUPLICATE = new ErrorCode(1_102_005_000, "资产类别名称已经存在");
     ErrorCode CATEGORY_CATEGORY_CODE_DUPLICATE = new ErrorCode(1_102_006_000, "资产类别编码已经存在");
-    ErrorCode CATEGORY_PARENT_IS_CHILD = new ErrorCode(1_102_007_000, "不能设置自己的子Category为父Category");
+    ErrorCode CATEGORY_PARENT_IS_CHILD = new ErrorCode(1_102_007_000, "不能设置自己的子类为父类");
 
 
     // ========== 物品信息 ==========
