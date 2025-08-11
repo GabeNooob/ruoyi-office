@@ -30,7 +30,7 @@ import cn.iocoder.yudao.module.wms.dal.dataobject.purchaseorder.PurchaseOrderDO;
 import cn.iocoder.yudao.module.wms.dal.dataobject.purchaseorderdetail.PurchaseOrderDetailDO;
 import cn.iocoder.yudao.module.wms.service.purchaseorder.PurchaseOrderService;
 
-@Tag(name = "管理后台 - 采购订单")
+@Tag(name = "仓库管理 - 采购订单")
 @RestController
 @RequestMapping("/wms/purchase-order")
 @Validated
@@ -44,6 +44,14 @@ public class PurchaseOrderController {
     @PreAuthorize("@ss.hasPermission('wms:purchase-order:create')")
     public CommonResult<Long> createPurchaseOrder(@Valid @RequestBody PurchaseOrderSaveReqVO createReqVO) {
         return success(purchaseOrderService.createPurchaseOrder(createReqVO));
+    }
+
+
+    @PostMapping("/submit")
+    @Operation(summary = "创建采购订单")
+    @PreAuthorize("@ss.hasPermission('wms:purchase-order:create')")
+    public CommonResult<Long> submitPurchaseOrder(@Valid @RequestBody PurchaseOrderSaveReqVO createReqVO) {
+        return success(purchaseOrderService.submitPurchaseOrder(createReqVO));
     }
 
     @PutMapping("/update")

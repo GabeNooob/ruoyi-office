@@ -33,7 +33,7 @@ import cn.iocoder.yudao.module.wms.dal.dataobject.warehousing.WarehousingDO;
 import cn.iocoder.yudao.module.wms.service.warehousing.WarehousingService;
 
 @Slf4j
-@Tag(name = "管理后台 - 仓库信息")
+@Tag(name = "仓库管理 - 仓库信息")
 @RestController
 @RequestMapping("/wms/warehousing")
 @Validated

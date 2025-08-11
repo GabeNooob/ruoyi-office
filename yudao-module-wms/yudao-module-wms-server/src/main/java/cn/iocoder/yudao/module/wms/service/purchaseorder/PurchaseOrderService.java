@@ -1,6 +1,8 @@
 package cn.iocoder.yudao.module.wms.service.purchaseorder;
 
 import java.util.*;
+
+import cn.iocoder.yudao.module.wms.framework.security.service.IBillBizService;
 import jakarta.validation.*;
 import cn.iocoder.yudao.module.wms.controller.admin.purchaseorder.vo.*;
 import cn.iocoder.yudao.module.wms.dal.dataobject.purchaseorder.PurchaseOrderDO;
@@ -13,7 +15,7 @@ import cn.iocoder.yudao.framework.common.pojo.PageParam;
  *
  * @author 芋道源码
  */
-public interface PurchaseOrderService {
+public interface PurchaseOrderService extends IBillBizService {
 
     /**
      * 创建采购订单
@@ -22,6 +24,14 @@ public interface PurchaseOrderService {
      * @return 编号
      */
     Long createPurchaseOrder(@Valid PurchaseOrderSaveReqVO createReqVO);
+
+    /**
+     * 提交采购订单
+     *
+     * @param createReqVO 创建信息
+     * @return 编号
+     */
+    Long submitPurchaseOrder(@Valid PurchaseOrderSaveReqVO createReqVO);
 
     /**
      * 更新采购订单

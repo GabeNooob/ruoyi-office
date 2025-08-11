@@ -2,7 +2,10 @@ package cn.iocoder.yudao.module.wms.service.purchaseorder;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
+import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.wms.dal.mysql.purchaseorder.PurchaseOrderDetailMapper;
+import cn.iocoder.yudao.module.wms.framework.security.enums.FlowCodeEnum;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +16,6 @@ import cn.iocoder.yudao.module.wms.controller.admin.purchaseorder.vo.*;
 import cn.iocoder.yudao.module.wms.dal.dataobject.purchaseorder.PurchaseOrderDO;
 import cn.iocoder.yudao.module.wms.dal.dataobject.purchaseorderdetail.PurchaseOrderDetailDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
-import cn.iocoder.yudao.framework.common.pojo.PageParam;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 
 import cn.iocoder.yudao.module.wms.dal.mysql.purchaseorder.PurchaseOrderMapper;
@@ -37,16 +39,39 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Resource
     private PurchaseOrderDetailMapper purchaseOrderDetailMapper;
 
+    @Resource
+    private BpmProcessInstanceApi processInstanceApi;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createPurchaseOrder(PurchaseOrderSaveReqVO createReqVO) {
         // 插入
         PurchaseOrderDO purchaseOrder = BeanUtils.toBean(createReqVO, PurchaseOrderDO.class);
         purchaseOrderMapper.insert(purchaseOrder);
-
-
         // 插入子表
         createPurchaseOrderDetailList(purchaseOrder.getId(), createReqVO.getPurchaseOrderDetails());
+        // 返回
+        return purchaseOrder.getId();
+    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long submitPurchaseOrder(PurchaseOrderSaveReqVO createReqVO) {
+        // 插入
+        PurchaseOrderDO purchaseOrder = BeanUtils.toBean(createReqVO, PurchaseOrderDO.class);
+        purchaseOrderMapper.insert(purchaseOrder);
+        // 插入子表
+        createPurchaseOrderDetailList(purchaseOrder.getId(), createReqVO.getPurchaseOrderDetails());
+
+        // 发起 BPM 流程
+        Map<String, Object> processInstanceVariables = new HashMap<>();
+        String processInstanceId = processInstanceApi.createProcessInstance(Long.valueOf(createReqVO.getApplicantUserId()),
+                new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(FlowCodeEnum.WMS_PURCHASE_ORDER_FLOW.getFlowCode())
+                        .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(purchaseOrder.getId()))
+        ).getCheckedData();
+
+        // 跟新单据工作流的编号
+        purchaseOrderMapper.updateById(new PurchaseOrderDO().setId(purchaseOrder.getId()).setProcessInstanceId(processInstanceId));
+
         // 返回
         return purchaseOrder.getId();
     }
@@ -146,4 +171,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         purchaseOrderDetailMapper.deleteByPurchaseOrderIds(purchaseOrderIds);
 	}
 
+   /* public void updateFlowDataByKey(WmsProcessInstanceStatusMessage message) {
+        logger.info("[updateFlowDataByKey][MQ消费] 采购订单工作流状态变化消息: {}", message);
+    }*/
 }
