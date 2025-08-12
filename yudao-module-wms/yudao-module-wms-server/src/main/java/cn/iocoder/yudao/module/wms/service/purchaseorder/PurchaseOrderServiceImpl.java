@@ -2,10 +2,14 @@ package cn.iocoder.yudao.module.wms.service.purchaseorder;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusEvent;
+import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusMessage;
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.wms.dal.mysql.purchaseorder.PurchaseOrderDetailMapper;
 import cn.iocoder.yudao.module.wms.framework.security.enums.FlowCodeEnum;
+import cn.iocoder.yudao.module.wms.framework.security.process.mq.WmsProcessInstanceStatusMessage;
+import cn.iocoder.yudao.module.wms.framework.security.service.FlowProcessRespDTO;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -170,8 +174,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private void deletePurchaseOrderDetailByPurchaseOrderIds(List<Long> purchaseOrderIds) {
         purchaseOrderDetailMapper.deleteByPurchaseOrderIds(purchaseOrderIds);
 	}
-
-   /* public void updateFlowDataByKey(WmsProcessInstanceStatusMessage message) {
+    @Override
+   public void updateFlowDataByKey(FlowProcessRespDTO message) {
         logger.info("[updateFlowDataByKey][MQ消费] 采购订单工作流状态变化消息: {}", message);
-    }*/
+        // 跟新单据工作流的编号
+        purchaseOrderMapper.updateById(new PurchaseOrderDO().setId(Long.valueOf(message.getBusinessKey())).setProcessStatus(message.getStatus()));
+
+    }
 }
