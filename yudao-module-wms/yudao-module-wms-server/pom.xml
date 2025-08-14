@@ -47,7 +47,12 @@
             <artifactId>yudao-module-bpm-api</artifactId>
             <version>${revision}</version>
         </dependency>
-
+        <!-- 资产模块 -->
+        <dependency>
+            <groupId>cn.iocoder.cloud</groupId>
+            <artifactId>yudao-module-asset-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <!-- 业务组件 -->
         <dependency>
             <groupId>cn.iocoder.cloud</groupId>
@@ -127,6 +132,7 @@
             <groupId>cn.iocoder.cloud</groupId>
             <artifactId>yudao-spring-boot-starter-monitor</artifactId>
         </dependency>
+
 
     </dependencies>
 

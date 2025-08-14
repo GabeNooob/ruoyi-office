@@ -139,7 +139,7 @@ yudao:
   bpm:
     notification:
       # 默认通知方式使用MQ
-      default-type: local
+      default-type: mq
       # 异步处理
       async: true
       # MQ 通知配置
