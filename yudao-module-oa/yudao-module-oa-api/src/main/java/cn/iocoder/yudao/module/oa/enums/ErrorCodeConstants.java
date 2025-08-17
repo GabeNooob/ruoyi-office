@@ -14,4 +14,5 @@ public interface ErrorCodeConstants {
 
     // ========== 用车申请单 TODO 补充编号 ==========
     ErrorCode CAR_APPLY_BILL_NOT_EXISTS = new ErrorCode(1_101_000_001, "用车申请单不存在");
+    ErrorCode CAR_APPLY_SAVE_INFO_NOT_NULL = new ErrorCode(1_101_000_002, "保存信息不能为空");
 }

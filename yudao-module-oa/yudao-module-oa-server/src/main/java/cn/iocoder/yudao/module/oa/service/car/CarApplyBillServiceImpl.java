@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
 import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -55,7 +56,15 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
 
     @Override
     public Long submitCarApplyBill(CarApplyBillSaveReqVO createReqVO) {
-        // 插入
+        if(createReqVO == null){
+            throw exception(CAR_APPLY_SAVE_INFO_NOT_NULL);
+        }
+        // 如果单号为空，需要生成
+        if(StringUtils.isBlank(createReqVO.getBillCode())){
+            createReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.OA, OaBillTypeEnum.OA_CAR_APPLY_BILL));
+        }
+
+        // 保存或更新
         CarApplyBillDO carApplyBill = BeanUtils.toBean(createReqVO, CarApplyBillDO.class)
                 .setProcessStatus(BpmTaskStatusEnum.RUNNING.getStatus());
         carApplyBillMapper.insertOrUpdate(carApplyBill);
