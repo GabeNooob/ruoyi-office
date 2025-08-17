@@ -129,14 +129,22 @@ public class BpmNotificationManager {
      * 获取通知方式
      */
     private BpmNotificationTypeEnum getNotificationType(String processDefinitionKey) {
+
         // 1. 查找流程特定配置
-        if(processNotificationConfig != null && processNotificationConfig.containsKey(processDefinitionKey)) {
+        if (processNotificationConfig != null) {
             String configType = processNotificationConfig.get(processDefinitionKey);
-            return BpmNotificationTypeEnum.getByCode(configType);
+            if (StrUtil.isNotBlank(configType)) {
+                return BpmNotificationTypeEnum.getByCode(configType);
+            }
         }
 
         // 2. 使用默认配置
-        return BpmNotificationTypeEnum.getByCode(defaultNotificationType);
+        if (StrUtil.isNotBlank(defaultNotificationType)) {
+            return BpmNotificationTypeEnum.getByCode(defaultNotificationType);
+        }
+
+        // 3. 返回默认通知类型或null（根据业务需求）
+        return null; // 或者返回一个默认的枚举值
     }
 
     /**

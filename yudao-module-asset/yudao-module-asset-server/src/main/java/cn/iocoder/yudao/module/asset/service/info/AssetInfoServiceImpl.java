@@ -82,4 +82,17 @@ public class AssetInfoServiceImpl implements AssetInfoService {
         return infoMapper.selectPage(pageReqVO);
     }
 
+    /**
+     * 批量保存资产信息
+     *
+     * @param createReqVOList 创建信息
+     * @return 编号
+     */
+    @Override
+    public boolean batchSave(List<AssetInfoSaveReqVO> createReqVOList) {
+        // 插入
+        List<AssetInfoDO> info = BeanUtils.toBean(createReqVOList, AssetInfoDO.class);
+        return infoMapper.insertBatch(info);
+    }
+
 }

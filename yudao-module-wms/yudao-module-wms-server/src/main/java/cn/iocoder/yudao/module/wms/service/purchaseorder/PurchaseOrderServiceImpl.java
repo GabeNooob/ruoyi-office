@@ -2,10 +2,14 @@ package cn.iocoder.yudao.module.wms.service.purchaseorder;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.iocoder.yudao.module.asset.api.assetinfo.AssetInfoApi;
+import cn.iocoder.yudao.module.asset.api.assetinfo.dto.AssetInfoReqDTO;
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
+import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
 import cn.iocoder.yudao.module.wms.dal.mysql.purchaseorder.PurchaseOrderDetailMapper;
 import cn.iocoder.yudao.module.wms.framework.security.enums.FlowCodeEnum;
+import cn.iocoder.yudao.module.wms.framework.security.service.FlowProcessRespDTO;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -42,6 +46,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Resource
     private BpmProcessInstanceApi processInstanceApi;
 
+    @Resource
+    private AssetInfoApi assetInfoApi;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createPurchaseOrder(PurchaseOrderSaveReqVO createReqVO) {
@@ -69,8 +76,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(purchaseOrder.getId()))
         ).getCheckedData();
 
-        // 跟新单据工作流的编号
-        purchaseOrderMapper.updateById(new PurchaseOrderDO().setId(purchaseOrder.getId()).setProcessInstanceId(processInstanceId));
+        // 跟新单据工作流的编号、流程状态
+        PurchaseOrderDO newDo = new PurchaseOrderDO();
+        newDo.setId(purchaseOrder.getId()).setProcessInstanceId(processInstanceId).setProcessStatus(BpmTaskStatusEnum.RUNNING.getStatus());
+        purchaseOrderMapper.updateById(newDo);
 
         // 返回
         return purchaseOrder.getId();
@@ -171,7 +180,40 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         purchaseOrderDetailMapper.deleteByPurchaseOrderIds(purchaseOrderIds);
 	}
 
-   /* public void updateFlowDataByKey(WmsProcessInstanceStatusMessage message) {
+    /**
+     * 单据工作流状态变化
+     * @param message 单据编码
+     */
+    @Override
+   public void updateFlowDataByKey(FlowProcessRespDTO message) {
         logger.info("[updateFlowDataByKey][MQ消费] 采购订单工作流状态变化消息: {}", message);
-    }*/
+        Long businessKey = Long.valueOf(message.getBusinessKey());
+        Integer flowStatus = message.getStatus();
+        // 跟新单据工作流的编号
+        purchaseOrderMapper.updateById(new PurchaseOrderDO().setId(businessKey).setProcessStatus(flowStatus));
+
+        if(Objects.equals(BpmTaskStatusEnum.APPROVE.getStatus(), flowStatus)){
+            // 写入资产库表
+            PurchaseOrderDO purchaseOrder = purchaseOrderMapper.selectById(businessKey);
+            if(purchaseOrder != null){
+                List<PurchaseOrderDetailDO> purchaseOrderDetails = purchaseOrderDetailMapper.selectListByPurchaseOrderId(String.valueOf(businessKey));
+                if(CollUtil.isNotEmpty(purchaseOrderDetails)){
+                    List<AssetInfoReqDTO> assetInfoDOList = new ArrayList<>();
+                    for (PurchaseOrderDetailDO purchaseOrderDetail : purchaseOrderDetails){
+                        AssetInfoReqDTO assetInfoDO = BeanUtils.toBean(purchaseOrderDetail, AssetInfoReqDTO.class);
+                        assetInfoDO.setPurchaseOrderId(purchaseOrder.getId());
+                        assetInfoDO.setPurchaseOrderCode(purchaseOrder.getPurchaseOrderCode());
+                        assetInfoDO.setAssetName(purchaseOrderDetail.getGoodsName());
+                        assetInfoDO.setAssetCode(purchaseOrderDetail.getGoodsCode());
+                        assetInfoDOList.add(assetInfoDO);
+                    }
+                    assetInfoApi.batchSaveInfo(assetInfoDOList);
+                }
+            }
+
+
+        }
+
+
+    }
 }
