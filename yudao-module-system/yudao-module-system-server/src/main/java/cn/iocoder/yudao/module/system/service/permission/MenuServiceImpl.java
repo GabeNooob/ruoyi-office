@@ -255,9 +255,6 @@ public class MenuServiceImpl implements MenuService {
             return;
         }
         // 如果 id 为空，说明不用比较是否为相同 id 的菜单
-        if (id == null) {
-            throw exception(MENU_NAME_DUPLICATE);
-        }
         if (!menu.getId().equals(id)) {
             throw exception(MENU_NAME_DUPLICATE);
         }
@@ -276,6 +273,10 @@ public class MenuServiceImpl implements MenuService {
         }
         MenuDO menu = menuMapper.selectByComponentName(componentName);
         if (menu == null) {
+            return;
+        }
+        // 如果 id 为空，说明不用比较是否为相同 id 的菜单
+        if (id == null) {
             return;
         }
         if (!menu.getId().equals(id)) {
