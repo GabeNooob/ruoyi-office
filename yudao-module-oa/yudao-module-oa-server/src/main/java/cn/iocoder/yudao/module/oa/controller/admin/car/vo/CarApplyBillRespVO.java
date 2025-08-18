@@ -33,6 +33,10 @@ public class CarApplyBillRespVO {
     @ExcelProperty("车辆")
     private Long carId;
 
+    @Schema(description = "车牌号", example = "3524")
+    @ExcelProperty("车牌号")
+    private String carNo;
+
     @Schema(description = "出车时间")
     @ExcelProperty("出车时间")
     private LocalDateTime goTime;

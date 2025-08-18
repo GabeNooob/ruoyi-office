@@ -46,6 +46,10 @@ public class CarApplyBillDO extends BaseDO {
      */
     private Long carId;
     /**
+     * 车牌号
+     */
+    private String carNo;
+    /**
      * 出车时间
      */
     private LocalDateTime goTime;

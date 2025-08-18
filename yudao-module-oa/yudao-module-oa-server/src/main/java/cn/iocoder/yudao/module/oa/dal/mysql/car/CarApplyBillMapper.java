@@ -23,7 +23,7 @@ public interface CarApplyBillMapper extends BaseMapperX<CarApplyBillDO> {
                 .eqIfPresent(CarApplyBillDO::getBillCode, reqVO.getBillCode())
                 .eqIfPresent(CarApplyBillDO::getProcessInstanceId, reqVO.getProcessInstanceId())
                 .eqIfPresent(CarApplyBillDO::getProcessStatus, reqVO.getProcessStatus())
-                .eqIfPresent(CarApplyBillDO::getCarId, reqVO.getCarId())
+                .eqIfPresent(CarApplyBillDO::getCarNo, reqVO.getCarNo())
                 .betweenIfPresent(CarApplyBillDO::getGoTime, reqVO.getGoTime())
                 .betweenIfPresent(CarApplyBillDO::getReturnTime, reqVO.getReturnTime())
                 .eqIfPresent(CarApplyBillDO::getGoArea, reqVO.getGoArea())

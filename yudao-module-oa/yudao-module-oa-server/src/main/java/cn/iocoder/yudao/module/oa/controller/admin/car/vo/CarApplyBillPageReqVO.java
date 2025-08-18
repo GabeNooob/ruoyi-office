@@ -25,8 +25,8 @@ public class CarApplyBillPageReqVO extends PageParam {
     @Schema(description = "单据状态", example = "2")
     private Integer processStatus;
 
-    @Schema(description = "车辆", example = "3524")
-    private Long carId;
+    @Schema(description = "车牌号", example = "3524")
+    private String carNo;
 
     @Schema(description = "出车时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
