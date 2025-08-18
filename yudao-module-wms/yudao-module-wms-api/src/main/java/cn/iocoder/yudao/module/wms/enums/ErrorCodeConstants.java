@@ -28,4 +28,13 @@ public interface ErrorCodeConstants {
     // ========== 采购订单明细  ==========
     ErrorCode PURCHASE_ORDER_DETAIL_NOT_EXISTS = new ErrorCode(2_103_001_000, "采购订单明细不存在");
 
+
+    // ========== 采购入库  ==========
+    ErrorCode PURCHASE_IN_WAREHOUSING_NOT_EXISTS = new ErrorCode(2_104_001_000, "采购入库不存在");
+    // ========== 采购入库、领用、退库、归还、借用、调拨明细 ==========
+    ErrorCode GOODS_WAREHOUSING_DETAIL_NOT_EXISTS = new ErrorCode(2_105_001_000, "采购入库、领用、退库、归还、借用、调拨明细不存在");
+
+    // ========== 领用、退库、归还、借用、调拨主 =========
+    ErrorCode GOODS_COMMON_OPERATION_ORDER_NOT_EXISTS = new ErrorCode(2_106_001_000, "领用、退库、归还、借用、调拨主不存在");
+
 }
