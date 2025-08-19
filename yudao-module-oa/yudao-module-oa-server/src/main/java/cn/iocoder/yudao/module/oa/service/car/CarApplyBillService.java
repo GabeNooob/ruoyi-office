@@ -13,6 +13,13 @@ import cn.iocoder.yudao.framework.common.pojo.PageParam;
  * @author 芋道源码
  */
 public interface CarApplyBillService {
+    /**
+     * 保存用车申请单
+     *
+     * @param saveReqVO 保存信息
+     * @return 编号
+     */
+    Long saveCarApplyBill(@Valid CarApplyBillSaveReqVO saveReqVO);
 
     /**
      * 创建用车申请单
@@ -83,4 +90,6 @@ public interface CarApplyBillService {
      * @param status 状态
      */
     void updateBillStatus(Long id, Integer status);
+
+
 }

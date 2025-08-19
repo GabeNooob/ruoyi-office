@@ -65,6 +65,10 @@ public class CarApplyBillRespVO {
     @ExcelProperty("随行人")
     private String passenger;
 
+    @Schema(description = "创建者", example = "1")
+    @ExcelProperty("创建者")
+    private String creator;
+
     @Schema(description = "创建者姓名", example = "芋艿")
     @ExcelProperty("创建者姓名")
     private String creatorName;

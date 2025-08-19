@@ -42,45 +42,61 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
 
 
     @Override
-    public Long createCarApplyBill(CarApplyBillSaveReqVO createReqVO) {
-        // 插入
-        String billCode = BillCodeUtils.generateBillCode(SystemEnum.OA, OaBillTypeEnum.OA_CAR_APPLY_BILL);
-        createReqVO.setBillCode(billCode);
-        // 插入
-        CarApplyBillDO carApplyBill = BeanUtils.toBean(createReqVO, CarApplyBillDO.class);
-        carApplyBillMapper.insert(carApplyBill);
+    public Long saveCarApplyBill(CarApplyBillSaveReqVO saveReqVO) {
+
+        // 如果单号为空，需要生成
+        if(StringUtils.isBlank(saveReqVO.getBillCode())){
+            saveReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.OA, OaBillTypeEnum.OA_CAR_APPLY_BILL));
+        }
+
+        // 插入或更新
+        CarApplyBillDO carApplyBill = BeanUtils.toBean(saveReqVO, CarApplyBillDO.class);
+        carApplyBillMapper.insertOrUpdate(carApplyBill);
 
         // 返回
         return carApplyBill.getId();
     }
 
     @Override
-    public Long submitCarApplyBill(CarApplyBillSaveReqVO createReqVO) {
-        if(createReqVO == null){
-            throw exception(CAR_APPLY_SAVE_INFO_NOT_NULL);
-        }
+    public Long submitCarApplyBill(CarApplyBillSaveReqVO saveReqVO) {
+
         // 如果单号为空，需要生成
-        if(StringUtils.isBlank(createReqVO.getBillCode())){
-            createReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.OA, OaBillTypeEnum.OA_CAR_APPLY_BILL));
+        if(StringUtils.isBlank(saveReqVO.getBillCode())){
+            saveReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.OA, OaBillTypeEnum.OA_CAR_APPLY_BILL));
         }
 
         // 保存或更新
-        CarApplyBillDO carApplyBill = BeanUtils.toBean(createReqVO, CarApplyBillDO.class)
+        CarApplyBillDO carApplyBill = BeanUtils.toBean(saveReqVO, CarApplyBillDO.class)
                 .setProcessStatus(BpmTaskStatusEnum.RUNNING.getStatus());
         carApplyBillMapper.insertOrUpdate(carApplyBill);
 
         // 发起 BPM 流程
         Map<String, Object> processInstanceVariables = new HashMap<>();
-        String processInstanceId = processInstanceApi.createProcessInstance(Long.valueOf(createReqVO.getCreator()),
+        String processInstanceId = processInstanceApi.createProcessInstance(Long.valueOf(saveReqVO.getCreator()),
                 new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(OaBillTypeEnum.OA_CAR_APPLY_BILL.getProcessDefinitionKey())
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(carApplyBill.getId()))
-                        ).getCheckedData();
+        ).getCheckedData();
 
         // 将工作流的编号，更新到 OA 请假单中
         carApplyBillMapper.updateById(new CarApplyBillDO().setId(carApplyBill.getId()).setProcessInstanceId(processInstanceId));
         // 返回
         return carApplyBill.getId();
     }
+
+    @Override
+    public Long createCarApplyBill(CarApplyBillSaveReqVO createReqVO) {
+        // 插入
+        String billCode = BillCodeUtils.generateBillCode(SystemEnum.OA, OaBillTypeEnum.OA_CAR_APPLY_BILL);
+        createReqVO.setBillCode(billCode);
+        // 插入
+        CarApplyBillDO carApplyBill = BeanUtils.toBean(createReqVO, CarApplyBillDO.class);
+        carApplyBillMapper.insertOrUpdate(carApplyBill);
+
+        // 返回
+        return carApplyBill.getId();
+    }
+
+
 
     @Override
     public void updateCarApplyBill(CarApplyBillSaveReqVO updateReqVO) {

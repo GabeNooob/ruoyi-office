@@ -38,11 +38,12 @@ public class CarApplyBillController {
     @Resource
     private CarApplyBillService carApplyBillService;
 
-    @PostMapping("/create")
-    @Operation(summary = "创建用车申请单")
-    @PreAuthorize("@ss.hasPermission('oa:car-apply-bill:create')")
-    public CommonResult<Long> createCarApplyBill(@Valid @RequestBody CarApplyBillSaveReqVO createReqVO) {
-        return success(carApplyBillService.createCarApplyBill(createReqVO));
+
+    @PostMapping("/save")
+    @Operation(summary = "保存用车申请单")
+    @PreAuthorize("@ss.hasPermission('oa:car-apply-bill:save')")
+    public CommonResult<Long> saveCarApplyBill(@Valid @RequestBody CarApplyBillSaveReqVO saveReqVO) {
+        return success(carApplyBillService.saveCarApplyBill(saveReqVO));
     }
 
     @PostMapping("/submit")
@@ -51,6 +52,15 @@ public class CarApplyBillController {
     public CommonResult<Long> submitCarApplyBill(@Valid @RequestBody CarApplyBillSaveReqVO createReqVO) {
         return success(carApplyBillService.submitCarApplyBill(createReqVO));
     }
+
+    @PostMapping("/create")
+    @Operation(summary = "创建用车申请单")
+    @PreAuthorize("@ss.hasPermission('oa:car-apply-bill:create')")
+    public CommonResult<Long> createCarApplyBill(@Valid @RequestBody CarApplyBillSaveReqVO createReqVO) {
+        return success(carApplyBillService.createCarApplyBill(createReqVO));
+    }
+
+
 
     @PutMapping("/update")
     @Operation(summary = "更新用车申请单")
