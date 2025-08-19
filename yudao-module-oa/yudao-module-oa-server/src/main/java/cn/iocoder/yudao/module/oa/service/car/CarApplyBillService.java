@@ -5,7 +5,6 @@ import jakarta.validation.*;
 import cn.iocoder.yudao.module.oa.controller.admin.car.vo.*;
 import cn.iocoder.yudao.module.oa.dal.dataobject.car.CarApplyBillDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
-import cn.iocoder.yudao.framework.common.pojo.PageParam;
 
 /**
  * 用车申请单 Service 接口
@@ -81,15 +80,5 @@ public interface CarApplyBillService {
      * @param status 流程状态
      */
     void updateProcessStatus(Long id, Integer status);
-
-
-    /**
-     * 更新用车申请单的状态
-     *
-     * @param id 用车申请单编号
-     * @param status 状态
-     */
-    void updateBillStatus(Long id, Integer status);
-
 
 }
