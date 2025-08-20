@@ -154,11 +154,6 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
         log.info("[updateProcessStatus] 用车申请单流程状态更新成功，id: {}, status: {}", id, status);
     }
 
-    @Override
-    public void updateBillStatus(Long id, Integer status) {
-        validateLeaveExists(id);
-        carApplyBillMapper.updateById(new CarApplyBillDO().setId(id).setProcessStatus(status));
-    }
 
     private void validateLeaveExists(Long id) {
         if (carApplyBillMapper.selectById(id) == null) {
