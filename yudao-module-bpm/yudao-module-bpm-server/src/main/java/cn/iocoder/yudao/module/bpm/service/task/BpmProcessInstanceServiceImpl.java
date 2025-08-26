@@ -964,7 +964,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
 
         // 3. 发送流程实例的状态事件（保持兼容性）
         processInstanceEventPublisher.sendProcessInstanceResultEvent(
-                BpmProcessInstanceConvert.INSTANCE.buildProcessInstanceStatusEvent(this, instance, status));
+                BpmProcessInstanceConvert.INSTANCE.buildProcessInstanceStatusEvent(this, instance, status, reason));
 
         // 4. 发送跨服务通知
         notificationManager.sendProcessStatusNotification(instance, status);
