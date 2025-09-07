@@ -20,7 +20,7 @@ public interface CarApplyBillMapper extends BaseMapperX<CarApplyBillDO> {
     default PageResult<CarApplyBillDO> selectPage(CarApplyBillPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<CarApplyBillDO>()
                 .eqIfPresent(CarApplyBillDO::getId, reqVO.getId())
-                .eqIfPresent(CarApplyBillDO::getBillCode, reqVO.getBillCode())
+                .likeIfPresent(CarApplyBillDO::getBillCode, reqVO.getBillCode())
                 .eqIfPresent(CarApplyBillDO::getProcessInstanceId, reqVO.getProcessInstanceId())
                 .eqIfPresent(CarApplyBillDO::getProcessStatus, reqVO.getProcessStatus())
                 .eqIfPresent(CarApplyBillDO::getCarNo, reqVO.getCarNo())
