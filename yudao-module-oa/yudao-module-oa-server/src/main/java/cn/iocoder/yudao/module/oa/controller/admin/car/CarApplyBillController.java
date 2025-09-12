@@ -52,15 +52,6 @@ public class CarApplyBillController {
         return success(carApplyBillService.submitCarApplyBill(createReqVO));
     }
 
-    @PostMapping("/create")
-    @Operation(summary = "创建用车申请单")
-    @PreAuthorize("@ss.hasPermission('oa:car-apply-bill:create')")
-    public CommonResult<Long> createCarApplyBill(@Valid @RequestBody CarApplyBillSaveReqVO createReqVO) {
-        return success(carApplyBillService.createCarApplyBill(createReqVO));
-    }
-
-
-
     @PutMapping("/update")
     @Operation(summary = "更新用车申请单")
     @PreAuthorize("@ss.hasPermission('oa:car-apply-bill:update')")

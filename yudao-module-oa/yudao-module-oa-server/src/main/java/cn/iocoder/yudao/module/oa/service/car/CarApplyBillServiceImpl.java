@@ -77,7 +77,7 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(carApplyBill.getId()))
         ).getCheckedData();
 
-        // 将工作流的编号，更新到 OA 请假单中
+        // 将工作流的编号，更新到单据中
         carApplyBillMapper.updateById(new CarApplyBillDO().setId(carApplyBill.getId()).setProcessInstanceId(processInstanceId));
         // 返回
         return carApplyBill.getId();
@@ -116,10 +116,10 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
     }
 
     @Override
-        public void deleteCarApplyBillListByIds(List<Long> ids) {
-        // 删除
-        carApplyBillMapper.deleteByIds(ids);
-        }
+    public void deleteCarApplyBillListByIds(List<Long> ids) {
+    // 删除
+    carApplyBillMapper.deleteByIds(ids);
+    }
 
 
     private void validateCarApplyBillExists(Long id) {
@@ -152,13 +152,6 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
         carApplyBillMapper.updateById(updateObj);
         
         log.info("[updateProcessStatus] 用车申请单流程状态更新成功，id: {}, status: {}", id, status);
-    }
-
-
-    private void validateLeaveExists(Long id) {
-        if (carApplyBillMapper.selectById(id) == null) {
-            throw exception(OA_LEAVE_NOT_EXISTS);
-        }
     }
 
 }
