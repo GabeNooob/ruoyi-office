@@ -117,8 +117,8 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
 
     @Override
     public void deleteCarApplyBillListByIds(List<Long> ids) {
-    // 删除
-    carApplyBillMapper.deleteByIds(ids);
+        // 删除
+        carApplyBillMapper.deleteByIds(ids);
     }
 
 
