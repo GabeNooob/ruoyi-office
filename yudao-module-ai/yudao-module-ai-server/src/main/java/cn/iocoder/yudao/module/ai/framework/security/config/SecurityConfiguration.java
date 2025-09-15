@@ -2,16 +2,23 @@ package cn.iocoder.yudao.module.ai.framework.security.config;
 
 import cn.iocoder.yudao.framework.security.config.AuthorizeRequestsCustomizer;
 import cn.iocoder.yudao.module.infra.enums.ApiConstants;
+import jakarta.annotation.Resource;
+import org.springframework.ai.mcp.server.autoconfigure.McpServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+
+import java.util.Optional;
 
 /**
  * AI 模块的 Security 配置
  */
 @Configuration(proxyBeanMethods = false, value = "aiSecurityConfiguration")
 public class SecurityConfiguration {
+
+    @Resource
+    private Optional<McpServerProperties> serverProperties;
 
     @Bean("aiAuthorizeRequestsCustomizer")
     public AuthorizeRequestsCustomizer authorizeRequestsCustomizer() {
@@ -33,6 +40,12 @@ public class SecurityConfiguration {
                 // TODO 芋艿：这个每个项目都需要重复配置，得捉摸有没通用的方案
                 // RPC 服务的安全配置
                 registry.requestMatchers(ApiConstants.PREFIX + "/**").permitAll();
+
+                // MCP Server
+                serverProperties.ifPresent(properties -> {
+                    registry.requestMatchers(properties.getSseEndpoint()).permitAll();
+                    registry.requestMatchers(properties.getSseMessageEndpoint()).permitAll();
+                });
             }
 
         };
