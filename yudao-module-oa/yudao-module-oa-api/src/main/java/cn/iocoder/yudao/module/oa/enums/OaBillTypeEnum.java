@@ -11,7 +11,12 @@ public enum OaBillTypeEnum implements BillTypeEnum {
     /**
      * 用车申请单
      */
-    OA_CAR_APPLY_BILL("101", "用车申请单","oa_car_apply_bill");
+    OA_CAR_APPLY_BILL("101", "用车申请单","oa_car_apply_bill"),
+    
+    /**
+     * 还车申请单
+     */
+    OA_CAR_RETURN_BILL("102", "还车申请单","oa_car_return_bill");
 
     /**
      * 单据类型代码

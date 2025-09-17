@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.oa.process.mq;
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.mq.redis.core.stream.AbstractRedisStreamMessageListener;
 import cn.iocoder.yudao.module.oa.service.car.CarApplyBillService;
+import cn.iocoder.yudao.module.oa.service.car.CarReturnBillService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,6 +22,9 @@ public class OaMqNotificationConsumer extends AbstractRedisStreamMessageListener
 
     @Resource
     private CarApplyBillService carApplyBillService;
+
+    @Resource
+    private CarReturnBillService carReturnBillService;
 
     @Override
     public void onMessage(OaProcessInstanceStatusMessage message) {
@@ -71,7 +75,12 @@ public class OaMqNotificationConsumer extends AbstractRedisStreamMessageListener
                     carApplyBillService.updateProcessStatus(carApplyBillId, status);
                     log.info("[handleOaProcessNotification] 用车申请单状态更新成功，id: {}, status: {}", carApplyBillId, status);
                     break;
-                    
+                case "oa_car_return_bill":
+                    // 更新还车申请单状态
+                    Long carReturnBillId = Long.parseLong(businessKey);
+                    carReturnBillService.updateProcessStatus(carReturnBillId, status);
+                    log.info("[handleOaProcessNotification] 还车申请单状态更新成功，id: {}, status: {}", carReturnBillId, status);
+                    break;
                 // 可以在这里添加其他OA流程的处理
                 // case "oa_leave":
                 //     handleLeaveProcess(businessKey, status);

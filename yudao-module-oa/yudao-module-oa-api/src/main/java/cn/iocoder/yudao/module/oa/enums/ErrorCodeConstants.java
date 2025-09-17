@@ -12,7 +12,9 @@ public interface ErrorCodeConstants {
     // ========== oa车辆管理 1-101-000-000 ============
     ErrorCode CAR_NOT_EXISTS = new ErrorCode(1_101_000_000, "车辆信息不存在");
 
-    // ========== 用车申请单 TODO 补充编号 ==========
+    // ========== 用车申请单 ==========
     ErrorCode CAR_APPLY_BILL_NOT_EXISTS = new ErrorCode(1_101_000_001, "用车申请单不存在");
     ErrorCode CAR_APPLY_SAVE_INFO_NOT_NULL = new ErrorCode(1_101_000_002, "保存信息不能为空");
+    // ========== 还车申请单  ==========
+    ErrorCode CAR_RETURN_BILL_NOT_EXISTS = new ErrorCode(1_101_000_003, "还车申请单不存在");
 }
