@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.oa.controller.admin.car.vo;
 
+import cn.idev.excel.annotation.ExcelProperty;
 import lombok.*;
 import java.util.*;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,6 +54,10 @@ public class CarReturnBillPageReqVO extends PageParam {
 
     @Schema(description = "随行人")
     private String passenger;
+
+    @Schema(description = "创建人")
+    @ExcelProperty("创建人")
+    private String creator;
 
     @Schema(description = "还车说明", example = "随便")
     private String remark;

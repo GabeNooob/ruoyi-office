@@ -2,8 +2,9 @@ package cn.iocoder.yudao.module.oa.process.mq;
 
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.mq.redis.core.stream.AbstractRedisStreamMessageListener;
-import cn.iocoder.yudao.module.oa.service.FlowBillService;
-import cn.iocoder.yudao.module.oa.service.FlowBillServiceFactory;
+import cn.iocoder.yudao.framework.common.service.FlowBillService;
+import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
+import cn.iocoder.yudao.module.oa.service.OaFlowBillServiceFactory;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class OaMqNotificationConsumer extends AbstractRedisStreamMessageListener<OaProcessInstanceStatusMessage> {
 
     @Resource
-    private FlowBillServiceFactory flowBillServiceFactory;
+    private OaFlowBillServiceFactory flowBillServiceFactory;
 
     @Override
     public void onMessage(OaProcessInstanceStatusMessage message) {
@@ -66,7 +67,7 @@ public class OaMqNotificationConsumer extends AbstractRedisStreamMessageListener
         
         try {
             // 通过工厂获取对应的服务实现
-            FlowBillService flowBillService = flowBillServiceFactory.getServiceByProcessKey(processDefinitionKey);
+            FlowBillService<OaBillTypeEnum> flowBillService = flowBillServiceFactory.getServiceByProcessKey(processDefinitionKey);
             
             // 统一调用接口方法
             flowBillService.updateProcessStatus(businessKey, status);

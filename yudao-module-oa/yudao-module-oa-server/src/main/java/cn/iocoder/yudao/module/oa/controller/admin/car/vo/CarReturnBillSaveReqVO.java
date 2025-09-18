@@ -15,7 +15,6 @@ public class CarReturnBillSaveReqVO {
     private Long id;
 
     @Schema(description = "单据编号", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "单据编号不能为空")
     private String billCode;
 
     @Schema(description = "流程实例编号", example = "6065")
@@ -62,10 +61,6 @@ public class CarReturnBillSaveReqVO {
 
     @Schema(description = "创建者姓名", example = "芋艿")
     private String creatorName;
-
-    @Schema(description = "父级ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "11284")
-    @NotNull(message = "父级ID不能为空")
-    private Long parentId;
 
     @Schema(description = "部门ID", example = "20051")
     private Long deptId;

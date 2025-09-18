@@ -1,9 +1,8 @@
-package cn.iocoder.yudao.module.oa.service;
+package cn.iocoder.yudao.framework.common.service;
 
-import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
+import cn.iocoder.yudao.framework.common.enums.BillTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
 import java.util.HashMap;
@@ -17,22 +16,21 @@ import java.util.Map;
  * @author 芋道源码
  */
 @Slf4j
-@Component
-public class FlowBillServiceFactory implements InitializingBean {
+public abstract class FlowBillServiceFactory<T extends BillTypeEnum> implements InitializingBean {
 
     @Resource
-    private List<FlowBillService> flowBillServices;
+    private List<FlowBillService<T>> flowBillServices;
 
     /**
      * 服务映射表：单据类型 -> 服务实现
      */
-    private final Map<OaBillTypeEnum, FlowBillService> serviceMap = new HashMap<>();
+    private final Map<T, FlowBillService<T>> serviceMap = new HashMap<>();
 
     @Override
     public void afterPropertiesSet() {
         // 初始化服务映射表
-        for (FlowBillService service : flowBillServices) {
-            OaBillTypeEnum billType = service.getSupportedBillType();
+        for (FlowBillService<T> service : flowBillServices) {
+            T billType = service.getSupportedBillType();
             serviceMap.put(billType, service);
             log.info("注册流程表单服务: {} -> {}", billType.getTypeName(), service.getClass().getSimpleName());
         }
@@ -44,8 +42,8 @@ public class FlowBillServiceFactory implements InitializingBean {
      * @param billType 单据类型
      * @return 服务实现
      */
-    public FlowBillService getService(OaBillTypeEnum billType) {
-        FlowBillService service = serviceMap.get(billType);
+    public FlowBillService<T> getService(T billType) {
+        FlowBillService<T> service = serviceMap.get(billType);
         if (service == null) {
             throw new IllegalArgumentException("不支持的单据类型: " + billType);
         }
@@ -58,12 +56,21 @@ public class FlowBillServiceFactory implements InitializingBean {
      * @param processDefinitionKey 流程定义Key
      * @return 服务实现
      */
-    public FlowBillService getServiceByProcessKey(String processDefinitionKey) {
-        for (OaBillTypeEnum billType : OaBillTypeEnum.values()) {
+    public FlowBillService<T> getServiceByProcessKey(String processDefinitionKey) {
+        T[] billTypes = getBillTypeValues();
+        for (T billType : billTypes) {
             if (billType.getProcessDefinitionKey().equals(processDefinitionKey)) {
                 return getService(billType);
             }
         }
         throw new IllegalArgumentException("未找到对应的单据类型，流程定义Key: " + processDefinitionKey);
     }
+
+    /**
+     * 获取所有单据类型枚举值
+     * 子类需要实现此方法返回具体的枚举类型数组
+     *
+     * @return 单据类型枚举值数组
+     */
+    protected abstract T[] getBillTypeValues();
 }

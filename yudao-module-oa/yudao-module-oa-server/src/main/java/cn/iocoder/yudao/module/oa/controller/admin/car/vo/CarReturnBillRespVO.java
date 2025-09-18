@@ -68,6 +68,10 @@ public class CarReturnBillRespVO {
     @ExcelProperty("随行人")
     private String passenger;
 
+    @Schema(description = "创建人")
+    @ExcelProperty("创建人")
+    private String creator;
+
     @Schema(description = "还车说明", example = "随便")
     @ExcelProperty("还车说明")
     private String remark;
@@ -100,4 +104,4 @@ public class CarReturnBillRespVO {
     @ExcelProperty("公司名称")
     private String companyName;
 
-}
+}

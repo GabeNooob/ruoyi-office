@@ -6,8 +6,9 @@ import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
 import cn.iocoder.yudao.module.oa.dal.dataobject.car.CarApplyBillDO;
+import cn.iocoder.yudao.module.oa.enums.CarReturnStatusEnum;
 import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
-import cn.iocoder.yudao.module.oa.service.FlowBillService;
+import cn.iocoder.yudao.framework.common.service.FlowBillService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
 @Slf4j
 @Service
 @Validated
-public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillService {
+public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillService<OaBillTypeEnum> {
 
     @Resource
     private CarReturnBillMapper carReturnBillMapper;
@@ -86,8 +87,8 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
         // 将工作流的编号，更新到单据中
         carReturnBillMapper.updateById(new CarReturnBillDO().setId(carReturnBill.getId()).setProcessInstanceId(processInstanceId));
         
-        // 标记对应用车申请单为已还车
-        carApplyBillService.markAsReturned(applyBillId);
+        // 标记对应用车申请单为还车中
+        carApplyBillService.markAsReturning(applyBillId);
         
         // 返回
         return carReturnBill.getId();
@@ -145,21 +146,7 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
         return carReturnBillMapper.selectPage(pageReqVO);
     }
 
-    @Override
-    public void updateProcessStatus(Long id, Integer status) {
-        log.info("[updateProcessStatus] 更新还车申请单流程状态，id: {}, status: {}", id, status);
-        
-        // 校验还车申请单存在
-        validateCarReturnBillExists(id);
-        
-        // 更新流程状态
-        CarReturnBillDO updateObj = new CarReturnBillDO();
-        updateObj.setId(id);
-        updateObj.setProcessStatus(status);
-        carReturnBillMapper.updateById(updateObj);
-        
-        log.info("[updateProcessStatus] 还车申请单流程状态更新成功，id: {}, status: {}", id, status);
-    }
+
 
     // ==================== FlowBillService 接口实现 ====================
 
@@ -171,7 +158,56 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
     @Override
     public void updateProcessStatus(String businessKey, Integer status) {
         Long id = Long.parseLong(businessKey);
-        updateProcessStatus(id, status);
+        log.info("[updateProcessStatus] 更新还车申请单流程状态，id: {}, status: {}", id, status);
+
+        // 校验还车申请单存在
+        validateCarReturnBillExists(id);
+
+        // 更新流程状态
+        CarReturnBillDO updateObj = new CarReturnBillDO();
+        updateObj.setId(id);
+        updateObj.setProcessStatus(status);
+        carReturnBillMapper.updateById(updateObj);
+
+        // 根据流程状态处理用车申请单的还车状态
+        handleApplyBillReturnStatus(id, status);
+
+        log.info("[updateProcessStatus] 还车申请单流程状态更新成功，id: {}, status: {}", id, status);
+    }
+
+    /**
+     * 根据还车单流程状态处理用车申请单的还车状态
+     *
+     * @param returnBillId 还车单ID
+     * @param status 流程状态
+     */
+    private void handleApplyBillReturnStatus(Long returnBillId, Integer status) {
+        try {
+            CarReturnBillDO returnBill = getCarReturnBill(returnBillId);
+            if (returnBill == null || returnBill.getApplyBill() == null) {
+                return;
+            }
+
+            CarApplyBillDO applyBill = carApplyBillService.getCarApplyBillByCode(returnBill.getApplyBill());
+            if (applyBill == null) {
+                return;
+            }
+
+            // 根据流程状态处理用车申请单的还车状态
+            if (BpmTaskStatusEnum.APPROVE.getStatus().equals(status)) {
+                // 审批通过：标记为已还车
+                carApplyBillService.markAsReturned(applyBill.getId());
+                log.info("[handleApplyBillReturnStatus] 还车单审批通过，用车申请单标记为已还车，applyBillId: {}", applyBill.getId());
+            } else if (BpmTaskStatusEnum.REJECT.getStatus().equals(status) || 
+                       BpmTaskStatusEnum.CANCEL.getStatus().equals(status) ||
+                       BpmTaskStatusEnum.RETURN.getStatus().equals(status)) {
+                // 审批拒绝、取消或退回：回滚为未还车
+                carApplyBillService.markAsNotReturned(applyBill.getId());
+                log.info("[handleApplyBillReturnStatus] 还车单流程状态变更为{}，用车申请单回滚为未还车，applyBillId: {}", status, applyBill.getId());
+            }
+        } catch (Exception e) {
+            log.error("[handleApplyBillReturnStatus] 处理用车申请单还车状态失败，returnBillId: {}, status: {}", returnBillId, status, e);
+        }
     }
 
     /**
@@ -190,7 +226,7 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
             throw exception(CAR_APPLY_BILL_NOT_EXISTS);
         }
         
-        if (Boolean.TRUE.equals(applyBill.getIsReturned())) {
+        if (CarReturnStatusEnum.RETURNED.getStatus().equals(applyBill.getReturnStatus())) {
             throw exception(CAR_APPLY_BILL_ALREADY_RETURNED);
         }
         return applyBill.getId();

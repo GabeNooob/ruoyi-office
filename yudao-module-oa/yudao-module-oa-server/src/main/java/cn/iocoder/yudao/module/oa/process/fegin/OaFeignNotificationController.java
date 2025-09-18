@@ -4,17 +4,15 @@ import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusMessage;
 import cn.iocoder.yudao.module.oa.enums.ApiConstants;
-import cn.iocoder.yudao.module.oa.service.FlowBillService;
-import cn.iocoder.yudao.module.oa.service.FlowBillServiceFactory;
-import cn.iocoder.yudao.module.oa.service.car.CarApplyBillService;
+import cn.iocoder.yudao.framework.common.service.FlowBillService;
+import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
+import cn.iocoder.yudao.module.oa.service.OaFlowBillServiceFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 
@@ -32,7 +30,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 public class OaFeignNotificationController {
 
     @Resource
-    private FlowBillServiceFactory flowBillServiceFactory;
+    private OaFlowBillServiceFactory flowBillServiceFactory;
 
     @PostMapping("/status-change")
     @Operation(summary = "接收流程状态变化回调")
@@ -62,7 +60,7 @@ public class OaFeignNotificationController {
             
             try {
                 // 通过工厂获取对应的服务实现
-                FlowBillService flowBillService = flowBillServiceFactory.getServiceByProcessKey(processDefinitionKey);
+                FlowBillService<OaBillTypeEnum> flowBillService = flowBillServiceFactory.getServiceByProcessKey(processDefinitionKey);
                 
                 // 统一调用接口方法
                 flowBillService.updateProcessStatus(businessKey, status);

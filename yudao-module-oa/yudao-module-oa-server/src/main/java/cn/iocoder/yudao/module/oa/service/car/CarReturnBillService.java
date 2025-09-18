@@ -75,12 +75,5 @@ public interface CarReturnBillService {
      */
     PageResult<CarReturnBillDO> getCarReturnBillPage(CarReturnBillPageReqVO pageReqVO);
 
-    /**
-     * 更新还车申请单的流程状态
-     *
-     * @param id 还车申请单编号
-     * @param status 流程状态
-     */
-    void updateProcessStatus(Long id, Integer status);
 
 }

@@ -1,20 +1,20 @@
-package cn.iocoder.yudao.module.oa.service;
+package cn.iocoder.yudao.framework.common.service;
 
-import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
+import cn.iocoder.yudao.framework.common.enums.BillTypeEnum;
 
 /**
  * 流程表单服务接口
  * 
  * @author 芋道源码
  */
-public interface FlowBillService {
+public interface FlowBillService<T extends BillTypeEnum> {
 
     /**
      * 获取支持的单据类型
      *
      * @return 单据类型枚举
      */
-    OaBillTypeEnum getSupportedBillType();
+    T getSupportedBillType();
 
     /**
      * 更新流程状态

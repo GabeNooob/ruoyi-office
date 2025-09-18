@@ -91,8 +91,8 @@ public class CarApplyBillRespVO {
     @ExcelProperty("公司名称")
     private String companyName;
 
-    @Schema(description = "是否还车", example = "false")
-    @ExcelProperty("是否还车")
-    private Boolean isReturned;
+    @Schema(description = "还车状态", example = "0")
+    @ExcelProperty("还车状态")
+    private Integer returnStatus;
 
 }

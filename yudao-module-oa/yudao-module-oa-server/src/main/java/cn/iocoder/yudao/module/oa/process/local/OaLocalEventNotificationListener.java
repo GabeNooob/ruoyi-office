@@ -2,11 +2,12 @@ package cn.iocoder.yudao.module.oa.process.local;
 
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusEvent;
-import cn.iocoder.yudao.module.oa.service.FlowBillService;
-import cn.iocoder.yudao.module.oa.service.FlowBillServiceFactory;
-import cn.iocoder.yudao.module.oa.service.car.CarApplyBillService;
+import cn.iocoder.yudao.framework.common.service.FlowBillService;
+import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
+import cn.iocoder.yudao.module.oa.service.OaFlowBillServiceFactory;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +21,10 @@ import org.springframework.stereotype.Component;
 public class OaLocalEventNotificationListener implements ApplicationListener<BpmProcessInstanceStatusEvent> {
 
     @Resource
-    private FlowBillServiceFactory flowBillServiceFactory;
+    private OaFlowBillServiceFactory flowBillServiceFactory;
 
     @Override
-    public void onApplicationEvent(BpmProcessInstanceStatusEvent message) {
+    public void onApplicationEvent(@NotNull BpmProcessInstanceStatusEvent message) {
         log.info("[processStatusChange][Feign回调] 收到流程状态变化回调: {}", message);
 
         try {
@@ -49,7 +50,7 @@ public class OaLocalEventNotificationListener implements ApplicationListener<Bpm
 
             try {
                 // 通过工厂获取对应的服务实现
-                FlowBillService flowBillService = flowBillServiceFactory.getServiceByProcessKey(processDefinitionKey);
+                FlowBillService<OaBillTypeEnum> flowBillService = flowBillServiceFactory.getServiceByProcessKey(processDefinitionKey);
                 
                 // 统一调用接口方法
                 flowBillService.updateProcessStatus(businessKey, status);

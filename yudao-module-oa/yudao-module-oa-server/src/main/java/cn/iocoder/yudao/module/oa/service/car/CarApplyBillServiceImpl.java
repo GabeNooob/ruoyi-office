@@ -21,7 +21,9 @@ import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 
 import cn.iocoder.yudao.module.oa.dal.mysql.car.CarApplyBillMapper;
 
-import cn.iocoder.yudao.module.oa.service.FlowBillService;
+import cn.iocoder.yudao.framework.common.service.FlowBillService;
+
+import cn.iocoder.yudao.module.oa.enums.CarReturnStatusEnum;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants.OA_LEAVE_NOT_EXISTS;
@@ -35,7 +37,7 @@ import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
 @Slf4j
 @Service
 @Validated
-public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillService {
+public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillService<OaBillTypeEnum> {
 
     @Resource
     private CarApplyBillMapper carApplyBillMapper;
@@ -146,21 +148,6 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
         return carApplyBillMapper.selectPage(pageReqVO);
     }
 
-    @Override
-    public void updateProcessStatus(Long id, Integer status) {
-        log.info("[updateProcessStatus] 更新用车申请单流程状态，id: {}, status: {}", id, status);
-        
-        // 校验用车申请单存在
-        validateCarApplyBillExists(id);
-        
-        // 更新流程状态
-        CarApplyBillDO updateObj = new CarApplyBillDO();
-        updateObj.setId(id);
-        updateObj.setProcessStatus(status);
-        carApplyBillMapper.updateById(updateObj);
-        
-        log.info("[updateProcessStatus] 用车申请单流程状态更新成功，id: {}, status: {}", id, status);
-    }
 
     // ==================== FlowBillService 接口实现 ====================
 
@@ -172,25 +159,51 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
     @Override
     public void updateProcessStatus(String businessKey, Integer status) {
         Long id = Long.parseLong(businessKey);
-        updateProcessStatus(id, status);
+        log.info("[updateProcessStatus] 更新用车申请单流程状态，id: {}, status: {}", id, status);
+
+        // 校验用车申请单存在
+        validateCarApplyBillExists(id);
+
+        // 更新流程状态
+        CarApplyBillDO updateObj = new CarApplyBillDO();
+        updateObj.setId(id);
+        updateObj.setProcessStatus(status);
+        carApplyBillMapper.updateById(updateObj);
+
+        log.info("[updateProcessStatus] 用车申请单流程状态更新成功，id: {}, status: {}", id, status);
     }
 
 
 
     @Override
-    public void markAsReturned(Long id) {
-        log.info("[markAsReturned] 标记用车申请单为已还车，id: {}", id);
+    public void updateReturnStatus(Long id, Integer returnStatus) {
+        log.info("[updateReturnStatus] 更新用车申请单还车状态，id: {}, returnStatus: {}", id, returnStatus);
         
         // 校验用车申请单存在
         validateCarApplyBillExists(id);
         
-        // 更新为已还车
+        // 更新还车状态
         CarApplyBillDO updateObj = new CarApplyBillDO();
         updateObj.setId(id);
-        updateObj.setIsReturned(true);
+        updateObj.setReturnStatus(returnStatus);
         carApplyBillMapper.updateById(updateObj);
         
-        log.info("[markAsReturned] 用车申请单标记为已还车成功，id: {}", id);
+        log.info("[updateReturnStatus] 用车申请单还车状态更新成功，id: {}, returnStatus: {}", id, returnStatus);
+    }
+
+    @Override
+    public void markAsReturned(Long id) {
+        updateReturnStatus(id, CarReturnStatusEnum.RETURNED.getStatus());
+    }
+    
+    @Override
+    public void markAsReturning(Long id) {
+        updateReturnStatus(id, CarReturnStatusEnum.RETURNING.getStatus());
+    }
+    
+    @Override
+    public void markAsNotReturned(Long id) {
+        updateReturnStatus(id, CarReturnStatusEnum.NOT_RETURNED.getStatus());
     }
 
 }

@@ -53,6 +53,7 @@ public class WmsLocalEventNotificationListener implements ApplicationListener<Bp
             // 只处理WMS相关流程
             if (!processDefinitionKey.startsWith("wms_")) {
                 log.debug("[processStatusChange] 非WMS流程，跳过处理: {}", processDefinitionKey);
+                return;
             }
 
             log.info("[processStatusChange] 处理WMS流程状态变化，processDefinitionKey: {}, businessKey: {}, status: {}",

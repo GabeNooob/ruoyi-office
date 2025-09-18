@@ -108,7 +108,7 @@ public class CarApplyBillDO extends BaseDO {
     /**
      * 是否还车
      */
-    private Boolean isReturned;
+    private Integer returnStatus;
 
 
 }

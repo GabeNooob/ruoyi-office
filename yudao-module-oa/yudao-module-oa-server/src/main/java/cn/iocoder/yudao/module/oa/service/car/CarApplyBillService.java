@@ -82,12 +82,12 @@ public interface CarApplyBillService {
     PageResult<CarApplyBillDO> getCarApplyBillPage(CarApplyBillPageReqVO pageReqVO);
 
     /**
-     * 更新用车申请单的流程状态
+     * 更新用车申请单还车状态
      *
      * @param id 用车申请单编号
-     * @param status 流程状态
+     * @param returnStatus 还车状态
      */
-    void updateProcessStatus(Long id, Integer status);
+    void updateReturnStatus(Long id, Integer returnStatus);
 
     /**
      * 标记用车申请单为已还车
@@ -95,5 +95,19 @@ public interface CarApplyBillService {
      * @param id 用车申请单编号
      */
     void markAsReturned(Long id);
+    
+    /**
+     * 标记用车申请单为还车中
+     *
+     * @param id 用车申请单编号
+     */
+    void markAsReturning(Long id);
+    
+    /**
+     * 标记用车申请单为未还车
+     *
+     * @param id 用车申请单编号
+     */
+    void markAsNotReturned(Long id);
 
 }

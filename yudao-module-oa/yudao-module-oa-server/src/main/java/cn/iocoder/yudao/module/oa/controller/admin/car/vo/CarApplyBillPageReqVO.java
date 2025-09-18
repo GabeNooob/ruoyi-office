@@ -70,7 +70,7 @@ public class CarApplyBillPageReqVO extends PageParam {
     @Schema(description = "公司名称", example = "张三")
     private String companyName;
 
-    @Schema(description = "是否还车", example = "false")
-    private Boolean isReturned;
+    @Schema(description = "还车状态", example = "0")
+    private Integer returnStatus;
 
 }
