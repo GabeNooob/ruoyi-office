@@ -64,6 +64,14 @@ public interface CarApplyBillService {
      * @return 用车申请单
      */
     CarApplyBillDO getCarApplyBill(Long id);
+    
+    /**
+     * 获得用车申请单
+     *
+     * @param code 编号
+     * @return 用车申请单
+     */
+    CarApplyBillDO getCarApplyBillByCode(String code);
 
     /**
      * 获得用车申请单分页
@@ -80,5 +88,12 @@ public interface CarApplyBillService {
      * @param status 流程状态
      */
     void updateProcessStatus(Long id, Integer status);
+
+    /**
+     * 标记用车申请单为已还车
+     *
+     * @param id 用车申请单编号
+     */
+    void markAsReturned(Long id);
 
 }

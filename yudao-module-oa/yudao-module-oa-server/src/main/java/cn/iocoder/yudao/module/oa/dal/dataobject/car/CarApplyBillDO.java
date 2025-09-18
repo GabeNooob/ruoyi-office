@@ -105,6 +105,10 @@ public class CarApplyBillDO extends BaseDO {
      * 公司名称
      */
     private String companyName;
+    /**
+     * 是否还车
+     */
+    private Boolean isReturned;
 
 
 }

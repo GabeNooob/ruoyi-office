@@ -5,6 +5,7 @@ import cn.iocoder.yudao.framework.common.util.bill.BillCodeUtils;
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
+import cn.iocoder.yudao.module.oa.dal.dataobject.car.CarApplyBillDO;
 import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +40,9 @@ public class CarReturnBillServiceImpl implements CarReturnBillService {
     @Resource
     private BpmProcessInstanceApi processInstanceApi;
 
+    @Resource
+    private CarApplyBillService carApplyBillService;
+
     @Override
     public Long saveCarReturnBill(CarReturnBillSaveReqVO saveReqVO) {
 
@@ -63,6 +67,9 @@ public class CarReturnBillServiceImpl implements CarReturnBillService {
             saveReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.OA, OaBillTypeEnum.OA_CAR_RETURN_BILL));
         }
 
+        // 验证用车申请单是否已还车
+        Long applyBillId = validateApplyBillNotReturned(saveReqVO.getApplyBill());
+
         // 保存或更新
         CarReturnBillDO carReturnBill = BeanUtils.toBean(saveReqVO, CarReturnBillDO.class)
                 .setProcessStatus(BpmTaskStatusEnum.RUNNING.getStatus());
@@ -77,6 +84,10 @@ public class CarReturnBillServiceImpl implements CarReturnBillService {
 
         // 将工作流的编号，更新到单据中
         carReturnBillMapper.updateById(new CarReturnBillDO().setId(carReturnBill.getId()).setProcessInstanceId(processInstanceId));
+        
+        // 标记对应用车申请单为已还车
+        carApplyBillService.markAsReturned(applyBillId);
+        
         // 返回
         return carReturnBill.getId();
     }
@@ -147,6 +158,28 @@ public class CarReturnBillServiceImpl implements CarReturnBillService {
         carReturnBillMapper.updateById(updateObj);
         
         log.info("[updateProcessStatus] 还车申请单流程状态更新成功，id: {}, status: {}", id, status);
+    }
+
+    /**
+     * 验证用车申请单是否已还车
+     *
+     * @param applyBillCode 用车申请单ID
+     */
+    private Long validateApplyBillNotReturned(String applyBillCode) {
+        Long applyBillId = 0L;
+        if (applyBillCode == null) {
+            throw exception(CAR_APPLY_BILL_NOT_EXISTS);
+        }
+        
+        CarApplyBillDO applyBill = carApplyBillService.getCarApplyBillByCode(applyBillCode);
+        if (applyBill == null) {
+            throw exception(CAR_APPLY_BILL_NOT_EXISTS);
+        }
+        
+        if (Boolean.TRUE.equals(applyBill.getIsReturned())) {
+            throw exception(CAR_APPLY_BILL_ALREADY_RETURNED);
+        }
+        return applyBill.getId();
     }
 
 }

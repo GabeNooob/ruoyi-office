@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.oa.service.car;
 
 import cn.iocoder.yudao.framework.common.enums.SystemEnum;
 import cn.iocoder.yudao.framework.common.util.bill.BillCodeUtils;
+import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
@@ -132,6 +133,11 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
     public CarApplyBillDO getCarApplyBill(Long id) {
         return carApplyBillMapper.selectById(id);
     }
+    
+    @Override
+    public CarApplyBillDO getCarApplyBillByCode(String code) {
+        return carApplyBillMapper.selectOne(new LambdaQueryWrapperX<CarApplyBillDO>().eq(CarApplyBillDO::getBillCode, code));
+    }
 
     @Override
     public PageResult<CarApplyBillDO> getCarApplyBillPage(CarApplyBillPageReqVO pageReqVO) {
@@ -152,6 +158,24 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
         carApplyBillMapper.updateById(updateObj);
         
         log.info("[updateProcessStatus] 用车申请单流程状态更新成功，id: {}, status: {}", id, status);
+    }
+
+
+
+    @Override
+    public void markAsReturned(Long id) {
+        log.info("[markAsReturned] 标记用车申请单为已还车，id: {}", id);
+        
+        // 校验用车申请单存在
+        validateCarApplyBillExists(id);
+        
+        // 更新为已还车
+        CarApplyBillDO updateObj = new CarApplyBillDO();
+        updateObj.setId(id);
+        updateObj.setIsReturned(true);
+        carApplyBillMapper.updateById(updateObj);
+        
+        log.info("[markAsReturned] 用车申请单标记为已还车成功，id: {}", id);
     }
 
 }

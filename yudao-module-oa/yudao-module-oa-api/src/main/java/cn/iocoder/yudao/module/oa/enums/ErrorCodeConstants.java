@@ -17,4 +17,5 @@ public interface ErrorCodeConstants {
     ErrorCode CAR_APPLY_SAVE_INFO_NOT_NULL = new ErrorCode(1_101_000_002, "保存信息不能为空");
     // ========== 还车申请单  ==========
     ErrorCode CAR_RETURN_BILL_NOT_EXISTS = new ErrorCode(1_101_000_003, "还车申请单不存在");
+    ErrorCode CAR_APPLY_BILL_ALREADY_RETURNED = new ErrorCode(1_101_000_004, "用车申请单已还车，不能重复还车");
 }
