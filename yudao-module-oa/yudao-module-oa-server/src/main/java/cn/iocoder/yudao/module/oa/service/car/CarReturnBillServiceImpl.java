@@ -7,6 +7,7 @@ import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
 import cn.iocoder.yudao.module.oa.dal.dataobject.car.CarApplyBillDO;
 import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
+import cn.iocoder.yudao.module.oa.service.FlowBillService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
 @Slf4j
 @Service
 @Validated
-public class CarReturnBillServiceImpl implements CarReturnBillService {
+public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillService {
 
     @Resource
     private CarReturnBillMapper carReturnBillMapper;
@@ -158,6 +159,19 @@ public class CarReturnBillServiceImpl implements CarReturnBillService {
         carReturnBillMapper.updateById(updateObj);
         
         log.info("[updateProcessStatus] 还车申请单流程状态更新成功，id: {}, status: {}", id, status);
+    }
+
+    // ==================== FlowBillService 接口实现 ====================
+
+    @Override
+    public OaBillTypeEnum getSupportedBillType() {
+        return OaBillTypeEnum.OA_CAR_RETURN_BILL;
+    }
+
+    @Override
+    public void updateProcessStatus(String businessKey, Integer status) {
+        Long id = Long.parseLong(businessKey);
+        updateProcessStatus(id, status);
     }
 
     /**

@@ -2,8 +2,8 @@ package cn.iocoder.yudao.module.oa.process.mq;
 
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.mq.redis.core.stream.AbstractRedisStreamMessageListener;
-import cn.iocoder.yudao.module.oa.service.car.CarApplyBillService;
-import cn.iocoder.yudao.module.oa.service.car.CarReturnBillService;
+import cn.iocoder.yudao.module.oa.service.FlowBillService;
+import cn.iocoder.yudao.module.oa.service.FlowBillServiceFactory;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,10 +21,7 @@ import org.springframework.stereotype.Component;
 public class OaMqNotificationConsumer extends AbstractRedisStreamMessageListener<OaProcessInstanceStatusMessage> {
 
     @Resource
-    private CarApplyBillService carApplyBillService;
-
-    @Resource
-    private CarReturnBillService carReturnBillService;
+    private FlowBillServiceFactory flowBillServiceFactory;
 
     @Override
     public void onMessage(OaProcessInstanceStatusMessage message) {
@@ -68,27 +65,17 @@ public class OaMqNotificationConsumer extends AbstractRedisStreamMessageListener
                 processDefinitionKey, businessKey, status);
         
         try {
-            switch (processDefinitionKey) {
-                case "oa_car_apply_bill":
-                    // 更新用车申请单状态
-                    Long carApplyBillId = Long.parseLong(businessKey);
-                    carApplyBillService.updateProcessStatus(carApplyBillId, status);
-                    log.info("[handleOaProcessNotification] 用车申请单状态更新成功，id: {}, status: {}", carApplyBillId, status);
-                    break;
-                case "oa_car_return_bill":
-                    // 更新还车申请单状态
-                    Long carReturnBillId = Long.parseLong(businessKey);
-                    carReturnBillService.updateProcessStatus(carReturnBillId, status);
-                    log.info("[handleOaProcessNotification] 还车申请单状态更新成功，id: {}, status: {}", carReturnBillId, status);
-                    break;
-                // 可以在这里添加其他OA流程的处理
-                // case "oa_leave":
-                //     handleLeaveProcess(businessKey, status);
-                //     break;
+            // 通过工厂获取对应的服务实现
+            FlowBillService flowBillService = flowBillServiceFactory.getServiceByProcessKey(processDefinitionKey);
+            
+            // 统一调用接口方法
+            flowBillService.updateProcessStatus(businessKey, status);
+            
+            log.info("[handleOaProcessNotification] 流程状态更新成功，processDefinitionKey: {}, businessKey: {}, status: {}", 
+                    processDefinitionKey, businessKey, status);
                     
-                default:
-                    log.debug("[handleOaProcessNotification] 未知的OA流程类型: {}", processDefinitionKey);
-            }
+        } catch (IllegalArgumentException e) {
+            log.debug("[handleOaProcessNotification] 未知的OA流程类型: {}", processDefinitionKey);
         } catch (Exception e) {
             log.error("[handleOaProcessNotification] 处理OA流程状态变化失败", e);
             throw e; // 重新抛出异常，触发重试机制

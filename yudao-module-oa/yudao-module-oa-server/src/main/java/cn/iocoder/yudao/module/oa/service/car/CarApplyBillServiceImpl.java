@@ -21,6 +21,8 @@ import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 
 import cn.iocoder.yudao.module.oa.dal.mysql.car.CarApplyBillMapper;
 
+import cn.iocoder.yudao.module.oa.service.FlowBillService;
+
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants.OA_LEAVE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
@@ -33,7 +35,7 @@ import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
 @Slf4j
 @Service
 @Validated
-public class CarApplyBillServiceImpl implements CarApplyBillService {
+public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillService {
 
     @Resource
     private CarApplyBillMapper carApplyBillMapper;
@@ -158,6 +160,19 @@ public class CarApplyBillServiceImpl implements CarApplyBillService {
         carApplyBillMapper.updateById(updateObj);
         
         log.info("[updateProcessStatus] 用车申请单流程状态更新成功，id: {}, status: {}", id, status);
+    }
+
+    // ==================== FlowBillService 接口实现 ====================
+
+    @Override
+    public OaBillTypeEnum getSupportedBillType() {
+        return OaBillTypeEnum.OA_CAR_APPLY_BILL;
+    }
+
+    @Override
+    public void updateProcessStatus(String businessKey, Integer status) {
+        Long id = Long.parseLong(businessKey);
+        updateProcessStatus(id, status);
     }
 
 
