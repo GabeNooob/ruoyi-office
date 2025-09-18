@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusMessage;
 import cn.iocoder.yudao.module.oa.enums.ApiConstants;
+import cn.iocoder.yudao.module.oa.service.FlowBillService;
+import cn.iocoder.yudao.module.oa.service.FlowBillServiceFactory;
 import cn.iocoder.yudao.module.oa.service.car.CarApplyBillService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +32,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 public class OaFeignNotificationController {
 
     @Resource
-    private CarApplyBillService carApplyBillService;
+    private FlowBillServiceFactory flowBillServiceFactory;
 
     @PostMapping("/status-change")
     @Operation(summary = "接收流程状态变化回调")
@@ -58,23 +60,19 @@ public class OaFeignNotificationController {
             log.info("[processStatusChange] 处理OA流程状态变化，processDefinitionKey: {}, businessKey: {}, status: {}", 
                     processDefinitionKey, businessKey, status);
             
-            // 根据流程类型分发处理
-            switch (processDefinitionKey) {
-                case "oa_car_apply_bill":
-                    // 更新用车申请单状态
-                    Long carApplyBillId = Long.parseLong(businessKey);
-                    carApplyBillService.updateProcessStatus(carApplyBillId, status);
-                    log.info("[processStatusChange] 用车申请单状态更新成功，id: {}, status: {}", carApplyBillId, status);
-                    break;
-                    
-                // 可以在这里添加其他OA流程的处理
-                // case "oa_leave":
-                //     handleLeaveProcess(businessKey, status);
-                //     break;
-                    
-                default:
-                    log.warn("[processStatusChange] 未知的OA流程类型: {}", processDefinitionKey);
-                    return CommonResult.error(404, "未知的流程类型");
+            try {
+                // 通过工厂获取对应的服务实现
+                FlowBillService flowBillService = flowBillServiceFactory.getServiceByProcessKey(processDefinitionKey);
+                
+                // 统一调用接口方法
+                flowBillService.updateProcessStatus(businessKey, status);
+                
+                log.info("[processStatusChange] 流程状态更新成功，processDefinitionKey: {}, businessKey: {}, status: {}", 
+                        processDefinitionKey, businessKey, status);
+                        
+            } catch (IllegalArgumentException e) {
+                log.warn("[processStatusChange] 未知的OA流程类型: {}", processDefinitionKey);
+                return CommonResult.error(404, "未知的流程类型: " + processDefinitionKey);
             }
             
             return success(true);
