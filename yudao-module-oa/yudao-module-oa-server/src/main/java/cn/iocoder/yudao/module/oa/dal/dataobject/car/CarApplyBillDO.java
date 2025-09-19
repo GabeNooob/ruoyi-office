@@ -106,7 +106,7 @@ public class CarApplyBillDO extends BaseDO {
      */
     private String companyName;
     /**
-     * 是否还车
+     * 还车状态
      */
     private Integer returnStatus;
 

@@ -13,19 +13,24 @@ import lombok.Getter;
 public enum CarReturnStatusEnum {
 
     /**
-     * 未还车
+     * 未生效
      */
-    NOT_RETURNED(0, "未还车"),
+    NOT_EFFECTIVE(0, "未生效"),
+    
+    /**
+     * 待还车
+     */
+    PENDING_RETURN(1, "待还车"),
     
     /**
      * 还车中
      */
-    RETURNING(1, "还车中"),
+    RETURNING(2, "还车中"),
     
     /**
      * 已还车
      */
-    RETURNED(2, "已还车");
+    RETURNED(3, "已还车");
 
     /**
      * 状态值

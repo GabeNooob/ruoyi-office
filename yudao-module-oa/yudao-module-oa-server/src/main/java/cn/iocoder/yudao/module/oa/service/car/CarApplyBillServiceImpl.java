@@ -28,6 +28,8 @@ import cn.iocoder.yudao.module.oa.enums.CarReturnStatusEnum;
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants.OA_LEAVE_NOT_EXISTS;
 import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
+import static cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum.RUNNING;
+import static cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum.APPROVE;
 
 /**
  * 用车申请单 Service 实现类
@@ -69,6 +71,9 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
         if(StringUtils.isBlank(saveReqVO.getBillCode())){
             saveReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.OA, OaBillTypeEnum.OA_CAR_APPLY_BILL));
         }
+
+        // 校验时间冲突
+        validateTimeConflict(saveReqVO);
 
         // 保存或更新
         CarApplyBillDO carApplyBill = BeanUtils.toBean(saveReqVO, CarApplyBillDO.class)
@@ -168,6 +173,12 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
         CarApplyBillDO updateObj = new CarApplyBillDO();
         updateObj.setId(id);
         updateObj.setProcessStatus(status);
+        
+        // 如果审批通过，设置还车状态为待还车
+        if (APPROVE.getStatus().equals(status)) {
+            updateObj.setReturnStatus(CarReturnStatusEnum.PENDING_RETURN.getStatus());
+        }
+        
         carApplyBillMapper.updateById(updateObj);
 
         log.info("[updateProcessStatus] 用车申请单流程状态更新成功，id: {}, status: {}", id, status);
@@ -203,7 +214,75 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
     
     @Override
     public void markAsNotReturned(Long id) {
-        updateReturnStatus(id, CarReturnStatusEnum.NOT_RETURNED.getStatus());
+        updateReturnStatus(id, CarReturnStatusEnum.NOT_EFFECTIVE.getStatus());
+    }
+
+    /**
+     * 校验车辆使用时间冲突
+     *
+     * @param saveReqVO 保存请求VO
+     */
+    private void validateTimeConflict(CarApplyBillSaveReqVO saveReqVO) {
+        if (saveReqVO.getCarId() == null || saveReqVO.getGoTime() == null || saveReqVO.getReturnTime() == null) {
+            return; // 如果必要字段为空，跳过校验
+        }
+
+        // 校验出车时间不能晚于回车时间
+        if (saveReqVO.getGoTime().isAfter(saveReqVO.getReturnTime())) {
+            throw exception(CAR_TIME_CONFLICT);
+        }
+
+        // 查询同一车辆在相同时间段内的申请单
+        List<CarApplyBillDO> conflictBills = carApplyBillMapper.selectList(
+                new LambdaQueryWrapperX<CarApplyBillDO>()
+                        .eq(CarApplyBillDO::getCarId, saveReqVO.getCarId())
+                        .ne(saveReqVO.getId() != null, CarApplyBillDO::getId, saveReqVO.getId()) // 排除当前编辑的记录
+                        .and(wrapper -> wrapper
+                                // 场景1：存在审批中的申请单且时间重合
+                                .and(subWrapper -> subWrapper
+                                        .eq(CarApplyBillDO::getProcessStatus, RUNNING.getStatus())
+                                        .and(timeWrapper -> timeWrapper
+                                                .and(timeWrapper2 -> timeWrapper2
+                                                        .le(CarApplyBillDO::getGoTime, saveReqVO.getGoTime())
+                                                        .ge(CarApplyBillDO::getReturnTime, saveReqVO.getGoTime())
+                                                )
+                                                .or(timeWrapper3 -> timeWrapper3
+                                                        .le(CarApplyBillDO::getGoTime, saveReqVO.getReturnTime())
+                                                        .ge(CarApplyBillDO::getReturnTime, saveReqVO.getReturnTime())
+                                                )
+                                                .or(timeWrapper4 -> timeWrapper4
+                                                        .ge(CarApplyBillDO::getGoTime, saveReqVO.getGoTime())
+                                                        .le(CarApplyBillDO::getReturnTime, saveReqVO.getReturnTime())
+                                                )
+                                        )
+                                )
+                                // 场景2：存在审批通过且还车状态为待还车或还车中的申请单且时间重合
+                                .or(subWrapper -> subWrapper
+                                        .eq(CarApplyBillDO::getProcessStatus, APPROVE.getStatus())
+                                        .in(CarApplyBillDO::getReturnStatus, 
+                                                CarReturnStatusEnum.PENDING_RETURN.getStatus(), 
+                                                CarReturnStatusEnum.RETURNING.getStatus())
+                                        .and(timeWrapper -> timeWrapper
+                                                .and(timeWrapper2 -> timeWrapper2
+                                                        .le(CarApplyBillDO::getGoTime, saveReqVO.getGoTime())
+                                                        .ge(CarApplyBillDO::getReturnTime, saveReqVO.getGoTime())
+                                                )
+                                                .or(timeWrapper3 -> timeWrapper3
+                                                        .le(CarApplyBillDO::getGoTime, saveReqVO.getReturnTime())
+                                                        .ge(CarApplyBillDO::getReturnTime, saveReqVO.getReturnTime())
+                                                )
+                                                .or(timeWrapper4 -> timeWrapper4
+                                                        .ge(CarApplyBillDO::getGoTime, saveReqVO.getGoTime())
+                                                        .le(CarApplyBillDO::getReturnTime, saveReqVO.getReturnTime())
+                                                )
+                                        )
+                                )
+                        )
+        );
+
+        if (!conflictBills.isEmpty()) {
+            throw exception(CAR_TIME_CONFLICT);
+        }
     }
 
 }
