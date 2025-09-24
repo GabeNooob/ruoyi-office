@@ -12,9 +12,11 @@ import cn.iocoder.yudao.module.bpm.controller.admin.base.user.UserSimpleBaseVO;
 import cn.iocoder.yudao.module.bpm.controller.admin.task.vo.task.BpmTaskRespVO;
 import cn.iocoder.yudao.module.bpm.dal.dataobject.definition.BpmFormDO;
 import cn.iocoder.yudao.module.bpm.dal.dataobject.definition.BpmProcessDefinitionInfoDO;
+import cn.iocoder.yudao.module.bpm.enums.definition.BpmModelFormTypeEnum;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.util.FlowableUtils;
 import cn.iocoder.yudao.module.bpm.service.message.dto.BpmMessageSendWhenTaskCreatedReqDTO;
+import cn.iocoder.yudao.module.bpm.util.BpmProcessVariableUtils;
 import cn.iocoder.yudao.module.system.api.dept.dto.DeptRespDTO;
 import cn.iocoder.yudao.module.system.api.user.dto.AdminUserRespDTO;
 import org.flowable.engine.history.HistoricProcessInstance;
@@ -25,6 +27,7 @@ import org.flowable.task.service.impl.persistence.entity.TaskEntityImpl;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -55,9 +58,9 @@ public interface BpmTaskConvert {
             AdminUserRespDTO startUser = userMap.get(NumberUtils.parseLong(processInstance.getStartUserId()));
             taskVO.getProcessInstance().setStartUser(BeanUtils.toBean(startUser, UserSimpleBaseVO.class));
             taskVO.getProcessInstance().setCreateTime(DateUtils.of(processInstance.getStartTime()));
-            // 摘要
-            taskVO.getProcessInstance().setSummary(FlowableUtils.getSummary(processDefinitionInfoMap.get(processInstance.getProcessDefinitionId()),
-                    processInstance.getProcessVariables()));
+
+            // 摘要和单号
+            makeProcessInstanceData(processDefinitionInfoMap, taskVO, processInstance.getProcessVariables(), processInstance.getProcessDefinitionId());
         });
     }
 
@@ -81,13 +84,32 @@ public interface BpmTaskConvert {
                 AdminUserRespDTO startUser = userMap.get(NumberUtils.parseLong(processInstance.getStartUserId()));
                 taskVO.setProcessInstance(BeanUtils.toBean(processInstance, BpmTaskRespVO.ProcessInstance.class));
                 taskVO.getProcessInstance().setStartUser(BeanUtils.toBean(startUser, UserSimpleBaseVO.class));
-                // 摘要
-                taskVO.getProcessInstance().setSummary(FlowableUtils.getSummary(processDefinitionInfoMap.get(processInstance.getProcessDefinitionId()),
-                        processInstance.getProcessVariables()));
+                // 摘要和单号
+                makeProcessInstanceData(processDefinitionInfoMap, taskVO, processInstance.getProcessVariables(), processInstance.getProcessDefinitionId());
             }
             return taskVO;
         });
         return new PageResult<>(taskVOList, pageResult.getTotal());
+    }
+
+    /**
+     * 组织流程实例数据
+     * @param processDefinitionInfoMap
+     * @param taskVO
+     * @param processVariables
+     * @param processDefinitionId
+     */
+    private void makeProcessInstanceData(Map<String, BpmProcessDefinitionInfoDO> processDefinitionInfoMap, BpmTaskRespVO taskVO, Map<String, Object> processVariables, String processDefinitionId) {
+        BpmProcessDefinitionInfoDO bpmProcessDefinitionInfoDO = processDefinitionInfoMap.get(processDefinitionId);
+        if (BpmModelFormTypeEnum.NORMAL.getType().equals(bpmProcessDefinitionInfoDO.getFormType())) {
+            // 如果是流程表单
+            taskVO.getProcessInstance().setSummary(FlowableUtils.getSummary(bpmProcessDefinitionInfoDO,
+                    processVariables));
+        }else {
+            // 如果是业务表单
+            taskVO.getProcessInstance().setSummary(Collections.singletonList(new KeyValue<>("", BpmProcessVariableUtils.getCause(processVariables))));
+            taskVO.getProcessInstance().setBillCode(BpmProcessVariableUtils.getBillCode(processVariables));
+        }
     }
 
     default List<BpmTaskRespVO> buildTaskListByProcessInstanceId(List<HistoricTaskInstance> taskList,

@@ -24,6 +24,7 @@ import cn.iocoder.yudao.module.oa.dal.mysql.car.CarApplyBillMapper;
 import cn.iocoder.yudao.framework.common.service.FlowBillService;
 
 import cn.iocoder.yudao.module.oa.enums.CarReturnStatusEnum;
+import cn.iocoder.yudao.module.bpm.util.BpmProcessVariableUtils;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants.OA_LEAVE_NOT_EXISTS;
@@ -81,7 +82,7 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
         carApplyBillMapper.insertOrUpdate(carApplyBill);
 
         // 发起 BPM 流程
-        Map<String, Object> processInstanceVariables = new HashMap<>();
+        Map<String, Object> processInstanceVariables = BpmProcessVariableUtils.buildBillVariables(saveReqVO);
         String processInstanceId = processInstanceApi.createProcessInstance(Long.valueOf(saveReqVO.getCreator()),
                 new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(OaBillTypeEnum.OA_CAR_APPLY_BILL.getProcessDefinitionKey())
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(carApplyBill.getId()))

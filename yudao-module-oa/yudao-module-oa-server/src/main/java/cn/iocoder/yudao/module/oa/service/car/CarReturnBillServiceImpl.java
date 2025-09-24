@@ -22,6 +22,7 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 
 import cn.iocoder.yudao.module.oa.dal.mysql.car.CarReturnBillMapper;
+import cn.iocoder.yudao.module.bpm.util.BpmProcessVariableUtils;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
@@ -78,7 +79,12 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
         carReturnBillMapper.insertOrUpdate(carReturnBill);
 
         // 发起 BPM 流程
-        Map<String, Object> processInstanceVariables = new HashMap<>();
+        // 还车申请单使用remark作为cause
+        Map<String, Object> additionalVariables = new HashMap<>();
+        additionalVariables.put("cause", saveReqVO.getRemark()); // 显式设置cause字段
+        
+        Map<String, Object> processInstanceVariables = BpmProcessVariableUtils
+                .buildBillVariables(saveReqVO, additionalVariables);
         String processInstanceId = processInstanceApi.createProcessInstance(Long.valueOf(saveReqVO.getCreator()),
                 new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(OaBillTypeEnum.OA_CAR_RETURN_BILL.getProcessDefinitionKey())
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(carReturnBill.getId()))
