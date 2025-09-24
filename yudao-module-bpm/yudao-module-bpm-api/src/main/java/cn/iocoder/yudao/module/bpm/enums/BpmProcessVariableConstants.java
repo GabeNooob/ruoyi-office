@@ -22,4 +22,32 @@ public interface BpmProcessVariableConstants {
      * 用于在待办列表中显示业务事由或说明信息
      */
     String CAUSE = "cause";
+
+    /**
+     * 部门名称变量名
+     * 
+     * 用于在待办列表中显示申请人所属部门名称
+     */
+    String DEPT_NAME = "deptName";
+
+    /**
+     * 部门ID变量名
+     * 
+     * 用于在待办列表中显示申请人所属部门ID
+     */
+    String DEPT_ID = "deptId";
+
+    /**
+     * 公司名称变量名
+     * 
+     * 用于在待办列表中显示申请人所属公司名称
+     */
+    String COMPANY_NAME = "companyName";
+
+    /**
+     * 公司ID变量名
+     * 
+     * 用于在待办列表中显示申请人所属公司ID
+     */
+    String COMPANY_ID = "companyId";
 }

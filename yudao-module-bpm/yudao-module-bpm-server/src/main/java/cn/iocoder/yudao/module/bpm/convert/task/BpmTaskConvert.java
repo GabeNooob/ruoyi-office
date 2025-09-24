@@ -109,6 +109,12 @@ public interface BpmTaskConvert {
             // 如果是业务表单
             taskVO.getProcessInstance().setSummary(Collections.singletonList(new KeyValue<>("", BpmProcessVariableUtils.getCause(processVariables))));
             taskVO.getProcessInstance().setBillCode(BpmProcessVariableUtils.getBillCode(processVariables));
+            
+            // 设置部门和公司信息
+            taskVO.getProcessInstance().setDeptName(BpmProcessVariableUtils.getDeptName(processVariables));
+            taskVO.getProcessInstance().setDeptId(BpmProcessVariableUtils.getDeptId(processVariables));
+            taskVO.getProcessInstance().setCompanyName(BpmProcessVariableUtils.getCompanyName(processVariables));
+            taskVO.getProcessInstance().setCompanyId(BpmProcessVariableUtils.getCompanyId(processVariables));
         }
     }
 
