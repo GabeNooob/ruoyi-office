@@ -25,4 +25,26 @@ public class BpmTaskPageReqVO extends PageParam {
     @DateTimeFormat(pattern = DateUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;
 
+    // ========== 流程变量搜索字段 ==========
+    
+    @Schema(description = "单据类型（流程变量）", example = "OA用车申请单")
+    private String billType;
+
+    @Schema(description = "单据编号（流程变量）", example = "YC20250101001")
+    private String billCode;
+
+    @Schema(description = "单据日期（流程变量）")
+    @DateTimeFormat(pattern = DateUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
+    private LocalDateTime[] billCreateTime;
+
+    @Schema(description = "接收时间（任务创建时间）")
+    @DateTimeFormat(pattern = DateUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
+    private LocalDateTime[] receiveTime;
+
+    @Schema(description = "所属公司ID（流程变量）", example = "1")
+    private Long companyId;
+
+    @Schema(description = "所属部门ID（流程变量）", example = "1")
+    private Long deptId;
+
 }

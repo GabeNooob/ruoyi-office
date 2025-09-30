@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.bpm.controller.admin.definition;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.bpm.controller.admin.definition.vo.process.BpmProcessDefinitionPageReqVO;
@@ -103,10 +104,15 @@ public class BpmProcessDefinitionController {
 
     @GetMapping("/simple-list")
     @Operation(summary = "获得流程定义精简列表", description = "只包含未挂起的流程，主要用于前端的下拉选项")
-    public CommonResult<List<BpmProcessDefinitionRespVO>> getSimpleProcessDefinitionList() {
+    public CommonResult<List<BpmProcessDefinitionRespVO>> getSimpleProcessDefinitionList(
+            @RequestParam(value = "category", required = false) String category) {
         // 只查询未挂起的流程
         List<ProcessDefinition> list = processDefinitionService.getProcessDefinitionListBySuspensionState(
                 SuspensionState.ACTIVE.getStateCode());
+        // 根据流程分类进行过滤（可选）
+        if (StrUtil.isNotBlank(category)) {
+            list.removeIf(definition -> !StrUtil.equals(category, definition.getCategory()));
+        }
         // 拼接 VO 返回，只返回 id、name、key
         return success(convertList(list, definition -> new BpmProcessDefinitionRespVO()
                 .setId(definition.getId()).setName(definition.getName()).setKey(definition.getKey())));

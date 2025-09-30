@@ -17,6 +17,7 @@ import cn.iocoder.yudao.module.bpm.controller.admin.task.vo.task.*;
 import cn.iocoder.yudao.module.bpm.convert.task.BpmTaskConvert;
 import cn.iocoder.yudao.module.bpm.dal.dataobject.definition.BpmFormDO;
 import cn.iocoder.yudao.module.bpm.dal.dataobject.definition.BpmProcessDefinitionInfoDO;
+import cn.iocoder.yudao.module.bpm.enums.BpmProcessVariableConstants;
 import cn.iocoder.yudao.module.bpm.enums.definition.*;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmCommentTypeEnum;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmReasonEnum;
@@ -131,6 +132,41 @@ public class BpmTaskServiceImpl implements BpmTaskService {
             taskQuery.taskCreatedAfter(DateUtils.of(pageVO.getCreateTime()[0]));
             taskQuery.taskCreatedBefore(DateUtils.of(pageVO.getCreateTime()[1]));
         }
+        
+        // ========== 流程变量/业务搜索条件 ==========
+        // billType 语义为“单据类型”，即流程定义 key
+        if (StrUtil.isNotBlank(pageVO.getBillType())) {
+            taskQuery.processDefinitionKey(pageVO.getBillType());
+        }
+        if (StrUtil.isNotBlank(pageVO.getBillCode())) {
+            taskQuery.processVariableValueLike(BpmProcessVariableConstants.BILL_CODE, "%" + pageVO.getBillCode() + "%");
+        }
+        if (ArrayUtil.isNotEmpty(pageVO.getBillCreateTime())) {
+            // 按“单据日期”过滤，即流程实例开始时间范围
+            // 通过 HistoricProcessInstance 获取在时间范围内启动的实例，再限定任务查询
+            List<String> processInstanceIds = convertList(
+                    historyService.createHistoricProcessInstanceQuery()
+                            .processInstanceTenantId(FlowableUtils.getTenantId())
+                            .startedAfter(DateUtils.of(pageVO.getBillCreateTime()[0]))
+                            .startedBefore(DateUtils.of(pageVO.getBillCreateTime()[1]))
+                            .list(),
+                    org.flowable.engine.history.HistoricProcessInstance::getId);
+            if (CollUtil.isEmpty(processInstanceIds)) {
+                return PageResult.empty();
+            }
+            taskQuery.processInstanceIdIn(processInstanceIds);
+        }
+        if (ArrayUtil.isNotEmpty(pageVO.getReceiveTime())) {
+            taskQuery.taskCreatedAfter(DateUtils.of(pageVO.getReceiveTime()[0]));
+            taskQuery.taskCreatedBefore(DateUtils.of(pageVO.getReceiveTime()[1]));
+        }
+        if (pageVO.getCompanyId() != null) {
+            taskQuery.processVariableValueEquals(BpmProcessVariableConstants.COMPANY_ID, pageVO.getCompanyId());
+        }
+        if (pageVO.getDeptId() != null) {
+            taskQuery.processVariableValueEquals(BpmProcessVariableConstants.DEPT_ID, pageVO.getDeptId());
+        }
+        
         long count = taskQuery.count();
         if (count == 0) {
             return PageResult.empty();
