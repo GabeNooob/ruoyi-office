@@ -94,10 +94,6 @@ public interface BpmTaskConvert {
 
     /**
      * 组织流程实例数据
-     * @param processDefinitionInfoMap
-     * @param taskVO
-     * @param processVariables
-     * @param processDefinitionId
      */
     private void makeProcessInstanceData(Map<String, BpmProcessDefinitionInfoDO> processDefinitionInfoMap, BpmTaskRespVO taskVO, Map<String, Object> processVariables, String processDefinitionId) {
         BpmProcessDefinitionInfoDO bpmProcessDefinitionInfoDO = processDefinitionInfoMap.get(processDefinitionId);

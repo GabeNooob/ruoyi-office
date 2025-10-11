@@ -5,6 +5,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.*;
+import lombok.extern.slf4j.Slf4j;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.collection.CollectionUtils;
 import cn.iocoder.yudao.framework.common.util.date.DateUtils;
@@ -20,6 +21,7 @@ import cn.iocoder.yudao.module.bpm.controller.admin.task.vo.task.BpmTaskRespVO;
 import cn.iocoder.yudao.module.bpm.convert.task.BpmProcessInstanceConvert;
 import cn.iocoder.yudao.module.bpm.dal.dataobject.definition.BpmProcessDefinitionInfoDO;
 import cn.iocoder.yudao.module.bpm.dal.redis.BpmProcessIdRedisDAO;
+import cn.iocoder.yudao.module.bpm.enums.BpmProcessVariableConstants;
 import cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants;
 import cn.iocoder.yudao.module.bpm.enums.definition.BpmModelTypeEnum;
 import cn.iocoder.yudao.module.bpm.enums.definition.BpmSimpleModelNodeTypeEnum;
@@ -313,6 +315,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
         if (StrUtil.isNotEmpty(pageReqVO.getCategory())) {
             processInstanceQuery.processDefinitionCategory(pageReqVO.getCategory());
         }
+
         if (pageReqVO.getStatus() != null) {
             processInstanceQuery.variableValueEquals(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_STATUS,
                     pageReqVO.getStatus());
@@ -325,6 +328,23 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
             processInstanceQuery.finishedAfter(DateUtils.of(pageReqVO.getEndTime()[0]));
             processInstanceQuery.finishedBefore(DateUtils.of(pageReqVO.getEndTime()[1]));
         }
+
+        // 新增流程参数查询
+        if (StrUtil.isNotEmpty(pageReqVO.getBillType())) {
+            processInstanceQuery.processDefinitionKey(pageReqVO.getBillType());
+        }
+        if (StrUtil.isNotEmpty(pageReqVO.getBillCode())) {
+            processInstanceQuery.variableValueEquals(BpmProcessVariableConstants.BILL_CODE,
+                    pageReqVO.getBillCode());
+        }
+        if (pageReqVO.getCompanyId() != null) {
+            processInstanceQuery.variableValueEquals(BpmProcessVariableConstants.COMPANY_ID,
+                    pageReqVO.getCompanyId());
+        }
+        if (pageReqVO.getDeptId() != null) {
+            processInstanceQuery.variableValueEquals(BpmProcessVariableConstants.DEPT_ID,
+                    pageReqVO.getDeptId());
+        }
         // 表单字段查询
         Map<String, Object> formFieldsParams = JsonUtils.parseObject(pageReqVO.getFormFieldsParams(), Map.class);
         if (CollUtil.isNotEmpty(formFieldsParams)) {
@@ -336,7 +356,6 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
                 processInstanceQuery.variableValueEquals(key, value);
             });
         }
-
         // 2.1 查询数量
         long processInstanceCount = processInstanceQuery.count();
         if (processInstanceCount == 0) {
@@ -777,6 +796,11 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
         // 1.3 校验发起人自选审批人
         validateStartUserSelectAssignees(userId, definition, startUserSelectAssignees, variables);
 
+        // 1.4 如果提供了BusinessKey，删除相同BusinessKey的历史流程实例
+        if (StrUtil.isNotEmpty(businessKey)) {
+            deleteHistoricalProcessInstancesByBusinessKey(businessKey);
+        }
+
         // 2. 创建流程实例
         if (variables == null) {
             variables = new HashMap<>();
@@ -807,6 +831,50 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
         // 3.3 发起流程实例
         ProcessInstance instance = processInstanceBuilder.start();
         return instance.getId();
+    }
+
+    /**
+     * 根据BusinessKey删除历史流程实例
+     * 当重新提交相同单据时，删除之前的历史流程实例，避免重复显示
+     * 
+     * @param businessKey 业务键（通常是单据ID）
+     */
+    private void deleteHistoricalProcessInstancesByBusinessKey(String businessKey) {
+        try {
+            // 查询相同BusinessKey的所有历史流程实例
+            List<HistoricProcessInstance> historicalInstances = historyService.createHistoricProcessInstanceQuery()
+                    .processInstanceTenantId(FlowableUtils.getTenantId())
+                    .processInstanceBusinessKey(businessKey)
+                    .list();
+            
+            if (CollUtil.isEmpty(historicalInstances)) {
+                log.debug("[deleteHistoricalProcessInstancesByBusinessKey] 未找到BusinessKey为 {} 的历史流程实例", businessKey);
+                return;
+            }
+            
+            int deletedCount = 0;
+            for (HistoricProcessInstance historicalInstance : historicalInstances) {
+                try {
+                    // 删除历史流程实例
+                    historyService.deleteHistoricProcessInstance(historicalInstance.getId());
+                    deletedCount++;
+                    
+                    log.debug("[deleteHistoricalProcessInstancesByBusinessKey] 删除历史流程实例: {}, BusinessKey: {}", 
+                             historicalInstance.getId(), businessKey);
+                } catch (Exception e) {
+                    log.warn("[deleteHistoricalProcessInstancesByBusinessKey] 删除历史流程实例失败: {}, BusinessKey: {}, 错误: {}", 
+                            historicalInstance.getId(), businessKey, e.getMessage());
+                }
+            }
+            
+            log.info("[deleteHistoricalProcessInstancesByBusinessKey] 成功删除 {} 个历史流程实例，BusinessKey: {}", 
+                    deletedCount, businessKey);
+            
+        } catch (Exception e) {
+            log.error("[deleteHistoricalProcessInstancesByBusinessKey] 删除历史流程实例失败，BusinessKey: {}, 错误: {}", 
+                     businessKey, e.getMessage(), e);
+            // 不抛出异常，避免影响新流程实例的创建
+        }
     }
 
     private void validateStartUserSelectAssignees(Long userId, ProcessDefinition definition,
