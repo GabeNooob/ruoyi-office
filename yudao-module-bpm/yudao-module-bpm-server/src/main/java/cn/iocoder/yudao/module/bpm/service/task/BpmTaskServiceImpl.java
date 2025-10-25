@@ -73,6 +73,7 @@ import java.util.Objects;
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.*;
 import static cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants.*;
+import static cn.iocoder.yudao.module.bpm.enums.task.BpmReasonEnum.ASSIGN_START_USER_WITHDRAW;
 import static cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmnModelConstants.START_USER_NODE_ID;
 //import static cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmnVariableConstants.*;
 import static cn.iocoder.yudao.module.bpm.framework.flowable.core.util.BpmnModelUtils.*;
@@ -1085,23 +1086,32 @@ public class BpmTaskServiceImpl implements BpmTaskService {
             }
 
             // 为所有任务添加撤回评论和状态更新
-            taskService.addComment(task.getId(), processInstanceId,
-                    BpmCommentTypeEnum.WITHDRAW.getType(),
-                    BpmCommentTypeEnum.WITHDRAW.formatComment("制单人撤回到开始节点: " + reason));
+             taskService.addComment(task.getId(), processInstanceId,
+                     BpmCommentTypeEnum.WITHDRAW.getType(),
+                     BpmCommentTypeEnum.WITHDRAW.formatComment(ASSIGN_START_USER_WITHDRAW.getReason() + ":" + reason));
 
-            // 更新任务状态为撤回
-            updateTaskStatusAndReason(task.getId(), BpmTaskStatusEnum.WITHDRAW.getStatus(), reason);
+             // 更新任务状态为撤回
+             updateTaskStatusAndReason(task.getId(), BpmTaskStatusEnum.WITHDRAW.getStatus(), ASSIGN_START_USER_WITHDRAW.getReason() + ":" + reason);
         });
 
-        // 3. 设置撤回相关的流程变量
+        // 3. 构建需要预测的任务流程变量（关键修复）
+        // 获取第一个当前任务作为参考
+        Task currentTask = taskList.get(0);
+        Set<String> needSimulateTaskDefinitionKeys = getNeedSimulateTaskDefinitionKeysForWithdraw(bpmnModel, currentTask, startEvent);
+        Map<String, Object> needSimulateVariables = convertMap(needSimulateTaskDefinitionKeys,
+                key -> StrUtil.concat(false, BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_PREFIX, key), item -> Boolean.TRUE);
+
+        // 4. 设置撤回相关的流程变量
         updateWithdrawVariables(processInstanceId, reason);
 
-        // 4. 使用退回逻辑的核心方法：moveExecutionsToSingleActivityId
+        // 5. 使用退回逻辑的核心方法：moveExecutionsToSingleActivityId
         // 这是退回逻辑的核心，比直接移动活动更稳定
         if (CollUtil.isNotEmpty(runExecutionIds)) {
             runtimeService.createChangeActivityStateBuilder()
                     .processInstanceId(processInstanceId)
                     .moveExecutionsToSingleActivityId(runExecutionIds, START_USER_NODE_ID)
+                    // 设置需要预测的任务流程变量，用于辅助预测（关键修复）
+                    .processVariables(needSimulateVariables)
                     // 设置开始节点的退回标记，防止自动通过
                     // 注意：这里使用START_USER_NODE_ID而不是startEvent.getId()，因为任务检查时使用的是START_USER_NODE_ID
                     .localVariable(START_USER_NODE_ID,
@@ -1109,8 +1119,8 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                             Boolean.TRUE)
                     .changeState();
 
-            log.info("[withdrawToStartEventByReturnLogic] 使用退回逻辑成功撤回到开始节点: processInstanceId={}, startEventId={}, returnFlagKey={}", 
-                    processInstanceId, startEvent.getId(), String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, START_USER_NODE_ID));
+            log.info("[withdrawToStartEventByReturnLogic] 使用退回逻辑成功撤回到开始节点: processInstanceId={}, startEventId={}, returnFlagKey={}, simulateVariables={}", 
+                    processInstanceId, startEvent.getId(), String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, START_USER_NODE_ID), needSimulateVariables.keySet());
         } else {
             throw new RuntimeException("没有找到有效的执行ID");
         }
@@ -1165,6 +1175,32 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                 taskDefinitionKeys.add(item.getTaskDefinitionKey());
             }
         });
+        return taskDefinitionKeys;
+    }
+
+    /**
+     * 获取撤回到开始节点时需要预测的任务定义键
+     */
+    private Set<String> getNeedSimulateTaskDefinitionKeysForWithdraw(BpmnModel bpmnModel, Task currentTask, StartEvent startEvent) {
+        // 1. 获取需要预测的任务的 definition key。因为当前任务还没完成，也需要预测
+        Set<String> taskDefinitionKeys = CollUtil.newHashSet(currentTask.getTaskDefinitionKey());
+
+        // 2. 获取所有已结束的任务
+        List<HistoricTaskInstance> endTaskList = CollectionUtils.filterList(
+                getTaskListByProcessInstanceId(currentTask.getProcessInstanceId(), Boolean.FALSE),
+                item -> item.getEndTime() != null);
+
+        // 3. 对于撤回到开始节点，所有已结束的任务都需要预测，因为它们都在开始节点之后
+        endTaskList.forEach(item -> {
+            taskDefinitionKeys.add(item.getTaskDefinitionKey());
+        });
+
+        // 4. 添加开始节点的任务定义键（如果存在）
+        taskDefinitionKeys.add(START_USER_NODE_ID);
+
+        log.debug("[getNeedSimulateTaskDefinitionKeysForWithdraw] 撤回预测任务键: processInstanceId={}, taskDefinitionKeys={}", 
+                currentTask.getProcessInstanceId(), taskDefinitionKeys);
+
         return taskDefinitionKeys;
     }
 
