@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.*;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.collection.CollectionUtils;
@@ -20,6 +21,7 @@ import cn.iocoder.yudao.module.bpm.dal.dataobject.definition.BpmFormDO;
 import cn.iocoder.yudao.module.bpm.dal.dataobject.definition.BpmProcessDefinitionInfoDO;
 import cn.iocoder.yudao.module.bpm.enums.BpmProcessVariableConstants;
 import cn.iocoder.yudao.module.bpm.enums.definition.*;
+import cn.iocoder.yudao.module.bpm.enums.task.BpmProcessInstanceStatusEnum;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmCommentTypeEnum;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmReasonEnum;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskSignTypeEnum;
@@ -42,6 +44,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.*;
+import org.flowable.bpmn.model.Process;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.ManagementService;
 import org.flowable.engine.RuntimeService;
@@ -65,6 +68,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import java.util.*;
 import java.util.stream.Stream;
+import java.util.Objects;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.*;
@@ -994,6 +998,149 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                 .changeState();
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void withdrawProcessToStart(Long userId, String processInstanceId, String reason) {
+        try {
+            // 1. 验证流程实例
+            ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+                    .processInstanceId(processInstanceId)
+                    .singleResult();
+            if (instance == null) {
+                throw exception(PROCESS_INSTANCE_NOT_EXISTS);
+            }
+
+            // 2. 验证权限（只能撤回自己的流程）
+            if (!Objects.equals(instance.getStartUserId(), String.valueOf(userId))) {
+                throw exception(PROCESS_INSTANCE_CANCEL_FAIL_NOT_SELF);
+            }
+
+            // 3. 验证流程定义是否允许撤回
+            BpmProcessDefinitionInfoDO processDefinitionInfo = bpmProcessDefinitionService
+                    .getProcessDefinitionInfo(instance.getProcessDefinitionId());
+            Assert.notNull(processDefinitionInfo, "流程定义不存在");
+            if (processDefinitionInfo.getAllowWithdrawTask() != null
+                    && BooleanUtil.isFalse(processDefinitionInfo.getAllowWithdrawTask())) {
+                throw exception(TASK_WITHDRAW_FAIL_NOT_ALLOW);
+            }
+
+            // 4. 子流程不允许撤回
+            if (StrUtil.isNotBlank(instance.getSuperExecutionId())) {
+                throw exception(PROCESS_INSTANCE_CANCEL_CHILD_FAIL_NOT_ALLOW);
+            }
+
+            // 5. 获取流程模型和开始节点
+            BpmnModel bpmnModel = modelService.getBpmnModelByDefinitionId(instance.getProcessDefinitionId());
+            StartEvent startEvent = findStartEvent(bpmnModel);
+            if (startEvent == null) {
+                throw new RuntimeException("无法找到开始节点");
+            }
+
+            // 6. 基于退回逻辑实现撤回到开始节点
+            withdrawToStartEventByReturnLogic(userId, instance, bpmnModel, startEvent, reason);
+
+            log.info("[withdrawProcessToStart] 撤回到开始节点成功: processInstanceId={}, reason={}",
+                    processInstanceId, reason);
+
+        } catch (Exception e) {
+            log.error("[withdrawProcessToStart] 撤回到开始节点失败: processInstanceId={}", processInstanceId, e);
+            throw new RuntimeException("撤回失败: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 查找流程模型中的开始节点
+     */
+    private StartEvent findStartEvent(BpmnModel bpmnModel) {
+        Process process = bpmnModel.getMainProcess();
+        return process.getFlowElements().stream()
+                .filter(element -> element instanceof StartEvent)
+                .map(element -> (StartEvent) element)
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * 基于退回逻辑实现撤回到开始节点
+     */
+    private void withdrawToStartEventByReturnLogic(Long userId, ProcessInstance instance, BpmnModel bpmnModel,
+                                                  StartEvent startEvent, String reason) {
+        String processInstanceId = instance.getProcessInstanceId();
+
+        // 1. 获取所有正在运行的任务
+        List<Task> taskList = taskService.createTaskQuery()
+                .processInstanceId(processInstanceId)
+                .active()
+                .list();
+
+        if (CollUtil.isEmpty(taskList)) {
+            throw new RuntimeException("没有找到正在运行的任务");
+        }
+
+        // 2. 获取所有需要撤回的任务的执行ID
+        List<String> runExecutionIds = new ArrayList<>();
+        taskList.forEach(task -> {
+            if (task.getExecutionId() != null) {
+                runExecutionIds.add(task.getExecutionId());
+            }
+
+            // 为所有任务添加撤回评论和状态更新
+            taskService.addComment(task.getId(), processInstanceId,
+                    BpmCommentTypeEnum.WITHDRAW.getType(),
+                    BpmCommentTypeEnum.WITHDRAW.formatComment("制单人撤回到开始节点: " + reason));
+
+            // 更新任务状态为撤回
+            updateTaskStatusAndReason(task.getId(), BpmTaskStatusEnum.WITHDRAW.getStatus(), reason);
+        });
+
+        // 3. 设置撤回相关的流程变量
+        updateWithdrawVariables(processInstanceId, reason);
+
+        // 4. 使用退回逻辑的核心方法：moveExecutionsToSingleActivityId
+        // 这是退回逻辑的核心，比直接移动活动更稳定
+        if (CollUtil.isNotEmpty(runExecutionIds)) {
+            runtimeService.createChangeActivityStateBuilder()
+                    .processInstanceId(processInstanceId)
+                    .moveExecutionsToSingleActivityId(runExecutionIds, START_USER_NODE_ID)
+                    // 设置开始节点的退回标记，防止自动通过
+                    // 注意：这里使用START_USER_NODE_ID而不是startEvent.getId()，因为任务检查时使用的是START_USER_NODE_ID
+                    .localVariable(START_USER_NODE_ID,
+                            String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, START_USER_NODE_ID),
+                            Boolean.TRUE)
+                    .changeState();
+
+            log.info("[withdrawToStartEventByReturnLogic] 使用退回逻辑成功撤回到开始节点: processInstanceId={}, startEventId={}, returnFlagKey={}", 
+                    processInstanceId, startEvent.getId(), String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, START_USER_NODE_ID));
+        } else {
+            throw new RuntimeException("没有找到有效的执行ID");
+        }
+    }
+
+    /**
+     * 更新撤回相关变量
+     */
+    private void updateWithdrawVariables(String processInstanceId, String reason) {
+        // 获取当前撤回次数
+        Object countObj = runtimeService.getVariable(processInstanceId,
+                BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_WITHDRAW_COUNT);
+        int count = countObj != null ? (Integer) countObj : 0;
+
+        // 设置撤回相关变量
+        runtimeService.setVariable(processInstanceId,
+                BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_WITHDRAW_TIME, DateUtil.now());
+        runtimeService.setVariable(processInstanceId,
+                BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_WITHDRAW_REASON, reason);
+        runtimeService.setVariable(processInstanceId,
+                BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_WITHDRAW_COUNT, count + 1);
+        runtimeService.setVariable(processInstanceId,
+                BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_STATUS, BpmProcessInstanceStatusEnum.NOT_START.getStatus());
+
+        // 清除之前的结束原因
+        runtimeService.removeVariable(processInstanceId, BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_REASON);
+
+        log.info("[updateWithdrawVariables] 更新撤回变量: processInstanceId={}, count={}", processInstanceId, count + 1);
+    }
+
     private Set<String> getNeedSimulateTaskDefinitionKeys(BpmnModel bpmnModel, Task currentTask, FlowElement targetElement) {
         // 1. 获取需要预测的任务的 definition key。因为当前任务还没完成，也需要预测
         Set<String> taskDefinitionKeys = CollUtil.newHashSet(currentTask.getTaskDefinitionKey());
@@ -1533,8 +1680,10 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                 }
                 FlowElement userTaskElement = BpmnModelUtils.getFlowElementById(bpmnModel, task.getTaskDefinitionKey());
                 // 判断是否为退回或者驳回：如果是退回或者驳回不走这个策略（使用 local variable）
-                Boolean returnTaskFlag = runtimeService.getVariableLocal(task.getExecutionId(),
-                        String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, task.getTaskDefinitionKey()), Boolean.class);
+                String returnFlagKey = String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, task.getTaskDefinitionKey());
+                Boolean returnTaskFlag = runtimeService.getVariableLocal(task.getExecutionId(), returnFlagKey, Boolean.class);
+                log.debug("[processTaskAssigned] 检查RETURN_FLAG: taskId={}, taskDefinitionKey={}, returnFlagKey={}, returnTaskFlag={}", 
+                        task.getId(), task.getTaskDefinitionKey(), returnFlagKey, returnTaskFlag);
                 Boolean skipStartUserNodeFlag = Convert.toBool(runtimeService.getVariable(processInstance.getProcessInstanceId(),
                         BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_SKIP_START_USER_NODE, String.class));
                 if (userTaskElement.getId().equals(START_USER_NODE_ID)

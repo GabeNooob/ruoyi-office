@@ -87,6 +87,19 @@ public class BpmnVariableConstants {
     public static final String PROCESS_DEFINITION_NAME = "PROCESS_DEFINITION_NAME";
 
     /**
+     * 流程实例的变量 - 撤回重提时间
+     */
+    public static final String PROCESS_INSTANCE_VARIABLE_WITHDRAW_TIME = "WITHDRAW_TIME";
+    /**
+     * 流程实例的变量 - 撤回重提原因
+     */
+    public static final String PROCESS_INSTANCE_VARIABLE_WITHDRAW_REASON = "WITHDRAW_REASON";
+    /**
+     * 流程实例的变量 - 撤回重提次数
+     */
+    public static final String PROCESS_INSTANCE_VARIABLE_WITHDRAW_COUNT = "WITHDRAW_COUNT";
+
+    /**
      * 任务的变量 - 状态
      *
      * @see org.flowable.task.api.Task#getTaskLocalVariables()

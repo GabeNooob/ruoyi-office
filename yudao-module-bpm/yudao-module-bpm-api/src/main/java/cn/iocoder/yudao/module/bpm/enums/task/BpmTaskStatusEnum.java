@@ -27,6 +27,8 @@ public enum BpmTaskStatusEnum implements ArrayValuable<Integer> {
 
     RETURN(5, "已退回"),
 
+    WITHDRAW(10, "已撤回"),
+
     /**
      * 使用场景：
      * 1. 任务被向后【加签】时，它在审批通过后，会变成 APPROVING 这个状态，然后等到【加签】出来的任务都被审批后，才会变成 APPROVE 审批通过
@@ -72,7 +74,7 @@ public enum BpmTaskStatusEnum implements ArrayValuable<Integer> {
     public static boolean isEndStatus(Integer status) {
         return ObjectUtils.equalsAny(status,
                 APPROVE.getStatus(), REJECT.getStatus(), CANCEL.getStatus(),
-                RETURN.getStatus(), APPROVING.getStatus());
+                RETURN.getStatus(), APPROVING.getStatus(), WITHDRAW.getStatus());
     }
 
     public static boolean isCancelStatus(Integer status) {

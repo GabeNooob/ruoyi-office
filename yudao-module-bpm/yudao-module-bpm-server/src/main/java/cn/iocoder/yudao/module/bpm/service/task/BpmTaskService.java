@@ -266,6 +266,15 @@ public interface BpmTaskService {
      */
     void withdrawTask(Long userId, String taskId);
 
+    /**
+     * 撤回流程到开始节点（制单人撤回）
+     *
+     * @param userId 用户编号（制单人）
+     * @param processInstanceId 流程实例编号
+     * @param reason 撤回原因
+     */
+    void withdrawProcessToStart(Long userId, String processInstanceId, String reason);
+
     // ========== Event 事件相关方法 ==========
 
     /**

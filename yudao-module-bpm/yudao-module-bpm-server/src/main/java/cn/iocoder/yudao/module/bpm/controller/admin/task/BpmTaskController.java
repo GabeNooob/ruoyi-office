@@ -179,6 +179,14 @@ public class BpmTaskController {
         return success(true);
     }
 
+    @PutMapping("/withdraw-to-start")
+    @Operation(summary = "撤回流程到开始节点", description = "用于制单人撤回流程到开始节点")
+    @PreAuthorize("@ss.hasPermission('bpm:task:update')")
+    public CommonResult<Boolean> withdrawProcessToStart(@Valid @RequestBody BpmTaskWithdrawReqVO reqVO) {
+        taskService.withdrawProcessToStart(getLoginUserId(), reqVO.getProcessInstanceId(), reqVO.getReason());
+        return success(true);
+    }
+
     @PutMapping("/delegate")
     @Operation(summary = "委派任务", description = "用于【流程详情】的【委派】按钮")
     @PreAuthorize("@ss.hasPermission('bpm:task:update')")
