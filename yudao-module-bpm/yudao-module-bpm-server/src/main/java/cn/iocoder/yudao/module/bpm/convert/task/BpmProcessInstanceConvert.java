@@ -10,6 +10,7 @@ import cn.iocoder.yudao.framework.common.util.collection.SetUtils;
 import cn.iocoder.yudao.framework.common.util.date.DateUtils;
 import cn.iocoder.yudao.framework.common.util.number.NumberUtils;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
+import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceInfo;
 import cn.iocoder.yudao.module.bpm.controller.admin.base.user.UserSimpleBaseVO;
 import cn.iocoder.yudao.module.bpm.controller.admin.definition.vo.model.BpmModelMetaInfoVO;
 import cn.iocoder.yudao.module.bpm.controller.admin.definition.vo.model.simple.BpmSimpleModelNodeVO;
@@ -134,8 +135,12 @@ public interface BpmProcessInstanceConvert {
 
     default BpmProcessInstanceStatusEvent buildProcessInstanceStatusEvent(Object source, ProcessInstance instance,
                                                                           Integer status, String reason) {
-        return new BpmProcessInstanceStatusEvent(source).setId(instance.getId()).setStatus(status).setReason(reason)
+        BpmProcessInstanceStatusEvent bpmProcessInstanceStatusEvent = new BpmProcessInstanceStatusEvent(source);
+        BpmProcessInstanceInfo bpmProcessInstanceInfo = new BpmProcessInstanceInfo();
+        bpmProcessInstanceInfo.setProcessInstanceId(instance.getId()).setStatus(status).setReason(reason)
                 .setProcessDefinitionKey(instance.getProcessDefinitionKey()).setBusinessKey(instance.getBusinessKey());
+        bpmProcessInstanceStatusEvent.setProcessInstanceInfo(bpmProcessInstanceInfo);
+        return bpmProcessInstanceStatusEvent;
     }
 
     default BpmMessageSendWhenProcessInstanceApproveReqDTO buildProcessInstanceApproveMessage(ProcessInstance instance) {

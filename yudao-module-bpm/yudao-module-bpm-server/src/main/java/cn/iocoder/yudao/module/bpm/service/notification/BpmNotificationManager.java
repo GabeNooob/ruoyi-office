@@ -1,7 +1,10 @@
 package cn.iocoder.yudao.module.bpm.service.notification;
 
 import cn.hutool.core.util.StrUtil;
+import cn.iocoder.yudao.module.bpm.api.event.BpmEventTypeEnum;
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusMessage;
+import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceInfo;
+import cn.iocoder.yudao.module.bpm.api.event.BpmTaskInfo;
 import cn.iocoder.yudao.module.bpm.api.event.BpmNotificationTypeEnum;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -78,15 +81,46 @@ public class BpmNotificationManager {
         }
 
         // 构建通知消息
-        BpmProcessInstanceStatusMessage message = buildNotificationMessage(processInstance, status);
+        BpmProcessInstanceStatusMessage message = buildProcessInstanceNotificationMessage(processInstance, status);
         
+        // 发送通知
+        sendNotification(message, processInstance.getProcessDefinitionKey());
+    }
+
+    /**
+     * 发送任务事件通知
+     *
+     * @param processInstance 流程实例
+     * @param task           任务信息
+     * @param eventType      事件类型
+     * @param taskResult     任务结果
+     * @param taskReason     任务原因
+     */
+    public void sendTaskEventNotification(ProcessInstance processInstance, org.flowable.task.api.Task task,
+                                          BpmEventTypeEnum eventType, Integer taskResult, String taskReason) {
+        if (processInstance == null || task == null) {
+            log.warn("[sendTaskEventNotification] 流程实例或任务为空，跳过通知");
+            return;
+        }
+
+        // 构建任务事件通知消息
+        BpmProcessInstanceStatusMessage message = buildTaskEventNotificationMessage(processInstance, task, eventType, taskResult, taskReason);
+        
+        // 发送通知
+        sendNotification(message, processInstance.getProcessDefinitionKey());
+    }
+
+    /**
+     * 统一发送通知的方法
+     */
+    private void sendNotification(BpmProcessInstanceStatusMessage message, String processDefinitionKey) {
         // 获取通知方式
-        BpmNotificationTypeEnum notificationType = getNotificationType(processInstance.getProcessDefinitionKey());
+        BpmNotificationTypeEnum notificationType = getNotificationType(processDefinitionKey);
         
         // 获取对应的处理器
         BpmNotificationHandler handler = handlerMap.get(notificationType);
         if (handler == null) {
-            log.warn("[sendProcessStatusNotification] 未找到对应的通知处理器: {}", notificationType);
+            log.warn("[sendNotification] 未找到对应的通知处理器: {}", notificationType);
             return;
         }
 
@@ -97,7 +131,7 @@ public class BpmNotificationManager {
                 try {
                     handler.handleNotification(message);
                 } catch (Exception e) {
-                    log.error("[sendProcessStatusNotification] 异步通知处理失败", e);
+                    log.error("[sendNotification] 异步通知处理失败", e);
                 }
             });
         } else {
@@ -105,24 +139,107 @@ public class BpmNotificationManager {
             try {
                 handler.handleNotification(message);
             } catch (Exception e) {
-                log.error("[sendProcessStatusNotification] 同步通知处理失败", e);
+                log.error("[sendNotification] 同步通知处理失败", e);
             }
         }
     }
 
     /**
-     * 构建通知消息
+     * 构建流程实例通知消息
      */
-    private BpmProcessInstanceStatusMessage buildNotificationMessage(ProcessInstance processInstance, Integer status) {
-        return BpmProcessInstanceStatusMessage.builder()
+    private BpmProcessInstanceStatusMessage buildProcessInstanceNotificationMessage(ProcessInstance processInstance, Integer status) {
+        // 根据状态确定事件类型
+        BpmEventTypeEnum eventType = determineProcessInstanceEventType(status);
+        
+        // 构建流程实例信息
+        BpmProcessInstanceInfo processInstanceInfo = BpmProcessInstanceInfo.builder()
                 .processInstanceId(processInstance.getId())
                 .processDefinitionKey(processInstance.getProcessDefinitionKey())
+                .processDefinitionId(processInstance.getProcessDefinitionId())
                 .status(status)
                 .businessKey(processInstance.getBusinessKey())
                 .startUserId(processInstance.getStartUserId())
+                .processInstanceName(processInstance.getName())
                 .tenantId(processInstance.getTenantId())
+                .suspended(processInstance.isSuspended())
+                .build();
+        
+        return BpmProcessInstanceStatusMessage.builder()
+                .eventType(eventType)
+                .processInstanceInfo(processInstanceInfo)
                 .eventTime(LocalDateTime.now())
                 .build();
+    }
+
+    /**
+     * 构建任务事件通知消息
+     */
+    private BpmProcessInstanceStatusMessage buildTaskEventNotificationMessage(ProcessInstance processInstance, 
+                                                                            org.flowable.task.api.Task task, 
+                                                                            BpmEventTypeEnum eventType, 
+                                                                            Integer taskResult, 
+                                                                            String taskReason) {
+        // 构建流程实例信息
+        BpmProcessInstanceInfo processInstanceInfo = BpmProcessInstanceInfo.builder()
+                .processInstanceId(processInstance.getId())
+                .processDefinitionKey(processInstance.getProcessDefinitionKey())
+                .processDefinitionId(processInstance.getProcessDefinitionId())
+                .businessKey(processInstance.getBusinessKey())
+                .startUserId(processInstance.getStartUserId())
+                .processInstanceName(processInstance.getName())
+                .tenantId(processInstance.getTenantId())
+                .suspended(processInstance.isSuspended())
+                .build();
+
+        // 构建任务信息
+        BpmTaskInfo taskInfo = BpmTaskInfo.builder()
+                .taskId(task.getId())
+                .taskDefinitionKey(task.getTaskDefinitionKey())
+                .taskName(task.getName())
+                .taskDescription(task.getDescription())
+                .assigneeId(task.getAssignee())
+                .ownerId(task.getOwner())
+                .taskResult(taskResult)
+                .taskReason(taskReason)
+                .taskCreateTime(task.getCreateTime() != null ? 
+                    task.getCreateTime().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null)
+                .taskPriority(task.getPriority())
+                .taskDueDate(task.getDueDate() != null ? 
+                    task.getDueDate().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime() : null)
+                .taskCategory(task.getCategory())
+                .taskFormKey(task.getFormKey())
+                .executionId(task.getExecutionId())
+                .parentTaskId(task.getParentTaskId())
+                .scopeType(task.getScopeType())
+                .delegationState(task.getDelegationState() != null ? task.getDelegationState().toString() : null)
+                .build();
+        
+        return BpmProcessInstanceStatusMessage.builder()
+                .eventType(eventType)
+                .processInstanceInfo(processInstanceInfo)
+                .taskInfo(taskInfo)
+                .eventTime(LocalDateTime.now())
+                .build();
+    }
+
+    /**
+     * 根据流程状态确定事件类型
+     */
+    private BpmEventTypeEnum determineProcessInstanceEventType(Integer status) {
+        // 这里需要根据实际的状态枚举来映射
+        // 假设状态值：1-运行中，2-已完成，3-已取消，4-已撤回
+        switch (status) {
+            case 1:
+                return BpmEventTypeEnum.PROCESS_INSTANCE_STARTED;
+            case 2:
+                return BpmEventTypeEnum.PROCESS_INSTANCE_COMPLETED;
+            case 3:
+                return BpmEventTypeEnum.PROCESS_INSTANCE_CANCELLED;
+            case 4:
+                return BpmEventTypeEnum.PROCESS_INSTANCE_WITHDRAWN;
+            default:
+                return BpmEventTypeEnum.PROCESS_INSTANCE_STARTED;
+        }
     }
 
     /**

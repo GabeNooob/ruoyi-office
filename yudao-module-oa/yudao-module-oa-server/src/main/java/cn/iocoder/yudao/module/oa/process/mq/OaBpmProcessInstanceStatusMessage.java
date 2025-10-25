@@ -1,11 +1,15 @@
-package cn.iocoder.yudao.module.bpm.api.event;
+package cn.iocoder.yudao.module.oa.process.mq;
 
+import cn.iocoder.yudao.framework.mq.redis.core.stream.AbstractRedisStreamMessage;
+import cn.iocoder.yudao.module.bpm.api.event.BpmEventTypeEnum;
+import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceInfo;
+import cn.iocoder.yudao.module.bpm.api.event.BpmTaskInfo;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -20,7 +24,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BpmProcessInstanceStatusMessage {
+public class OaBpmProcessInstanceStatusMessage extends AbstractRedisStreamMessage {
 
     /**
      * 事件类型
@@ -53,29 +57,4 @@ public class BpmProcessInstanceStatusMessage {
      * 扩展属性（用于传递更多自定义数据）
      */
     private Map<String, Object> extData;
-
-    // ========== 便捷方法（向后兼容） ==========
-
-    /**
-     * 获取流程实例ID
-     */
-    public String getProcessInstanceId() {
-        return processInstanceInfo != null ? processInstanceInfo.getProcessInstanceId() : null;
-    }
-
-    /**
-     * 获取流程定义Key
-     */
-    public String getProcessDefinitionKey() {
-        return processInstanceInfo != null ? processInstanceInfo.getProcessDefinitionKey() : null;
-    }
-
-    /**
-     * 获取业务Key
-     */
-    public String getBusinessKey() {
-        return processInstanceInfo != null ? processInstanceInfo.getBusinessKey() : null;
-    }
-
-
 } 

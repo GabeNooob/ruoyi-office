@@ -34,7 +34,7 @@ public class BpmMqNotificationHandler implements BpmNotificationHandler {
     public void handleNotification(BpmProcessInstanceStatusMessage message) {
         try {
             log.info("[handleNotification][MQ通知] 发送流程状态变化消息，processInstanceId: {}, status: {}", 
-                    message.getProcessInstanceId(), message.getStatus());
+                    message.getProcessInstanceId(), message.getProcessInstanceInfo().getStatus());
             
             // 转换为Redis Stream消息对象
             BpmProcessInstanceStatusRedisMessage redisMessage = BeanUtil.copyProperties(message, BpmProcessInstanceStatusRedisMessage.class);

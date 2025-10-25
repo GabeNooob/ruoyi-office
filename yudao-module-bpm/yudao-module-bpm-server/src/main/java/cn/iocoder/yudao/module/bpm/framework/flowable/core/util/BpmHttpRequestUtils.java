@@ -87,7 +87,7 @@ public class BpmHttpRequestUtils {
             headers.add(HEADER_TENANT_ID, String.valueOf(TenantContextHolder.getTenantId()));
         } else {
             BpmProcessInstanceService processInstanceService = SpringUtils.getBean(BpmProcessInstanceService.class);
-            ProcessInstance processInstance = processInstanceService.getProcessInstance(event.getId());
+            ProcessInstance processInstance = processInstanceService.getProcessInstance(event.getProcessInstanceInfo().getProcessInstanceId());
             if (processInstance != null) {
                 headers.add(HEADER_TENANT_ID, String.valueOf(TenantContextHolder.getTenantId()));
             }

@@ -1,8 +1,6 @@
 package cn.iocoder.yudao.module.bpm.service.notification.impl;
 
-import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusEvent;
-import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusMessage;
-import cn.iocoder.yudao.module.bpm.api.event.BpmNotificationTypeEnum;
+import cn.iocoder.yudao.module.bpm.api.event.*;
 import cn.iocoder.yudao.module.bpm.service.notification.BpmNotificationHandler;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -31,15 +29,21 @@ public class BpmLocalEventNotificationHandler implements BpmNotificationHandler 
     public void handleNotification(BpmProcessInstanceStatusMessage message) {
         try {
             log.info("[handleNotification][本地事件] 发布流程状态变化事件，processInstanceId: {}, status: {}", 
-                    message.getProcessInstanceId(), message.getStatus());
+                    message.getProcessInstanceId(), message.getProcessInstanceInfo().getStatus());
             
             // 转换为本地事件对象
             BpmProcessInstanceStatusEvent event = new BpmProcessInstanceStatusEvent();
-            event.setId(message.getProcessInstanceId());
-            event.setProcessDefinitionKey(message.getProcessDefinitionKey());
-            event.setStatus(message.getStatus());
-            event.setBusinessKey(message.getBusinessKey());
-            
+            BpmProcessInstanceInfo bpmProcessInstanceInfo = message.getProcessInstanceInfo();
+            bpmProcessInstanceInfo.setProcessInstanceId(message.getProcessInstanceId());
+            bpmProcessInstanceInfo.setProcessDefinitionKey(message.getProcessDefinitionKey());
+            bpmProcessInstanceInfo.setStatus(message.getProcessInstanceInfo().getStatus());
+            bpmProcessInstanceInfo.setBusinessKey(message.getBusinessKey());
+            event.setProcessInstanceInfo(bpmProcessInstanceInfo);
+
+            BpmTaskInfo taskInfo = new BpmTaskInfo();
+            event.setTaskInfo(taskInfo);
+
+
             // 发布本地事件
             eventPublisher.publishEvent(event);
             

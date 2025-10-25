@@ -41,7 +41,7 @@ public class BpmFeignNotificationHandler implements BpmNotificationHandler {
 
         try {
             log.info("[handleNotification][Feign通知] 调用OA服务，processInstanceId: {}, status: {}", 
-                    message.getProcessInstanceId(), message.getStatus());
+                    message.getProcessInstanceId(), message.getProcessInstanceInfo().getStatus());
             
             // 转换为Map，方便传输
 //            Map<String, Object> messageMap = BeanUtil.beanToMap(message);

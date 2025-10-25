@@ -53,7 +53,7 @@ public class WmsFeignNotificationController {
         try {
             String processDefinitionKey = message.getProcessDefinitionKey();
             String businessKey = message.getBusinessKey();
-            Integer status = message.getStatus();
+            Integer status = message.getProcessInstanceInfo().getStatus();
 
             // 参数校验
             if (StrUtil.isBlank(processDefinitionKey) || StrUtil.isBlank(businessKey) || status == null) {

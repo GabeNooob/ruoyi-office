@@ -35,6 +35,8 @@ import cn.iocoder.yudao.module.bpm.service.definition.BpmFormService;
 import cn.iocoder.yudao.module.bpm.service.definition.BpmModelService;
 import cn.iocoder.yudao.module.bpm.service.definition.BpmProcessDefinitionService;
 import cn.iocoder.yudao.module.bpm.service.message.BpmMessageService;
+import cn.iocoder.yudao.module.bpm.service.notification.BpmNotificationManager;
+import cn.iocoder.yudao.module.bpm.api.event.BpmEventTypeEnum;
 import cn.iocoder.yudao.module.bpm.service.message.dto.BpmMessageSendWhenTaskTimeoutReqDTO;
 import cn.iocoder.yudao.module.system.api.dept.DeptApi;
 import cn.iocoder.yudao.module.system.api.dept.dto.DeptRespDTO;
@@ -105,6 +107,8 @@ public class BpmTaskServiceImpl implements BpmTaskService {
     private BpmProcessInstanceCopyService processInstanceCopyService;
     @Resource
     private BpmModelService modelService;
+    @Resource
+    private BpmNotificationManager notificationManager;
     @Resource
     private BpmMessageService messageService;
     @Resource
@@ -654,6 +658,9 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         // 6. 调用 BPM complete 去完成任务
         taskService.complete(task.getId(), variables, true);
 
+        // 7. 发送任务审批通过事件通知
+        notificationManager.sendTaskEventNotification(instance, task, BpmEventTypeEnum.TASK_APPROVED, 1, reqVO.getReason());
+
         // 【加签专属】处理加签任务
         handleParentTaskIfSign(task.getParentTaskId());
     }
@@ -869,6 +876,9 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         // 3.2 情况二： 标记流程为不通过并结束流程
         processInstanceService.updateProcessInstanceReject(instance, reqVO.getReason()); // 标记不通过
         moveTaskToEnd(task.getProcessInstanceId(), BpmCommentTypeEnum.REJECT.formatComment(reqVO.getReason())); // 结束流程
+        
+        // 4. 发送任务审批拒绝事件通知
+        notificationManager.sendTaskEventNotification(instance, task, BpmEventTypeEnum.TASK_REJECTED, 2, reqVO.getReason());
     }
 
     /**
@@ -1121,6 +1131,11 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
             log.info("[withdrawToStartEventByReturnLogic] 使用退回逻辑成功撤回到开始节点: processInstanceId={}, startEventId={}, returnFlagKey={}, simulateVariables={}", 
                     processInstanceId, startEvent.getId(), String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, START_USER_NODE_ID), needSimulateVariables.keySet());
+            
+            // 6. 发送任务撤回事件通知（针对所有被撤回的任务）
+            taskList.forEach(task -> {
+                notificationManager.sendTaskEventNotification(instance, task, BpmEventTypeEnum.TASK_WITHDRAWN, 5, reason);
+            });
         } else {
             throw new RuntimeException("没有找到有效的执行ID");
         }
@@ -1558,7 +1573,10 @@ public class BpmTaskServiceImpl implements BpmTaskService {
             return;
         }
 
-        // 2. 任务前置通知
+        // 2. 发送任务创建事件通知
+        notificationManager.sendTaskEventNotification(processInstance, task, BpmEventTypeEnum.TASK_CREATED, null, null);
+
+        // 3. 任务前置通知
         if (ObjUtil.isNotNull(processDefinitionInfo.getTaskBeforeTriggerSetting())) {
             BpmModelMetaInfoVO.HttpRequestSetting setting = processDefinitionInfo.getTaskBeforeTriggerSetting();
             BpmHttpRequestUtils.executeBpmHttpRequest(processInstance,

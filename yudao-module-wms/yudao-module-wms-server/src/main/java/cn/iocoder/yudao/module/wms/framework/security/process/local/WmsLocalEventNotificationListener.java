@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.wms.framework.security.process.local;
 
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
+import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceInfo;
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusEvent;
 
 import cn.iocoder.yudao.module.wms.framework.security.enums.FlowCodeEnum;
@@ -41,7 +42,8 @@ public class WmsLocalEventNotificationListener implements ApplicationListener<Bp
         try {
             String processDefinitionKey = message.getProcessDefinitionKey();
             String businessKey = message.getBusinessKey();
-            Integer status = message.getStatus();
+            BpmProcessInstanceInfo processInstanceInfo = message.getProcessInstanceInfo();
+            Integer status = processInstanceInfo.getStatus();
 
             // 参数校验
             if (StrUtil.isBlank(processDefinitionKey) || StrUtil.isBlank(businessKey) || status == null) {
