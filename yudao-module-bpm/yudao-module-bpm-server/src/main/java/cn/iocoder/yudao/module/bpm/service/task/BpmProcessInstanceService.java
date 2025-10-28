@@ -134,6 +134,16 @@ public interface BpmProcessInstanceService {
     String createProcessInstance(Long userId, @Valid BpmProcessInstanceCreateReqDTO createReqDTO);
 
     /**
+     * 智能提交流程实例
+     * 如果流程实例不存在则创建新的流程实例，如果流程实例存在则审批发起人任务
+     *
+     * @param userId       用户编号
+     * @param createReqDTO 创建信息
+     * @return 实例的编号
+     */
+    String submitProcessInstance(Long userId, @Valid BpmProcessInstanceCreateReqDTO createReqDTO);
+
+    /**
      * 发起人取消流程实例
      *
      * @param userId      用户编号

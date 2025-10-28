@@ -29,4 +29,10 @@ public class BpmProcessInstanceApiImpl implements BpmProcessInstanceApi {
         return success(processInstanceService.createProcessInstance(userId, reqDTO));
     }
 
+
+    @Override
+    public CommonResult<String> submitProcessInstance(Long userId, @Valid BpmProcessInstanceCreateReqDTO reqDTO) {
+        return success(processInstanceService.submitProcessInstance(userId, reqDTO));
+    }
+
 }

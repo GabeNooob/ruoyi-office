@@ -1,21 +1,23 @@
 package cn.iocoder.yudao.module.oa.process.local;
 
 import cn.hutool.core.util.StrUtil;
-import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+import cn.iocoder.yudao.framework.tenant.core.util.TenantUtils;
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusEvent;
-import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusMessage;
 import cn.iocoder.yudao.module.bpm.api.event.BpmEventTypeEnum;
 import cn.iocoder.yudao.framework.common.service.FlowBillService;
 import cn.iocoder.yudao.module.bpm.api.event.BpmTaskInfo;
+import cn.iocoder.yudao.module.bpm.enums.task.BpmProcessInstanceStatusEnum;
 import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
 import cn.iocoder.yudao.module.oa.service.OaFlowBillServiceFactory;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
+import static cn.iocoder.yudao.module.bpm.enums.definition.BpmSimpleModelNodeTypeEnum.START_USER_NODE;
+import static cn.iocoder.yudao.module.bpm.enums.task.BpmnModelConstants.START_USER_NODE_ID;
 
 /**
  * OA 模块统一BPM事件监听器
@@ -25,7 +27,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
  */
 @Component
 @Slf4j
-public class OaBpmEventNotificationListener implements ApplicationListener<BpmProcessInstanceStatusEvent> {
+public class OaLocalNotificationListener implements ApplicationListener<BpmProcessInstanceStatusEvent> {
 
     @Resource
     private OaFlowBillServiceFactory flowBillServiceFactory;
@@ -77,15 +79,8 @@ public class OaBpmEventNotificationListener implements ApplicationListener<BpmPr
      */
     private void handleProcessInstanceEvent(BpmProcessInstanceStatusEvent message) {
         try {
-            // 通过工厂获取对应的服务实现
-            FlowBillService<OaBillTypeEnum> flowBillService = flowBillServiceFactory.getServiceByProcessKey(
-                    message.getProcessInstanceInfo().getProcessDefinitionKey());
-            
-            // 统一调用接口方法更新流程状态
-            flowBillService.updateProcessStatus(
-                    message.getProcessInstanceInfo().getBusinessKey(), 
-                    message.getProcessInstanceInfo().getStatus());
-            
+            updateBillStatus(message);
+
             log.info("[handleProcessInstanceEvent] 流程实例状态更新成功，eventType: {}, processDefinitionKey: {}, businessKey: {}, status: {}", 
                     message.getEventType().getName(), 
                     message.getProcessInstanceInfo().getProcessDefinitionKey(), 
@@ -96,6 +91,40 @@ public class OaBpmEventNotificationListener implements ApplicationListener<BpmPr
             log.debug("[handleProcessInstanceEvent] 未知的OA流程类型: {}", 
                     message.getProcessInstanceInfo().getProcessDefinitionKey());
         }
+    }
+
+
+
+    private void updateBillStatus(BpmProcessInstanceStatusEvent message) {
+        updateBillStatus(message, null);
+    }
+
+    /**
+     * 更新单据状态
+     * @param message 消息内容
+     * @param status 单据状态
+     */
+    private void updateBillStatus(BpmProcessInstanceStatusEvent message, Integer status) {
+        // 通过工厂获取对应的服务实现
+        FlowBillService<OaBillTypeEnum> flowBillService = flowBillServiceFactory.getServiceByProcessKey(
+                message.getProcessInstanceInfo().getProcessDefinitionKey());
+
+        // 统一调用接口方法更新流程状态
+        if(status == null){
+            TenantUtils.executeIgnore(()->{
+                flowBillService.updateProcessStatus(
+                        message.getProcessInstanceInfo().getBusinessKey(),
+                        message.getProcessInstanceInfo().getStatus());
+            });
+
+        }else {
+            TenantUtils.executeIgnore(()->{
+                flowBillService.updateProcessStatus(
+                        message.getProcessInstanceInfo().getBusinessKey(),
+                        status);
+            });
+        }
+
     }
 
     /**
@@ -116,6 +145,9 @@ public class OaBpmEventNotificationListener implements ApplicationListener<BpmPr
         switch (eventType) {
             case TASK_CREATED:
                 handleTaskCreated(message);
+                break;
+            case TASK_CREATED_REENTER:
+                handleTaskCreatedReenter(message);
                 break;
             case TASK_APPROVED:
                 handleTaskApproved(message);
@@ -139,18 +171,37 @@ public class OaBpmEventNotificationListener implements ApplicationListener<BpmPr
     }
 
     /**
-     * 处理任务创建事件
+     * 处理任务创建事件（首次创建）
      */
     private void handleTaskCreated(BpmProcessInstanceStatusEvent message) {
-        log.info("[handleTaskCreated] 任务创建通知，taskId: {}, taskName: {}, assigneeId: {}",
+        log.info("[handleTaskCreated] 任务创建通知（首次创建），taskId: {}, taskName: {}, assigneeId: {}",
                 message.getTaskInfo() != null ? message.getTaskInfo().getTaskId() : null,
                 message.getTaskInfo() != null ? message.getTaskInfo().getTaskName() : null,
                 message.getTaskInfo() != null ? message.getTaskInfo().getAssigneeId() : null);
         
-        // 这里可以实现具体的业务逻辑，比如：
-        // 1. 发送待办提醒
-        // 2. 更新业务单据状态
-        // 3. 记录操作日志等
+        // 首次创建流程实例时，不更新单据状态为未开始
+        // 这里可以添加其他首次创建时需要的业务逻辑
+    }
+
+    /**
+     * 处理任务创建事件（重新进入开始节点）
+     */
+    private void handleTaskCreatedReenter(BpmProcessInstanceStatusEvent message) {
+        log.info("[handleTaskCreatedReenter] 任务创建通知（重新进入开始节点），taskId: {}, taskName: {}, assigneeId: {}",
+                message.getTaskInfo() != null ? message.getTaskInfo().getTaskId() : null,
+                message.getTaskInfo() != null ? message.getTaskInfo().getTaskName() : null,
+                message.getTaskInfo() != null ? message.getTaskInfo().getAssigneeId() : null);
+        
+        BpmTaskInfo taskInfo = message.getTaskInfo();
+        if (taskInfo != null && StringUtils.isNoneEmpty(taskInfo.getTaskDefinitionKey())) {
+            String taskDefinitionKey = taskInfo.getTaskDefinitionKey();
+            // 重新进入开始节点时，更新单据状态为未开始
+            if (taskDefinitionKey.equals(START_USER_NODE_ID)) {
+                log.info("[handleTaskCreatedReenter] 重新进入开始节点，更新单据状态为未开始，processInstanceId: {}", 
+                        message.getProcessInstanceInfo().getProcessInstanceId());
+                updateBillStatus(message, BpmProcessInstanceStatusEnum.NOT_START.getStatus());
+            }
+        }
     }
 
     /**

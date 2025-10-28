@@ -81,9 +81,9 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
                 .setProcessStatus(BpmTaskStatusEnum.RUNNING.getStatus());
         carApplyBillMapper.insertOrUpdate(carApplyBill);
 
-        // 发起 BPM 流程
+        // 智能提交 BPM 流程（如果流程实例不存在则创建，存在则审批发起人任务）
         Map<String, Object> processInstanceVariables = BpmProcessVariableUtils.buildBillVariables(saveReqVO);
-        String processInstanceId = processInstanceApi.createProcessInstance(Long.valueOf(saveReqVO.getCreator()),
+        String processInstanceId = processInstanceApi.submitProcessInstance(Long.valueOf(saveReqVO.getCreator()),
                 new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(OaBillTypeEnum.OA_CAR_APPLY_BILL.getProcessDefinitionKey())
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(carApplyBill.getId()))
         ).getCheckedData();

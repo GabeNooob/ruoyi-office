@@ -85,7 +85,7 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
         
         Map<String, Object> processInstanceVariables = BpmProcessVariableUtils
                 .buildBillVariables(saveReqVO, additionalVariables);
-        String processInstanceId = processInstanceApi.createProcessInstance(Long.valueOf(saveReqVO.getCreator()),
+        String processInstanceId = processInstanceApi.submitProcessInstance(Long.valueOf(saveReqVO.getCreator()),
                 new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(OaBillTypeEnum.OA_CAR_RETURN_BILL.getProcessDefinitionKey())
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(carReturnBill.getId()))
         ).getCheckedData();

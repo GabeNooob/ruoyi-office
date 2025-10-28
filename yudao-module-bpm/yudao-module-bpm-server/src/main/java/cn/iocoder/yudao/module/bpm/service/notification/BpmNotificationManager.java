@@ -10,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -96,7 +97,7 @@ public class BpmNotificationManager {
      * @param taskResult     任务结果
      * @param taskReason     任务原因
      */
-    public void sendTaskEventNotification(ProcessInstance processInstance, org.flowable.task.api.Task task,
+    public void sendTaskEventNotification(ProcessInstance processInstance, Task task,
                                           BpmEventTypeEnum eventType, Integer taskResult, String taskReason) {
         if (processInstance == null || task == null) {
             log.warn("[sendTaskEventNotification] 流程实例或任务为空，跳过通知");
@@ -175,7 +176,7 @@ public class BpmNotificationManager {
      * 构建任务事件通知消息
      */
     private BpmProcessInstanceStatusMessage buildTaskEventNotificationMessage(ProcessInstance processInstance, 
-                                                                            org.flowable.task.api.Task task, 
+                                                                            Task task, 
                                                                             BpmEventTypeEnum eventType, 
                                                                             Integer taskResult, 
                                                                             String taskReason) {

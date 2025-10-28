@@ -43,6 +43,11 @@ public enum BpmEventTypeEnum {
     TASK_CREATED("task_created", "任务创建"),
 
     /**
+     * 任务创建（重新进入开始节点）
+     */
+    TASK_CREATED_REENTER("task_created_reenter", "任务创建（重新进入开始节点）"),
+
+    /**
      * 任务分配
      */
     TASK_ASSIGNED("task_assigned", "任务分配"),

@@ -2,9 +2,9 @@ package cn.iocoder.yudao.module.bpm.service.task;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.*;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.collection.CollectionUtils;
@@ -14,6 +14,7 @@ import cn.iocoder.yudao.framework.common.util.object.ObjectUtils;
 import cn.iocoder.yudao.framework.common.util.object.PageUtils;
 import cn.iocoder.yudao.framework.datapermission.core.annotation.DataPermission;
 import cn.iocoder.yudao.framework.web.core.util.WebFrameworkUtils;
+import cn.iocoder.yudao.module.bpm.api.event.BpmEventTypeEnum;
 import cn.iocoder.yudao.module.bpm.controller.admin.definition.vo.model.BpmModelMetaInfoVO;
 import cn.iocoder.yudao.module.bpm.controller.admin.task.vo.task.*;
 import cn.iocoder.yudao.module.bpm.convert.task.BpmTaskConvert;
@@ -21,11 +22,7 @@ import cn.iocoder.yudao.module.bpm.dal.dataobject.definition.BpmFormDO;
 import cn.iocoder.yudao.module.bpm.dal.dataobject.definition.BpmProcessDefinitionInfoDO;
 import cn.iocoder.yudao.module.bpm.enums.BpmProcessVariableConstants;
 import cn.iocoder.yudao.module.bpm.enums.definition.*;
-import cn.iocoder.yudao.module.bpm.enums.task.BpmProcessInstanceStatusEnum;
-import cn.iocoder.yudao.module.bpm.enums.task.BpmCommentTypeEnum;
-import cn.iocoder.yudao.module.bpm.enums.task.BpmReasonEnum;
-import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskSignTypeEnum;
-import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
+import cn.iocoder.yudao.module.bpm.enums.task.*;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmTaskCandidateStrategyEnum;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmnVariableConstants;
 import cn.iocoder.yudao.module.bpm.framework.flowable.core.util.BpmHttpRequestUtils;
@@ -35,9 +32,8 @@ import cn.iocoder.yudao.module.bpm.service.definition.BpmFormService;
 import cn.iocoder.yudao.module.bpm.service.definition.BpmModelService;
 import cn.iocoder.yudao.module.bpm.service.definition.BpmProcessDefinitionService;
 import cn.iocoder.yudao.module.bpm.service.message.BpmMessageService;
-import cn.iocoder.yudao.module.bpm.service.notification.BpmNotificationManager;
-import cn.iocoder.yudao.module.bpm.api.event.BpmEventTypeEnum;
 import cn.iocoder.yudao.module.bpm.service.message.dto.BpmMessageSendWhenTaskTimeoutReqDTO;
+import cn.iocoder.yudao.module.bpm.service.notification.BpmNotificationManager;
 import cn.iocoder.yudao.module.system.api.dept.DeptApi;
 import cn.iocoder.yudao.module.system.api.dept.dto.DeptRespDTO;
 import cn.iocoder.yudao.module.system.api.user.AdminUserApi;
@@ -70,14 +66,12 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import java.util.*;
 import java.util.stream.Stream;
-import java.util.Objects;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.*;
 import static cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants.*;
 import static cn.iocoder.yudao.module.bpm.enums.task.BpmReasonEnum.ASSIGN_START_USER_WITHDRAW;
-import static cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmnModelConstants.START_USER_NODE_ID;
-//import static cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmnVariableConstants.*;
+import static cn.iocoder.yudao.module.bpm.enums.task.BpmnModelConstants.START_USER_NODE_ID;
 import static cn.iocoder.yudao.module.bpm.framework.flowable.core.util.BpmnModelUtils.*;
 
 /**
@@ -1098,10 +1092,10 @@ public class BpmTaskServiceImpl implements BpmTaskService {
             // 为所有任务添加撤回评论和状态更新
              taskService.addComment(task.getId(), processInstanceId,
                      BpmCommentTypeEnum.WITHDRAW.getType(),
-                     BpmCommentTypeEnum.WITHDRAW.formatComment(ASSIGN_START_USER_WITHDRAW.getReason() + ":" + reason));
+                     BpmCommentTypeEnum.WITHDRAW.formatComment(ASSIGN_START_USER_WITHDRAW.getReason() + "：" + reason));
 
              // 更新任务状态为撤回
-             updateTaskStatusAndReason(task.getId(), BpmTaskStatusEnum.WITHDRAW.getStatus(), ASSIGN_START_USER_WITHDRAW.getReason() + ":" + reason);
+             updateTaskStatusAndReason(task.getId(), BpmTaskStatusEnum.WITHDRAW.getStatus(), ASSIGN_START_USER_WITHDRAW.getReason() + "：" + reason);
         });
 
         // 3. 构建需要预测的任务流程变量（关键修复）
@@ -1551,6 +1545,44 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
     // ========== Event 事件相关方法 ==========
 
+    /**
+     * 判断任务创建事件类型
+     * 如果是开始节点且不是首次创建，则返回TASK_CREATED_REENTER事件类型
+     *
+     * @param task 任务
+     * @param processInstance 流程实例
+     * @return 事件类型
+     */
+    private BpmEventTypeEnum determineTaskCreatedEventType(Task task, ProcessInstance processInstance) {
+        // 如果不是开始节点，直接返回普通的任务创建事件
+        if (!START_USER_NODE_ID.equals(task.getTaskDefinitionKey())) {
+            return BpmEventTypeEnum.TASK_CREATED;
+        }
+
+        // 如果是开始节点，判断是否为重新进入
+        // 通过查询该流程实例的历史任务数量来判断
+        try {
+            long historicTaskCount = historyService.createHistoricTaskInstanceQuery()
+                    .processInstanceId(processInstance.getId())
+                    .count();
+            
+            log.debug("[determineTaskCreatedEventType] 流程实例 {} 的历史任务数量: {}", processInstance.getId(), historicTaskCount);
+            
+            // 如果历史任务数量大于1，说明不是首次创建，而是重新进入开始节点
+            if (historicTaskCount > 1) {
+                log.info("[determineTaskCreatedEventType] 重新进入开始节点，processInstanceId: {}", processInstance.getId());
+                return BpmEventTypeEnum.TASK_CREATED_REENTER;
+            } else {
+                log.info("[determineTaskCreatedEventType] 首次创建流程实例，processInstanceId: {}", processInstance.getId());
+                return BpmEventTypeEnum.TASK_CREATED;
+            }
+        } catch (Exception e) {
+            log.error("[determineTaskCreatedEventType] 查询流程实例历史任务失败，processInstanceId: {}", processInstance.getId(), e);
+            // 异常情况下，返回普通的任务创建事件
+            return BpmEventTypeEnum.TASK_CREATED;
+        }
+    }
+
     @Override
     public void processTaskCreated(Task task) {
         // 1. 设置为待办中
@@ -1574,7 +1606,8 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         }
 
         // 2. 发送任务创建事件通知
-        notificationManager.sendTaskEventNotification(processInstance, task, BpmEventTypeEnum.TASK_CREATED, null, null);
+        BpmEventTypeEnum eventType = determineTaskCreatedEventType(task, processInstance);
+        notificationManager.sendTaskEventNotification(processInstance, task, eventType, null, null);
 
         // 3. 任务前置通知
         if (ObjUtil.isNotNull(processDefinitionInfo.getTaskBeforeTriggerSetting())) {

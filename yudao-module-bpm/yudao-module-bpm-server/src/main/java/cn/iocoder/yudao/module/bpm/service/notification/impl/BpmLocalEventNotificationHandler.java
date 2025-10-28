@@ -1,7 +1,9 @@
 package cn.iocoder.yudao.module.bpm.service.notification.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.iocoder.yudao.module.bpm.api.event.*;
 import cn.iocoder.yudao.module.bpm.service.notification.BpmNotificationHandler;
+import cn.iocoder.yudao.module.bpm.service.notification.message.BpmProcessInstanceStatusRedisMessage;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,17 +34,7 @@ public class BpmLocalEventNotificationHandler implements BpmNotificationHandler 
                     message.getProcessInstanceId(), message.getProcessInstanceInfo().getStatus());
             
             // 转换为本地事件对象
-            BpmProcessInstanceStatusEvent event = new BpmProcessInstanceStatusEvent();
-            BpmProcessInstanceInfo bpmProcessInstanceInfo = message.getProcessInstanceInfo();
-            bpmProcessInstanceInfo.setProcessInstanceId(message.getProcessInstanceId());
-            bpmProcessInstanceInfo.setProcessDefinitionKey(message.getProcessDefinitionKey());
-            bpmProcessInstanceInfo.setStatus(message.getProcessInstanceInfo().getStatus());
-            bpmProcessInstanceInfo.setBusinessKey(message.getBusinessKey());
-            event.setProcessInstanceInfo(bpmProcessInstanceInfo);
-
-            BpmTaskInfo taskInfo = new BpmTaskInfo();
-            event.setTaskInfo(taskInfo);
-
+            BpmProcessInstanceStatusEvent event = BeanUtil.copyProperties(message, BpmProcessInstanceStatusEvent.class);
 
             // 发布本地事件
             eventPublisher.publishEvent(event);

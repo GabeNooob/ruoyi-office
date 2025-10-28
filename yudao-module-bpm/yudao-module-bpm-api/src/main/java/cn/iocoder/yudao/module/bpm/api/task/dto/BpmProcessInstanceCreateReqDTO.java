@@ -33,4 +33,10 @@ public class BpmProcessInstanceCreateReqDTO {
     @Schema(description = "发起人自选审批人 Map")
     private Map<String, List<Long>> startUserSelectAssignees;
 
+    /**
+     * 任务审批信息
+     */
+    @Schema(description = "任务审批信息")
+    private BpmTaskApproveReqDTO taskApproveReqDTO;
+
 }

@@ -25,4 +25,10 @@ public interface BpmProcessInstanceApi {
     CommonResult<String> createProcessInstance(@RequestParam("userId") Long userId,
                                                @Valid @RequestBody BpmProcessInstanceCreateReqDTO reqDTO);
 
+    @PostMapping(PREFIX + "/submit")
+    @Operation(summary = "智能提交流程实例（提供给内部），如果流程实例不存在则创建，存在则审批发起人任务")
+    @Parameter(name = "userId", description = "用户编号", required = true, example = "1")
+    CommonResult<String> submitProcessInstance(@RequestParam("userId") Long userId,
+                                               @Valid @RequestBody BpmProcessInstanceCreateReqDTO reqDTO);
+
 }

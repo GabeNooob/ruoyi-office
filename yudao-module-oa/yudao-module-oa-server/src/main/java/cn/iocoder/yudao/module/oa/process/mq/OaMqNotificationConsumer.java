@@ -5,10 +5,8 @@ import cn.iocoder.yudao.framework.mq.redis.core.stream.AbstractRedisStreamMessag
 import cn.iocoder.yudao.module.bpm.api.event.BpmEventTypeEnum;
 import cn.iocoder.yudao.framework.common.service.FlowBillService;
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceInfo;
-import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusMessage;
 import cn.iocoder.yudao.module.bpm.api.event.BpmTaskInfo;
 import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
-import cn.iocoder.yudao.module.oa.process.local.OaBpmEventNotificationListener;
 import cn.iocoder.yudao.module.oa.service.OaFlowBillServiceFactory;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @ConditionalOnProperty(name = "yudao.bpm.notification.mq.enabled", havingValue = "true", matchIfMissing = false)
-public class OaBpmEventMqConsumer extends AbstractRedisStreamMessageListener<OaBpmProcessInstanceStatusMessage> {
+public class OaMqNotificationConsumer extends AbstractRedisStreamMessageListener<OaBpmProcessInstanceStatusMessage> {
 
     @Resource
     private OaFlowBillServiceFactory flowBillServiceFactory;

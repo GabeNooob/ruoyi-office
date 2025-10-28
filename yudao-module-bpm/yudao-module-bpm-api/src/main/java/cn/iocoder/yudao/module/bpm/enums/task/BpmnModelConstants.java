@@ -1,4 +1,4 @@
-package cn.iocoder.yudao.module.bpm.framework.flowable.core.enums;
+package cn.iocoder.yudao.module.bpm.enums.task;
 
 import cn.iocoder.yudao.module.bpm.enums.definition.BpmModelTypeEnum;
 
