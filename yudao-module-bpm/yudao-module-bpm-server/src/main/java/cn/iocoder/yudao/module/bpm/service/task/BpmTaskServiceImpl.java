@@ -269,13 +269,47 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         if (StrUtil.isNotBlank(pageVO.getName())) {
             taskQuery.taskNameLike("%" + pageVO.getName() + "%");
         }
+        if (StrUtil.isNotEmpty(pageVO.getCategory())) {
+            taskQuery.taskCategory(pageVO.getCategory());
+        }
         if (pageVO.getStatus() != null) {
             taskQuery.taskVariableValueEquals(BpmnVariableConstants.TASK_VARIABLE_STATUS, pageVO.getStatus());
         }
-//        if (ArrayUtil.isNotEmpty(pageVO.getCreateTime())) {
-//            taskQuery.taskCreatedAfter(DateUtils.of(pageVO.getCreateTime()[0]));
-//            taskQuery.taskCreatedBefore(DateUtils.of(pageVO.getCreateTime()[1]));
-//        }
+        if (ArrayUtil.isNotEmpty(pageVO.getCreateTime())) {
+            taskQuery.taskCreatedAfter(DateUtils.of(pageVO.getCreateTime()[0]));
+            taskQuery.taskCreatedBefore(DateUtils.of(pageVO.getCreateTime()[1]));
+        }
+        
+        // ========== 流程变量/业务搜索条件 ==========
+        // billType 语义为"单据类型"，即流程定义 key
+        if (StrUtil.isNotBlank(pageVO.getBillType())) {
+            taskQuery.processDefinitionKey(pageVO.getBillType());
+        }
+        if (StrUtil.isNotBlank(pageVO.getBillCode())) {
+            taskQuery.processVariableValueLike(BpmProcessVariableConstants.BILL_CODE, "%" + pageVO.getBillCode() + "%");
+        }
+        if (ArrayUtil.isNotEmpty(pageVO.getBillCreateTime())) {
+            // 按"单据日期"过滤，即流程实例开始时间范围
+            // 通过 HistoricProcessInstance 获取在时间范围内启动的实例，再限定任务查询
+            List<String> processInstanceIds = convertList(
+                    historyService.createHistoricProcessInstanceQuery()
+                            .processInstanceTenantId(FlowableUtils.getTenantId())
+                            .startedAfter(DateUtils.of(pageVO.getBillCreateTime()[0]))
+                            .startedBefore(DateUtils.of(pageVO.getBillCreateTime()[1]))
+                            .list(),
+                    org.flowable.engine.history.HistoricProcessInstance::getId);
+            if (CollUtil.isEmpty(processInstanceIds)) {
+                return PageResult.empty();
+            }
+            taskQuery.processInstanceIdIn(processInstanceIds);
+        }
+        if (pageVO.getCompanyId() != null) {
+            taskQuery.processVariableValueEquals(BpmProcessVariableConstants.COMPANY_ID, pageVO.getCompanyId());
+        }
+        if (pageVO.getDeptId() != null) {
+            taskQuery.processVariableValueEquals(BpmProcessVariableConstants.DEPT_ID, pageVO.getDeptId());
+        }
+        
         // 执行查询
         long count = taskQuery.count();
         if (count == 0) {
@@ -283,15 +317,9 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         }
         List<HistoricTaskInstance> tasks = taskQuery.listPage(PageUtils.getStart(pageVO), pageVO.getPageSize());
 
-        // 特殊：强制移除自动完成的“发起人”节点
+        // 特殊：强制移除自动完成的"发起人"节点
         // 补充说明：由于 taskQuery 无法方面的过滤，所以暂时通过内存过滤
         tasks.removeIf(task -> task.getTaskDefinitionKey().equals(START_USER_NODE_ID));
-        // TODO @芋艿：https://t.zsxq.com/MNzqp 【flowable bug】：taskCreatedAfter、taskCreatedBefore 拼接的是 OR
-        if (ArrayUtil.isNotEmpty(pageVO.getCreateTime())) {
-            tasks.removeIf(task -> task.getCreateTime() == null
-                    || task.getCreateTime().before(DateUtils.of(pageVO.getCreateTime()[0]))
-                    || task.getCreateTime().after(DateUtils.of(pageVO.getCreateTime()[1])));
-        }
         return new PageResult<>(tasks, count);
     }
 
