@@ -19,4 +19,7 @@ public interface ErrorCodeConstants {
     ErrorCode CAR_RETURN_BILL_NOT_EXISTS = new ErrorCode(1_101_000_003, "还车申请单不存在");
     ErrorCode CAR_APPLY_BILL_ALREADY_RETURNED = new ErrorCode(1_101_000_004, "用车申请单已还车，不能重复还车");
     ErrorCode CAR_TIME_CONFLICT = new ErrorCode(1_101_000_005, "车辆使用时间冲突，该时间段已有其他申请单");
+
+    // ========== 印章管理 1-101-001-000 ============
+    ErrorCode SEAL_NOT_EXISTS = new ErrorCode(1_101_001_000, "印章信息不存在");
 }
