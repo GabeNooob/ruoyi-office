@@ -22,4 +22,5 @@ public interface ErrorCodeConstants {
 
     // ========== 印章管理 1-101-001-000 ============
     ErrorCode SEAL_NOT_EXISTS = new ErrorCode(1_101_001_000, "印章信息不存在");
+    ErrorCode SEAL_NO_DUPLICATE = new ErrorCode(1_101_001_001, "印章编号已存在");
 }

@@ -40,5 +40,9 @@ public interface SealMapper extends BaseMapperX<SealDO> {
                 .orderByDesc(SealDO::getId));
     }
 
+    default SealDO selectBySealNo(String sealNo) {
+        return selectOne(SealDO::getSealNo, sealNo);
+    }
+
 }
 
