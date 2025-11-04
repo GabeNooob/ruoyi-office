@@ -23,4 +23,12 @@ public interface ErrorCodeConstants {
     // ========== 印章管理 1-101-001-000 ============
     ErrorCode SEAL_NOT_EXISTS = new ErrorCode(1_101_001_000, "印章信息不存在");
     ErrorCode SEAL_NO_DUPLICATE = new ErrorCode(1_101_001_001, "印章编号已存在");
+    
+    // ========== 用印申请单 1-101-001-100 ============
+    ErrorCode SEAL_APPLY_BILL_NOT_EXISTS = new ErrorCode(1_101_001_100, "用印申请单不存在");
+    ErrorCode SEAL_APPLY_SAVE_INFO_NOT_NULL = new ErrorCode(1_101_001_101, "保存信息不能为空");
+    ErrorCode SEAL_TIME_CONFLICT = new ErrorCode(1_101_001_102, "印章使用时间冲突，该时间段已有其他申请单");
+    ErrorCode SEAL_APPLY_BILL_ALREADY_USED = new ErrorCode(1_101_001_103, "用印申请单已使用，不能重复使用");
+    ErrorCode SEAL_APPLY_BILL_NOT_APPROVED = new ErrorCode(1_101_001_104, "用印申请单未审批通过，不能使用");
+    ErrorCode SEAL_APPLY_BILL_OVERDUE = new ErrorCode(1_101_001_105, "印章借用已逾期，请及时归还");
 }
