@@ -37,7 +37,8 @@ public interface SealMapper extends BaseMapperX<SealDO> {
                 .eqIfPresent(SealDO::getSort, reqVO.getSort())
                 .eqIfPresent(SealDO::getRemark, reqVO.getRemark())
                 .betweenIfPresent(SealDO::getCreateTime, reqVO.getCreateTime())
-                .orderByDesc(SealDO::getId));
+                .orderByAsc(SealDO::getSort)
+                .orderByAsc(SealDO::getCreateTime));
     }
 
     default SealDO selectBySealNo(String sealNo) {

@@ -137,6 +137,10 @@ public class SealApplyBillDO extends BaseDO {
     
     // ========== 基础字段 ==========
     /**
+     * 申请人姓名
+     */
+    private String creatorName;
+    /**
      * 公司ID
      */
     private Long companyId;

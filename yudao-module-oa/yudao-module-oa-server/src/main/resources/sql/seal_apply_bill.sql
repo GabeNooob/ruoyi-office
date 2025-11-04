@@ -38,6 +38,7 @@ CREATE TABLE `oa_seal_apply_bill` (
     `is_urgent` tinyint DEFAULT '0' COMMENT '是否紧急（0否 1是）',
     
     -- 基础字段
+    `creator_name` varchar(100) DEFAULT NULL COMMENT '申请人姓名',
     `company_id` bigint NOT NULL COMMENT '公司ID',
     `company_name` varchar(100) NOT NULL COMMENT '公司名称',
     `dept_id` bigint NOT NULL COMMENT '部门ID',

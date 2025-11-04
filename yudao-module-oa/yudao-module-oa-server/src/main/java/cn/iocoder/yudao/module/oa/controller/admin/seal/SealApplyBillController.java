@@ -89,17 +89,17 @@ public class SealApplyBillController {
     @Operation(summary = "获得用印申请单")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('oa:seal-apply-bill:query')")
-    public CommonResult<SealApplyBillSaveReqVO> getSealApplyBill(@RequestParam("id") Long id) {
+    public CommonResult<SealApplyBillRespVO> getSealApplyBill(@RequestParam("id") Long id) {
         SealApplyBillDO sealApplyBill = sealApplyBillService.getSealApplyBill(id);
-        return success(BeanUtils.toBean(sealApplyBill, SealApplyBillSaveReqVO.class));
+        return success(BeanUtils.toBean(sealApplyBill, SealApplyBillRespVO.class));
     }
 
     @GetMapping("/page")
     @Operation(summary = "获得用印申请单分页")
     @PreAuthorize("@ss.hasPermission('oa:seal-apply-bill:query')")
-    public CommonResult<PageResult<SealApplyBillSaveReqVO>> getSealApplyBillPage(@Valid SealApplyBillPageReqVO pageReqVO) {
+    public CommonResult<PageResult<SealApplyBillRespVO>> getSealApplyBillPage(@Valid SealApplyBillPageReqVO pageReqVO) {
         PageResult<SealApplyBillDO> pageResult = sealApplyBillService.getSealApplyBillPage(pageReqVO);
-        return success(BeanUtils.toBean(pageResult, SealApplyBillSaveReqVO.class));
+        return success(BeanUtils.toBean(pageResult, SealApplyBillRespVO.class));
     }
 
     @GetMapping("/export-excel")
@@ -111,8 +111,8 @@ public class SealApplyBillController {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<SealApplyBillDO> list = sealApplyBillService.getSealApplyBillPage(pageReqVO).getList();
         // 导出 Excel
-        ExcelUtils.write(response, "用印申请单.xls", "数据", SealApplyBillSaveReqVO.class,
-                        BeanUtils.toBean(list, SealApplyBillSaveReqVO.class));
+        ExcelUtils.write(response, "用印申请单.xls", "数据", SealApplyBillRespVO.class,
+                        BeanUtils.toBean(list, SealApplyBillRespVO.class));
     }
 
 }
