@@ -30,6 +30,7 @@ import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionU
 import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
 import static cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum.RUNNING;
 import static cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum.APPROVE;
+import static cn.iocoder.yudao.module.oa.enums.OaProcessVariableConstants.*;
 
 /**
  * 用印申请单 Service 实现类
@@ -81,6 +82,8 @@ public class SealApplyBillServiceImpl implements SealApplyBillService, FlowBillS
 
         // 智能提交 BPM 流程（如果流程实例不存在则创建，存在则审批发起人任务）
         Map<String, Object> processInstanceVariables = BpmProcessVariableUtils.buildBillVariables(saveReqVO);
+        // 添加用印申请单特有的流程变量
+        processInstanceVariables.put(PV_SEAL_USE_MODE, saveReqVO.getUseMode());
         String processInstanceId = processInstanceApi.submitProcessInstance(Long.valueOf(saveReqVO.getCreator()),
                 new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(OaBillTypeEnum.OA_SEAL_APPLY_BILL.getProcessDefinitionKey())
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(sealApplyBill.getId()))

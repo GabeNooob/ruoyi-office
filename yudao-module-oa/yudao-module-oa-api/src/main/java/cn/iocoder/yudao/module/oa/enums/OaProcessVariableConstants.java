@@ -1,0 +1,23 @@
+package cn.iocoder.yudao.module.oa.enums;
+
+/**
+ * OA 模块流程变量常量
+ * 
+ * 定义OA模块中各种业务流程的变量名称，用于在BPM流程中传递业务数据
+ * 
+ * @author 芋道源码
+ */
+public interface OaProcessVariableConstants {
+
+    // ========== 用印申请单流程变量 ==========
+
+    /**
+     * 用印方式变量名
+     * 
+     * 用于在用印申请单流程中传递用印方式信息
+     * 1-现场用章，2-借用印章
+     */
+    String PV_SEAL_USE_MODE = "sealUseMode";
+
+
+}

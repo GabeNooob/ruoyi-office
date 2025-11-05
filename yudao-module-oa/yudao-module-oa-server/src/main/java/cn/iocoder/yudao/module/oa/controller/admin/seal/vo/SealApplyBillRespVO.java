@@ -61,7 +61,7 @@ public class SealApplyBillRespVO {
 
     @Schema(description = "用印事由", requiredMode = Schema.RequiredMode.REQUIRED, example = "合同签署")
     @ExcelProperty("用印事由")
-    private String usePurpose;
+    private String cause;
 
     @Schema(description = "用印类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @ExcelProperty("用印类型")

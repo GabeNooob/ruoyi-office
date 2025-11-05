@@ -52,7 +52,7 @@ public class SealApplyBillSaveReqVO {
 
     @Schema(description = "用章事由", requiredMode = Schema.RequiredMode.REQUIRED, example = "合同签署")
     @NotEmpty(message = "用章事由不能为空")
-    private String usePurpose;
+    private String cause;
 
     @Schema(description = "用章类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @NotNull(message = "用章类型不能为空")
