@@ -20,6 +20,7 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 
 import cn.iocoder.yudao.module.oa.dal.mysql.seal.SealApplyBillMapper;
+import cn.iocoder.yudao.module.oa.service.attachment.AttachmentService;
 
 import cn.iocoder.yudao.framework.common.service.FlowBillService;
 
@@ -46,6 +47,9 @@ public class SealApplyBillServiceImpl implements SealApplyBillService, FlowBillS
     private SealApplyBillMapper sealApplyBillMapper;
 
     @Resource
+    private AttachmentService attachmentService;
+
+    @Resource
     private BpmProcessInstanceApi processInstanceApi;
 
     @Override
@@ -58,6 +62,11 @@ public class SealApplyBillServiceImpl implements SealApplyBillService, FlowBillS
         // 插入或更新
         SealApplyBillDO sealApplyBill = BeanUtils.toBean(saveReqVO, SealApplyBillDO.class);
         sealApplyBillMapper.insertOrUpdate(sealApplyBill);
+
+        // 保存附件信息
+        if (saveReqVO.getAttachments() != null) {
+            attachmentService.saveAttachmentList("seal_apply_bill", sealApplyBill.getId(), saveReqVO.getAttachments());
+        }
 
         // 返回
         return sealApplyBill.getId();
@@ -91,6 +100,12 @@ public class SealApplyBillServiceImpl implements SealApplyBillService, FlowBillS
 
         // 将工作流的编号，更新到单据中
         sealApplyBillMapper.updateById(new SealApplyBillDO().setId(sealApplyBill.getId()).setProcessInstanceId(processInstanceId));
+        
+        // 保存附件信息
+        if (saveReqVO.getAttachments() != null) {
+            attachmentService.saveAttachmentList("seal_apply_bill", sealApplyBill.getId(), saveReqVO.getAttachments());
+        }
+        
         // 返回
         return sealApplyBill.getId();
     }

@@ -5,6 +5,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
 import cn.idev.excel.annotation.ExcelProperty;
+import cn.iocoder.yudao.module.oa.controller.admin.attachment.vo.AttachmentRespVO;
+import java.util.List;
 
 @Schema(description = "管理后台 - 用印申请单 Response VO")
 @Data
@@ -150,5 +152,8 @@ public class SealApplyBillRespVO {
     @Schema(description = "备注", example = "紧急用章")
     @ExcelProperty("备注")
     private String remark;
+
+    @Schema(description = "附件列表")
+    private List<AttachmentRespVO> attachments;
 
 }

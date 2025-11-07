@@ -28,6 +28,8 @@ import static cn.iocoder.yudao.framework.apilog.core.enums.OperateTypeEnum.*;
 import cn.iocoder.yudao.module.oa.controller.admin.seal.vo.*;
 import cn.iocoder.yudao.module.oa.dal.dataobject.seal.SealApplyBillDO;
 import cn.iocoder.yudao.module.oa.service.seal.SealApplyBillService;
+import cn.iocoder.yudao.module.oa.service.attachment.AttachmentService;
+import cn.iocoder.yudao.module.oa.controller.admin.attachment.vo.AttachmentRespVO;
 
 @Tag(name = "管理后台 - 用印申请单")
 @RestController
@@ -37,6 +39,9 @@ public class SealApplyBillController {
 
     @Resource
     private SealApplyBillService sealApplyBillService;
+
+    @Resource
+    private AttachmentService attachmentService;
 
     @PostMapping("/create")
     @Operation(summary = "创建用印申请单")
@@ -91,7 +96,15 @@ public class SealApplyBillController {
     @PreAuthorize("@ss.hasPermission('oa:seal-apply-bill:query')")
     public CommonResult<SealApplyBillRespVO> getSealApplyBill(@RequestParam("id") Long id) {
         SealApplyBillDO sealApplyBill = sealApplyBillService.getSealApplyBill(id);
-        return success(BeanUtils.toBean(sealApplyBill, SealApplyBillRespVO.class));
+        SealApplyBillRespVO respVO = BeanUtils.toBean(sealApplyBill, SealApplyBillRespVO.class);
+        
+        // 获取附件信息
+        respVO.setAttachments(BeanUtils.toBean(
+            attachmentService.getAttachmentListByBusiness("seal_apply_bill", id), 
+            AttachmentRespVO.class
+        ));
+        
+        return success(respVO);
     }
 
     @GetMapping("/page")

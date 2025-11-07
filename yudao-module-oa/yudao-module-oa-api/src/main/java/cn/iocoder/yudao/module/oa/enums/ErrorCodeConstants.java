@@ -31,4 +31,7 @@ public interface ErrorCodeConstants {
     ErrorCode SEAL_APPLY_BILL_ALREADY_USED = new ErrorCode(1_101_001_103, "用印申请单已使用，不能重复使用");
     ErrorCode SEAL_APPLY_BILL_NOT_APPROVED = new ErrorCode(1_101_001_104, "用印申请单未审批通过，不能使用");
     ErrorCode SEAL_APPLY_BILL_OVERDUE = new ErrorCode(1_101_001_105, "印章借用已逾期，请及时归还");
+
+    // ========== 通用附件 1-101-002-000 ============
+    ErrorCode ATTACHMENT_NOT_EXISTS = new ErrorCode(1_101_002_000, "附件不存在");
 }

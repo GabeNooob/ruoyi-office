@@ -7,6 +7,7 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
+import cn.iocoder.yudao.module.oa.controller.admin.attachment.vo.AttachmentSaveReqVO;
 
 @Schema(description = "管理后台 - 用印申请单新增/修改 Request VO")
 @Data
@@ -123,5 +124,8 @@ public class SealApplyBillSaveReqVO {
 
     @Schema(description = "备注", example = "紧急用章")
     private String remark;
+
+    @Schema(description = "附件列表")
+    private List<AttachmentSaveReqVO> attachments;
 
 }
