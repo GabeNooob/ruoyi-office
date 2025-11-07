@@ -1,7 +1,7 @@
-package cn.iocoder.yudao.module.oa.dal.mysql.attachment;
+package cn.iocoder.yudao.common.server.attachment.dal.mysql;
 
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
-import cn.iocoder.yudao.module.oa.dal.dataobject.attachment.AttachmentDO;
+import cn.iocoder.yudao.common.server.attachment.dal.dataobject.AttachmentDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.apache.ibatis.annotations.Mapper;
 

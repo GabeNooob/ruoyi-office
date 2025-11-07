@@ -20,7 +20,7 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 
 import cn.iocoder.yudao.module.oa.dal.mysql.seal.SealApplyBillMapper;
-import cn.iocoder.yudao.module.oa.service.attachment.AttachmentService;
+import cn.iocoder.yudao.common.server.attachment.service.AttachmentService;
 
 import cn.iocoder.yudao.framework.common.service.FlowBillService;
 

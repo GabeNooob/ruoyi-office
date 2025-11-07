@@ -1,7 +1,7 @@
-package cn.iocoder.yudao.module.oa.service.attachment;
+package cn.iocoder.yudao.common.server.attachment.service;
 
-import cn.iocoder.yudao.module.oa.controller.admin.attachment.vo.AttachmentSaveReqVO;
-import cn.iocoder.yudao.module.oa.dal.dataobject.attachment.AttachmentDO;
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentSaveReqVO;
+import cn.iocoder.yudao.common.server.attachment.dal.dataobject.AttachmentDO;
 
 import jakarta.validation.Valid;
 import java.util.List;

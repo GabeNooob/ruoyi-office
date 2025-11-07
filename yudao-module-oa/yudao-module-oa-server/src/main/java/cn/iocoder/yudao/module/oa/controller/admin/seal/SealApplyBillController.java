@@ -1,5 +1,7 @@
 package cn.iocoder.yudao.module.oa.controller.admin.seal;
 
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentRespVO;
+import cn.iocoder.yudao.common.server.attachment.service.AttachmentService;
 import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -28,8 +30,6 @@ import static cn.iocoder.yudao.framework.apilog.core.enums.OperateTypeEnum.*;
 import cn.iocoder.yudao.module.oa.controller.admin.seal.vo.*;
 import cn.iocoder.yudao.module.oa.dal.dataobject.seal.SealApplyBillDO;
 import cn.iocoder.yudao.module.oa.service.seal.SealApplyBillService;
-import cn.iocoder.yudao.module.oa.service.attachment.AttachmentService;
-import cn.iocoder.yudao.module.oa.controller.admin.attachment.vo.AttachmentRespVO;
 
 @Tag(name = "管理后台 - 用印申请单")
 @RestController

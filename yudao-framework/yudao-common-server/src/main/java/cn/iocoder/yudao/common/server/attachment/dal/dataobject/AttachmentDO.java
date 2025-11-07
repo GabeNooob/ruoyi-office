@@ -1,4 +1,4 @@
-package cn.iocoder.yudao.module.oa.dal.dataobject.attachment;
+package cn.iocoder.yudao.common.server.attachment.dal.dataobject;
 
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 import com.baomidou.mybatisplus.annotation.KeySequence;
@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
  *
  * @author 芋道源码
  */
-@TableName("oa_attachment")
-@KeySequence("oa_attachment_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
+@TableName("common_attachment")
+@KeySequence("common_attachment_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

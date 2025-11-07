@@ -7,7 +7,7 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
-import cn.iocoder.yudao.module.oa.controller.admin.attachment.vo.AttachmentSaveReqVO;
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentSaveReqVO;
 
 @Schema(description = "管理后台 - 用印申请单新增/修改 Request VO")
 @Data

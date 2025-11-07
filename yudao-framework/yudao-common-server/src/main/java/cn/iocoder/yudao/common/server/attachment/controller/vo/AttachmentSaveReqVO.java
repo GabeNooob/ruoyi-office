@@ -1,66 +1,55 @@
-package cn.iocoder.yudao.module.oa.controller.admin.attachment.vo;
+package cn.iocoder.yudao.common.server.attachment.controller.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+
+import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
-import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
-import cn.idev.excel.annotation.ExcelProperty;
 
-@Schema(description = "管理后台 - 通用附件信息 Response VO")
+@Schema(description = "管理后台 - 通用附件信息新增/修改 Request VO")
 @Data
-@ExcelIgnoreUnannotated
-public class AttachmentRespVO {
+public class AttachmentSaveReqVO {
 
-    @Schema(description = "附件ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1882")
-    @ExcelProperty("附件ID")
+    @Schema(description = "附件ID", example = "1882")
     private Long id;
 
     @Schema(description = "业务类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "seal_apply_bill")
-    @ExcelProperty("业务类型")
+    @NotEmpty(message = "业务类型不能为空")
     private String businessType;
 
     @Schema(description = "业务单据ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @ExcelProperty("业务单据ID")
+    @NotNull(message = "业务单据ID不能为空")
     private Long businessId;
 
     @Schema(description = "文件名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "合同文件.pdf")
-    @ExcelProperty("文件名称")
+    @NotEmpty(message = "文件名称不能为空")
     private String fileName;
 
     @Schema(description = "文件路径", requiredMode = Schema.RequiredMode.REQUIRED)
-    @ExcelProperty("文件路径")
+    @NotEmpty(message = "文件路径不能为空")
     private String filePath;
 
     @Schema(description = "文件访问URL", requiredMode = Schema.RequiredMode.REQUIRED)
-    @ExcelProperty("文件访问URL")
+    @NotEmpty(message = "文件访问URL不能为空")
     private String fileUrl;
 
     @Schema(description = "文件大小（字节）", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    @ExcelProperty("文件大小")
+    @NotNull(message = "文件大小不能为空")
     private Long fileSize;
 
     @Schema(description = "文件类型（MIME类型）", example = "application/pdf")
-    @ExcelProperty("文件类型")
     private String fileType;
 
     @Schema(description = "文件扩展名", example = "pdf")
-    @ExcelProperty("文件扩展名")
     private String fileExtension;
 
     @Schema(description = "上传时间")
-    @ExcelProperty("上传时间")
     private LocalDateTime uploadTime;
 
     @Schema(description = "排序顺序", example = "1")
-    @ExcelProperty("排序顺序")
     private Integer sortOrder;
 
     @Schema(description = "备注", example = "重要文件")
-    @ExcelProperty("备注")
     private String remark;
-
-    @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
-    @ExcelProperty("创建时间")
-    private LocalDateTime createTime;
 
 }

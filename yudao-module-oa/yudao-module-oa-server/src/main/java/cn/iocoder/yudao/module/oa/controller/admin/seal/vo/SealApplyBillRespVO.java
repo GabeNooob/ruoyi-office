@@ -1,11 +1,11 @@
 package cn.iocoder.yudao.module.oa.controller.admin.seal.vo;
 
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentRespVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import java.time.LocalDateTime;
 import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
 import cn.idev.excel.annotation.ExcelProperty;
-import cn.iocoder.yudao.module.oa.controller.admin.attachment.vo.AttachmentRespVO;
 import java.util.List;
 
 @Schema(description = "管理后台 - 用印申请单 Response VO")

@@ -1,9 +1,9 @@
-package cn.iocoder.yudao.module.oa.service.attachment;
+package cn.iocoder.yudao.common.server.attachment.service;
 
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
-import cn.iocoder.yudao.module.oa.controller.admin.attachment.vo.AttachmentSaveReqVO;
-import cn.iocoder.yudao.module.oa.dal.dataobject.attachment.AttachmentDO;
-import cn.iocoder.yudao.module.oa.dal.mysql.attachment.AttachmentMapper;
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentSaveReqVO;
+import cn.iocoder.yudao.common.server.attachment.dal.dataobject.AttachmentDO;
+import cn.iocoder.yudao.common.server.attachment.dal.mysql.AttachmentMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -11,14 +11,11 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.ATTACHMENT_NOT_EXISTS;
 
 /**
  * 通用附件信息 Service 实现类
@@ -66,7 +63,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     private void validateAttachmentExists(Long id) {
         if (attachmentMapper.selectById(id) == null) {
-            throw exception(ATTACHMENT_NOT_EXISTS);
+            throw new RuntimeException("附件不存在");
         }
     }
 
