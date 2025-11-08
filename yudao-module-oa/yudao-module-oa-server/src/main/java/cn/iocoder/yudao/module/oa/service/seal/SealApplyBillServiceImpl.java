@@ -65,7 +65,7 @@ public class SealApplyBillServiceImpl implements SealApplyBillService, FlowBillS
 
         // 保存附件信息
         if (saveReqVO.getAttachments() != null) {
-            attachmentService.saveAttachmentList("seal_apply_bill", sealApplyBill.getId(), saveReqVO.getAttachments());
+            attachmentService.saveAttachmentList(OaBillTypeEnum.OA_SEAL_APPLY_BILL.getProcessDefinitionKey(), sealApplyBill.getId(), saveReqVO.getAttachments());
         }
 
         // 返回
@@ -103,7 +103,7 @@ public class SealApplyBillServiceImpl implements SealApplyBillService, FlowBillS
         
         // 保存附件信息
         if (saveReqVO.getAttachments() != null) {
-            attachmentService.saveAttachmentList("seal_apply_bill", sealApplyBill.getId(), saveReqVO.getAttachments());
+            attachmentService.saveAttachmentList(OaBillTypeEnum.OA_SEAL_APPLY_BILL.getProcessDefinitionKey(), sealApplyBill.getId(), saveReqVO.getAttachments());
         }
         
         // 返回
