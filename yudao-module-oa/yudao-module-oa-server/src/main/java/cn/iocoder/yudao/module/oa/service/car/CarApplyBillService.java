@@ -64,6 +64,14 @@ public interface CarApplyBillService {
      * @return 用车申请单
      */
     CarApplyBillDO getCarApplyBill(Long id);
+
+    /**
+     * 获得用车申请单（包含附件信息）
+     *
+     * @param id 编号
+     * @return 用车申请单响应VO
+     */
+    CarApplyBillRespVO getCarApplyBillInfo(Long id);
     
     /**
      * 获得用车申请单

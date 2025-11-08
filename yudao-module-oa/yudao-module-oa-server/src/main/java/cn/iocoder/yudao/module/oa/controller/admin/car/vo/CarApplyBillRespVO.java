@@ -1,8 +1,11 @@
 package cn.iocoder.yudao.module.oa.controller.admin.car.vo;
 
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentRespVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
 import cn.idev.excel.annotation.ExcelProperty;
 
@@ -94,5 +97,8 @@ public class CarApplyBillRespVO {
     @Schema(description = "还车状态", example = "0")
     @ExcelProperty("还车状态")
     private Integer returnStatus;
+
+    @Schema(description = "附件列表")
+    private List<AttachmentRespVO> attachments;
 
 }

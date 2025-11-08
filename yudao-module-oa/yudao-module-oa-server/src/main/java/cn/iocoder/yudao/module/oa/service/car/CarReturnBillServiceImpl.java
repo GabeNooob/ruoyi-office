@@ -22,6 +22,8 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 
 import cn.iocoder.yudao.module.oa.dal.mysql.car.CarReturnBillMapper;
+import cn.iocoder.yudao.common.server.attachment.service.AttachmentService;
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentRespVO;
 import cn.iocoder.yudao.module.bpm.util.BpmProcessVariableUtils;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -41,6 +43,9 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
     private CarReturnBillMapper carReturnBillMapper;
 
     @Resource
+    private AttachmentService attachmentService;
+
+    @Resource
     private BpmProcessInstanceApi processInstanceApi;
 
     @Resource
@@ -57,6 +62,11 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
         // 插入或更新
         CarReturnBillDO carReturnBill = BeanUtils.toBean(saveReqVO, CarReturnBillDO.class);
         carReturnBillMapper.insertOrUpdate(carReturnBill);
+
+        // 保存附件信息
+        if (saveReqVO.getAttachments() != null) {
+            attachmentService.saveAttachmentList(OaBillTypeEnum.OA_CAR_RETURN_BILL.getTypeCode(), carReturnBill.getId(), saveReqVO.getAttachments());
+        }
 
         // 返回
         return carReturnBill.getId();
@@ -92,6 +102,11 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
 
         // 将工作流的编号，更新到单据中
         carReturnBillMapper.updateById(new CarReturnBillDO().setId(carReturnBill.getId()).setProcessInstanceId(processInstanceId));
+        
+        // 保存附件信息
+        if (saveReqVO.getAttachments() != null) {
+            attachmentService.saveAttachmentList(OaBillTypeEnum.OA_CAR_RETURN_BILL.getTypeCode(), carReturnBill.getId(), saveReqVO.getAttachments());
+        }
         
         // 标记对应用车申请单为还车中
         carApplyBillService.markAsReturning(applyBillId);
@@ -145,6 +160,24 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
     @Override
     public CarReturnBillDO getCarReturnBill(Long id) {
         return carReturnBillMapper.selectById(id);
+    }
+
+    @Override
+    public CarReturnBillRespVO getCarReturnBillInfo(Long id) {
+        CarReturnBillDO carReturnBill = carReturnBillMapper.selectById(id);
+        if (carReturnBill == null) {
+            return null;
+        }
+        
+        CarReturnBillRespVO respVO = BeanUtils.toBean(carReturnBill, CarReturnBillRespVO.class);
+        
+        // 获取附件信息
+        respVO.setAttachments(BeanUtils.toBean(
+            attachmentService.getAttachmentListByBusiness(OaBillTypeEnum.OA_CAR_RETURN_BILL.getTypeCode(), id),
+            AttachmentRespVO.class
+        ));
+        
+        return respVO;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package cn.iocoder.yudao.module.oa.controller.admin.seal;
 
-import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentRespVO;
-import cn.iocoder.yudao.common.server.attachment.service.AttachmentService;
 import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -39,9 +37,6 @@ public class SealApplyBillController {
 
     @Resource
     private SealApplyBillService sealApplyBillService;
-
-    @Resource
-    private AttachmentService attachmentService;
 
     @PostMapping("/create")
     @Operation(summary = "创建用印申请单")
@@ -95,15 +90,7 @@ public class SealApplyBillController {
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('oa:seal-apply-bill:query')")
     public CommonResult<SealApplyBillRespVO> getSealApplyBill(@RequestParam("id") Long id) {
-        SealApplyBillDO sealApplyBill = sealApplyBillService.getSealApplyBill(id);
-        SealApplyBillRespVO respVO = BeanUtils.toBean(sealApplyBill, SealApplyBillRespVO.class);
-        
-        // 获取附件信息
-        respVO.setAttachments(BeanUtils.toBean(
-            attachmentService.getAttachmentListByBusiness("seal_apply_bill", id), 
-            AttachmentRespVO.class
-        ));
-        
+        SealApplyBillRespVO respVO = sealApplyBillService.getSealApplyBillInfo(id);
         return success(respVO);
     }
 

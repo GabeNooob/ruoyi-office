@@ -68,6 +68,14 @@ public interface CarReturnBillService {
     CarReturnBillDO getCarReturnBill(Long id);
 
     /**
+     * 获得还车申请单（包含附件信息）
+     *
+     * @param id 编号
+     * @return 还车申请单响应VO
+     */
+    CarReturnBillRespVO getCarReturnBillInfo(Long id);
+
+    /**
      * 获得还车申请单分页
      *
      * @param pageReqVO 分页查询

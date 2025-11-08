@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.oa.controller.admin.car.vo;
 
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentRespVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import java.util.*;
@@ -104,4 +105,6 @@ public class CarReturnBillRespVO {
     @ExcelProperty("公司名称")
     private String companyName;
 
+    @Schema(description = "附件列表")
+    private List<AttachmentRespVO> attachments;
 }

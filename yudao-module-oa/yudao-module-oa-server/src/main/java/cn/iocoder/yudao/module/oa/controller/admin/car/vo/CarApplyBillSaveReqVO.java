@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.oa.controller.admin.car.vo;
 
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentSaveReqVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import java.util.*;
@@ -70,5 +71,8 @@ public class CarApplyBillSaveReqVO {
 
     @Schema(description = "公司名称", example = "张三")
     private String companyName;
+
+    @Schema(description = "附件列表")
+    private List<AttachmentSaveReqVO> attachments;
 
 }

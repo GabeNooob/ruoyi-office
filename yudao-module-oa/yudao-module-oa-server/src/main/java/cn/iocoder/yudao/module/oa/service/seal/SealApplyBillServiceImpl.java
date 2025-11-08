@@ -21,6 +21,7 @@ import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 
 import cn.iocoder.yudao.module.oa.dal.mysql.seal.SealApplyBillMapper;
 import cn.iocoder.yudao.common.server.attachment.service.AttachmentService;
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentRespVO;
 
 import cn.iocoder.yudao.framework.common.service.FlowBillService;
 
@@ -65,7 +66,7 @@ public class SealApplyBillServiceImpl implements SealApplyBillService, FlowBillS
 
         // 保存附件信息
         if (saveReqVO.getAttachments() != null) {
-            attachmentService.saveAttachmentList(OaBillTypeEnum.OA_SEAL_APPLY_BILL.getProcessDefinitionKey(), sealApplyBill.getId(), saveReqVO.getAttachments());
+            attachmentService.saveAttachmentList(OaBillTypeEnum.OA_SEAL_APPLY_BILL.getTypeCode(), sealApplyBill.getId(), saveReqVO.getAttachments());
         }
 
         // 返回
@@ -103,7 +104,7 @@ public class SealApplyBillServiceImpl implements SealApplyBillService, FlowBillS
         
         // 保存附件信息
         if (saveReqVO.getAttachments() != null) {
-            attachmentService.saveAttachmentList(OaBillTypeEnum.OA_SEAL_APPLY_BILL.getProcessDefinitionKey(), sealApplyBill.getId(), saveReqVO.getAttachments());
+            attachmentService.saveAttachmentList(OaBillTypeEnum.OA_SEAL_APPLY_BILL.getTypeCode(), sealApplyBill.getId(), saveReqVO.getAttachments());
         }
         
         // 返回
@@ -155,6 +156,24 @@ public class SealApplyBillServiceImpl implements SealApplyBillService, FlowBillS
     @Override
     public SealApplyBillDO getSealApplyBill(Long id) {
         return sealApplyBillMapper.selectById(id);
+    }
+
+    @Override
+    public SealApplyBillRespVO getSealApplyBillInfo(Long id) {
+        SealApplyBillDO sealApplyBill = sealApplyBillMapper.selectById(id);
+        if (sealApplyBill == null) {
+            return null;
+        }
+        
+        SealApplyBillRespVO respVO = BeanUtils.toBean(sealApplyBill, SealApplyBillRespVO.class);
+        
+        // 获取附件信息
+        respVO.setAttachments(BeanUtils.toBean(
+            attachmentService.getAttachmentListByBusiness(OaBillTypeEnum.OA_SEAL_APPLY_BILL.getTypeCode(), id),
+            AttachmentRespVO.class
+        ));
+        
+        return respVO;
     }
     
     @Override

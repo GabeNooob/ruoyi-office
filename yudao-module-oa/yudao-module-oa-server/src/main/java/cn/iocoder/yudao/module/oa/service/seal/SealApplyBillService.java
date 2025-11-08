@@ -67,6 +67,14 @@ public interface SealApplyBillService {
     SealApplyBillDO getSealApplyBill(Long id);
 
     /**
+     * 获得用印申请单（包含附件信息）
+     *
+     * @param id 编号
+     * @return 用印申请单响应VO
+     */
+    SealApplyBillRespVO getSealApplyBillInfo(Long id);
+
+    /**
      * 根据单据编号获得用印申请单
      *
      * @param code 单据编号

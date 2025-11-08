@@ -83,8 +83,8 @@ public class CarApplyBillController {
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('oa:car-apply-bill:query')")
     public CommonResult<CarApplyBillRespVO> getCarApplyBill(@RequestParam("id") Long id) {
-        CarApplyBillDO carApplyBill = carApplyBillService.getCarApplyBill(id);
-        return success(BeanUtils.toBean(carApplyBill, CarApplyBillRespVO.class));
+        CarApplyBillRespVO respVO = carApplyBillService.getCarApplyBillInfo(id);
+        return success(respVO);
     }
 
     @GetMapping("/page")

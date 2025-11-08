@@ -90,8 +90,8 @@ public class CarReturnBillController {
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('oa:car-return-bill:query')")
     public CommonResult<CarReturnBillRespVO> getCarReturnBill(@RequestParam("id") Long id) {
-        CarReturnBillDO carReturnBill = carReturnBillService.getCarReturnBill(id);
-        return success(BeanUtils.toBean(carReturnBill, CarReturnBillRespVO.class));
+        CarReturnBillRespVO respVO = carReturnBillService.getCarReturnBillInfo(id);
+        return success(respVO);
     }
 
     @GetMapping("/page")

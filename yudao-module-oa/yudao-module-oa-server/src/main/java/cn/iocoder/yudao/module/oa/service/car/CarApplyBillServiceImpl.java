@@ -20,6 +20,8 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 
 import cn.iocoder.yudao.module.oa.dal.mysql.car.CarApplyBillMapper;
+import cn.iocoder.yudao.common.server.attachment.service.AttachmentService;
+import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentRespVO;
 
 import cn.iocoder.yudao.framework.common.service.FlowBillService;
 
@@ -46,6 +48,9 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
     private CarApplyBillMapper carApplyBillMapper;
 
     @Resource
+    private AttachmentService attachmentService;
+
+    @Resource
     private BpmProcessInstanceApi processInstanceApi;
 
 
@@ -60,6 +65,11 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
         // 插入或更新
         CarApplyBillDO carApplyBill = BeanUtils.toBean(saveReqVO, CarApplyBillDO.class);
         carApplyBillMapper.insertOrUpdate(carApplyBill);
+
+        // 保存附件信息
+        if (saveReqVO.getAttachments() != null) {
+            attachmentService.saveAttachmentList(OaBillTypeEnum.OA_CAR_APPLY_BILL.getTypeCode(), carApplyBill.getId(), saveReqVO.getAttachments());
+        }
 
         // 返回
         return carApplyBill.getId();
@@ -90,6 +100,12 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
 
         // 将工作流的编号，更新到单据中
         carApplyBillMapper.updateById(new CarApplyBillDO().setId(carApplyBill.getId()).setProcessInstanceId(processInstanceId));
+        
+        // 保存附件信息
+        if (saveReqVO.getAttachments() != null) {
+            attachmentService.saveAttachmentList(OaBillTypeEnum.OA_CAR_APPLY_BILL.getTypeCode(), carApplyBill.getId(), saveReqVO.getAttachments());
+        }
+        
         // 返回
         return carApplyBill.getId();
     }
@@ -142,6 +158,24 @@ public class CarApplyBillServiceImpl implements CarApplyBillService, FlowBillSer
     @Override
     public CarApplyBillDO getCarApplyBill(Long id) {
         return carApplyBillMapper.selectById(id);
+    }
+
+    @Override
+    public CarApplyBillRespVO getCarApplyBillInfo(Long id) {
+        CarApplyBillDO carApplyBill = carApplyBillMapper.selectById(id);
+        if (carApplyBill == null) {
+            return null;
+        }
+        
+        CarApplyBillRespVO respVO = BeanUtils.toBean(carApplyBill, CarApplyBillRespVO.class);
+        
+        // 获取附件信息
+        respVO.setAttachments(BeanUtils.toBean(
+            attachmentService.getAttachmentListByBusiness(OaBillTypeEnum.OA_CAR_APPLY_BILL.getTypeCode(), id),
+            AttachmentRespVO.class
+        ));
+        
+        return respVO;
     }
     
     @Override
