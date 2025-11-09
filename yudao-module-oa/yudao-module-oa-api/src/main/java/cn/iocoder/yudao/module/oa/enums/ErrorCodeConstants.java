@@ -34,4 +34,7 @@ public interface ErrorCodeConstants {
 
     // ========== 通用附件 1-101-002-000 ============
     ErrorCode ATTACHMENT_NOT_EXISTS = new ErrorCode(1_101_002_000, "附件不存在");
+
+    // ========== 企业云盘 1-101-003-000 ============
+    ErrorCode FILE_INFO_NOT_EXISTS = new ErrorCode(1_101_003_000, "文件/文件夹不存在");
 }

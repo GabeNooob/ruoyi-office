@@ -7,7 +7,7 @@ spring:
 
   http:
     codecs:
-      max-in-memory-size: 10MB # 调整缓冲区大小https://gitee.com/zhijiantianya/yudao-cloud/pulls/176
+      max-in-memory-size: 100MB # 调整缓冲区大小，支持大文件上传
 
   # Jackson 配置项
   jackson:
