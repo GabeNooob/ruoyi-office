@@ -30,5 +30,52 @@ public interface FilePermissionMapper extends BaseMapperX<FilePermissionDO> {
                 .eq(FilePermissionDO::getTargetId, targetId));
     }
 
+    default List<FilePermissionDO> selectByUserId(Long userId) {
+        return selectList(new LambdaQueryWrapperX<FilePermissionDO>()
+                .eq(FilePermissionDO::getShareType, 0) // 人员分享
+                .eq(FilePermissionDO::getTargetId, userId));
+    }
+
+    default List<FilePermissionDO> selectByUserOrg(Long userId, List<Long> deptIds) {
+        if (deptIds == null || deptIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return selectList(new LambdaQueryWrapperX<FilePermissionDO>()
+                .eq(FilePermissionDO::getShareType, 1) // 组织分享
+                .in(FilePermissionDO::getTargetId, deptIds));
+    }
+
+    default List<FilePermissionDO> selectByFileIdAndUser(Long fileId, Long userId, List<Long> deptIds) {
+        List<FilePermissionDO> result = new ArrayList<>();
+        
+        // 查询直接分享给用户的权限
+        FilePermissionDO userPermission = selectOne(new LambdaQueryWrapperX<FilePermissionDO>()
+                .eq(FilePermissionDO::getFileId, fileId)
+                .eq(FilePermissionDO::getShareType, 0)
+                .eq(FilePermissionDO::getTargetId, userId));
+        if (userPermission != null) {
+            result.add(userPermission);
+        }
+        
+        // 查询分享给用户所在组织的权限
+        if (deptIds != null && !deptIds.isEmpty()) {
+            List<FilePermissionDO> orgPermissions = selectList(new LambdaQueryWrapperX<FilePermissionDO>()
+                    .eq(FilePermissionDO::getFileId, fileId)
+                    .eq(FilePermissionDO::getShareType, 1)
+                    .in(FilePermissionDO::getTargetId, deptIds));
+            result.addAll(orgPermissions);
+        }
+        
+        return result;
+    }
+
+    default Integer selectMaxPermissionByFileIdAndUser(Long fileId, Long userId, List<Long> deptIds) {
+        List<FilePermissionDO> permissions = selectByFileIdAndUser(fileId, userId, deptIds);
+        return permissions.stream()
+                .mapToInt(FilePermissionDO::getPermission)
+                .max()
+                .orElse(-1); // -1表示无权限
+    }
+
 }
 

@@ -1,7 +1,14 @@
--- ----------------------------
--- 企业云盘 - 文件权限表
--- ----------------------------
+-- ========================================
+-- 企业云盘文件权限表结构更新脚本
+-- 执行前请备份数据库！
+-- ========================================
+
+-- 1. 如果表已存在，先备份数据（如果有的话）
+-- CREATE TABLE oa_file_permission_backup AS SELECT * FROM oa_file_permission WHERE 1=1;
+
+-- 2. 删除旧表并重新创建（包含所有必需字段）
 DROP TABLE IF EXISTS `oa_file_permission`;
+
 CREATE TABLE `oa_file_permission` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '权限ID',
   `file_id` bigint NOT NULL COMMENT '文件ID',
@@ -29,9 +36,12 @@ CREATE TABLE `oa_file_permission` (
   UNIQUE INDEX `uk_file_share_target`(`file_id` ASC, `share_type` ASC, `target_id` ASC, `deleted` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'OA协同办公-企业云盘-文件权限表';
 
--- ----------------------------
--- Records of oa_file_permission
--- ----------------------------
-BEGIN;
-COMMIT;
+-- 3. 如果需要恢复备份数据，可以执行以下语句（根据实际情况调整）
+-- INSERT INTO oa_file_permission (file_id, share_type, target_id, target_name, permission, creator, create_time, updater, update_time, deleted, tenant_id)
+-- SELECT file_id, share_type, target_id, target_name, permission, creator, create_time, updater, update_time, deleted, tenant_id
+-- FROM oa_file_permission_backup;
 
+-- 4. 清理备份表（可选）
+-- DROP TABLE IF EXISTS oa_file_permission_backup;
+
+COMMIT;

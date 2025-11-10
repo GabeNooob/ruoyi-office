@@ -50,6 +50,36 @@ public class FilePermissionDO extends BaseDO {
      * 权限(0仅查看 1可管理)
      */
     private Integer permission;
+    
+    /**
+     * 是否继承权限(0否 1是)
+     */
+    private Boolean inheritPermission;
+    
+    /**
+     * 分享路径(用于显示层级结构)
+     */
+    private String sharePath;
+    
+    /**
+     * 根分享文件夹ID(用于快速定位)
+     */
+    private Long rootShareId;
+    
+    /**
+     * 过期时间
+     */
+    private java.time.LocalDateTime expireTime;
+    
+    /**
+     * 分享码(可选)
+     */
+    private String shareCode;
+    
+    /**
+     * 访问次数
+     */
+    private Integer accessCount;
 
 }
 

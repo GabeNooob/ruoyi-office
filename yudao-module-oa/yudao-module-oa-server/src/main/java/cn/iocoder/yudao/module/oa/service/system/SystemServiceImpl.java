@@ -9,6 +9,9 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * System 模块服务实现类
  * 统一封装对 System 模块的远程调用
@@ -63,6 +66,18 @@ public class SystemServiceImpl implements SystemService {
     public String getDeptName(Long deptId) {
         DeptRespDTO dept = getDept(deptId);
         return dept != null ? dept.getName() : null;
+    }
+
+    @Override
+    public List<Long> getUserDeptIds(Long userId) {
+        List<Long> deptIds = new ArrayList<>();
+        AdminUserRespDTO user = getUser(userId);
+        if (user != null && user.getDeptId() != null) {
+            deptIds.add(user.getDeptId());
+            // 这里可以扩展为获取用户所有相关部门（如果有层级关系）
+            // 目前简化处理，只返回用户直接所属的部门
+        }
+        return deptIds;
     }
 
 }

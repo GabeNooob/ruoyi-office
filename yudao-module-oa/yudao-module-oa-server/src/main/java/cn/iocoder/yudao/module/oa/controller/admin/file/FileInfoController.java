@@ -33,6 +33,7 @@ import static cn.iocoder.yudao.framework.apilog.core.enums.OperateTypeEnum.*;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.*;
 import cn.iocoder.yudao.module.oa.dal.dataobject.file.FileInfoDO;
 import cn.iocoder.yudao.module.oa.service.file.FileInfoService;
+import cn.iocoder.yudao.module.oa.service.file.FileShareService;
 
 @Tag(name = "OA协同办公 - 企业云盘")
 @RestController
@@ -42,6 +43,9 @@ public class FileInfoController {
 
     @Resource
     private FileInfoService fileInfoService;
+
+    @Resource
+    private FileShareService fileShareService;
 
     @Resource
     private FileApi fileApi;
@@ -155,6 +159,65 @@ public class FileInfoController {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         List<FileInfoRespVO> list = fileInfoService.getFavoriteFileList(userId);
         return success(list);
+    }
+
+    // ==================== 文件分享相关接口 ====================
+
+    @PostMapping("/share")
+    @Operation(summary = "分享文件/文件夹")
+    @PreAuthorize("@ss.hasPermission('oa:file:share')")
+    public CommonResult<Integer> shareFile(@Valid @RequestBody FileShareReqVO shareReqVO) {
+        Integer shareCount = fileShareService.shareFile(shareReqVO);
+        return success(shareCount);
+    }
+
+    @DeleteMapping("/unshare")
+    @Operation(summary = "取消分享")
+    @PreAuthorize("@ss.hasPermission('oa:file:share')")
+    public CommonResult<Boolean> unshareFile(@RequestParam("fileId") Long fileId,
+                                           @RequestParam("shareType") Integer shareType,
+                                           @RequestParam("targetId") Long targetId) {
+        fileShareService.unshareFile(fileId, shareType, targetId);
+        return success(true);
+    }
+
+    @GetMapping("/share-info")
+    @Operation(summary = "获取文件分享信息")
+    @Parameter(name = "fileId", description = "文件ID", required = true, example = "1")
+    @PreAuthorize("@ss.hasPermission('oa:file:query')")
+    public CommonResult<FileShareRespVO> getFileShareInfo(@RequestParam("fileId") Long fileId) {
+        FileShareRespVO shareInfo = fileShareService.getFileShareInfo(fileId);
+        return success(shareInfo);
+    }
+
+    @GetMapping("/shared-list")
+    @Operation(summary = "获取共享文件列表(根级别)")
+    @PreAuthorize("@ss.hasPermission('oa:file:query')")
+    public CommonResult<List<SharedFileListRespVO>> getSharedFileList() {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        List<SharedFileListRespVO> list = fileShareService.getSharedFilesForUser(userId);
+        return success(list);
+    }
+
+    @GetMapping("/shared-sub-files")
+    @Operation(summary = "获取共享文件夹下的子文件列表")
+    @PreAuthorize("@ss.hasPermission('oa:file:query')")
+    public CommonResult<List<SharedFileListRespVO>> getSharedSubFiles(
+            @RequestParam("rootShareId") Long rootShareId,
+            @RequestParam("parentId") Long parentId) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        List<SharedFileListRespVO> list = fileShareService.getSharedSubFiles(rootShareId, parentId, userId);
+        return success(list);
+    }
+
+    @GetMapping("/check-permission")
+    @Operation(summary = "检查文件权限")
+    @Parameter(name = "fileId", description = "文件ID", required = true, example = "1")
+    @PreAuthorize("@ss.hasPermission('oa:file:query')")
+    public CommonResult<Integer> checkFilePermission(@RequestParam("fileId") Long fileId) {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        Integer permission = fileShareService.checkFilePermission(fileId, userId);
+        return success(permission);
     }
 
     @GetMapping("/export-excel")

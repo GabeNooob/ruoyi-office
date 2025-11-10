@@ -43,4 +43,12 @@ public interface SystemService {
      */
     String getDeptName(Long deptId);
 
+    /**
+     * 获取用户所属部门ID列表
+     *
+     * @param userId 用户ID
+     * @return 部门ID列表
+     */
+    java.util.List<Long> getUserDeptIds(Long userId);
+
 }
