@@ -40,4 +40,7 @@ public interface ErrorCodeConstants {
     ErrorCode FILE_SHARE_NOT_OWNER = new ErrorCode(1_101_003_001, "只有文件所有者才能分享文件");
     ErrorCode FILE_SHARE_NO_PERMISSION = new ErrorCode(1_101_003_002, "无权限访问");
     ErrorCode FILE_CANCEL_SHARE_NOT_OWNER = new ErrorCode(1_101_003_003, "只有文件所有者才能取消分享");
+
+    // ========== 会议室管理 1-101-004-000 ============
+    ErrorCode MEETING_ROOM_NOT_EXISTS = new ErrorCode(1_101_004_000, "会议室信息不存在");
 }
