@@ -49,6 +49,14 @@ public class MeetingRoomRespVO {
     @DictFormat("oa_meeting_room_status")
     private Integer availableStatus;
 
+    @Schema(description = "会议室图片URL", example = "https://www.iocoder.cn/image.jpg")
+    @ExcelProperty("会议室图片")
+    private String picUrl;
+
+    @Schema(description = "坐席数", example = "20")
+    @ExcelProperty("坐席数")
+    private Integer seatCount;
+
     @Schema(description = "会议室设备（数组形式）", example = "[\"tv\",\"computer\"]")
     private List<String> equipment;
 

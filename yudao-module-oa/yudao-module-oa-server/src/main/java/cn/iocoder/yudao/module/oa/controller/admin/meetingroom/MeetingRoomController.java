@@ -138,5 +138,18 @@ public class MeetingRoomController {
                         BeanUtils.toBean(list, MeetingRoomRespVO.class));
     }
 
+    @GetMapping("/simple-list")
+    @Operation(summary = "获取会议室精简信息列表（用于下拉选择）")
+    @PreAuthorize("@ss.hasPermission('oa:meeting-room:query')")
+    public CommonResult<List<MeetingRoomRespVO>> getSimpleMeetingRoomList() {
+        MeetingRoomPageReqVO pageReqVO = new MeetingRoomPageReqVO();
+        pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
+        // 只查询允许预定的会议室
+        pageReqVO.setAllowBooking(true);
+        List<MeetingRoomDO> list = meetingRoomService.getMeetingRoomPage(pageReqVO).getList();
+        List<MeetingRoomRespVO> respList = BeanUtils.toBean(list, MeetingRoomRespVO.class);
+        return success(respList);
+    }
+
 }
 

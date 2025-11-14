@@ -21,7 +21,12 @@ public enum OaBillTypeEnum implements BillTypeEnum {
     /**
      * 用印申请单
      */
-    OA_SEAL_APPLY_BILL("103", "用印申请单","oa_seal_apply_bill");
+    OA_SEAL_APPLY_BILL("103", "用印申请单","oa_seal_apply_bill"),
+    
+    /**
+     * 会议室预定申请单
+     */
+    OA_MEETING_ROOM_BOOKING("104", "会议室预定申请单","oa_meeting_room_booking");
 
     /**
      * 单据类型代码

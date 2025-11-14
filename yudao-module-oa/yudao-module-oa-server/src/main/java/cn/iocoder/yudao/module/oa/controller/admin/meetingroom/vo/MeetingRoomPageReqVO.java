@@ -29,6 +29,9 @@ public class MeetingRoomPageReqVO extends PageParam {
     @Schema(description = "可用状态（0正常 1维修中 2不可用）", example = "0")
     private Integer availableStatus;
 
+    @Schema(description = "允许预定", example = "true")
+    private Boolean allowBooking;
+
     @Schema(description = "创建时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;

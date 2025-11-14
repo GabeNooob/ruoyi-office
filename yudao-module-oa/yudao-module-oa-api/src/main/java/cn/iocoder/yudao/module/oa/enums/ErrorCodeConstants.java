@@ -43,4 +43,11 @@ public interface ErrorCodeConstants {
 
     // ========== 会议室管理 1-101-004-000 ============
     ErrorCode MEETING_ROOM_NOT_EXISTS = new ErrorCode(1_101_004_000, "会议室信息不存在");
+
+    // ========== 会议室预定 1-101-005-000 ============
+    ErrorCode MEETING_ROOM_BOOKING_NOT_EXISTS = new ErrorCode(1_101_005_000, "会议室预定申请单不存在");
+    ErrorCode MEETING_ROOM_BOOKING_TIME_INVALID = new ErrorCode(1_101_005_001, "会议时间无效，请检查开始时间和结束时间");
+    ErrorCode MEETING_ROOM_BOOKING_TIME_PAST = new ErrorCode(1_101_005_002, "会议开始时间不能是过去时间");
+    ErrorCode MEETING_ROOM_BOOKING_TIME_CONFLICT = new ErrorCode(1_101_005_003, "该时间段会议室已被预定，请选择其他时间");
+    ErrorCode MEETING_ROOM_BOOKING_CANNOT_DELETE = new ErrorCode(1_101_005_004, "只能删除草稿状态的预定申请单");
 }

@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS `oa_meeting_room` (
   `manager_name` varchar(100) NOT NULL COMMENT '负责人姓名',
   `manager_phone` varchar(20) DEFAULT NULL COMMENT '负责人联系方式',
   `available_status` int NOT NULL DEFAULT 0 COMMENT '可用状态（0正常 1维修中 2不可用）',
+  `pic_url` varchar(500) DEFAULT NULL COMMENT '会议室图片URL',
+  `seat_count` int DEFAULT NULL COMMENT '坐席数',
   `equipment` varchar(500) DEFAULT NULL COMMENT '会议室设备（逗号分隔：tv,computer,remote,projector,water_dispenser,locker）',
   `attachment_url` varchar(1000) DEFAULT NULL COMMENT '附件URL',
   `remark` varchar(500) DEFAULT NULL COMMENT '备注（200字以内）',

@@ -24,6 +24,7 @@ public interface MeetingRoomMapper extends BaseMapperX<MeetingRoomDO> {
                 .eqIfPresent(MeetingRoomDO::getRoomType, reqVO.getRoomType())
                 .likeIfPresent(MeetingRoomDO::getManagerName, reqVO.getManagerName())
                 .eqIfPresent(MeetingRoomDO::getAvailableStatus, reqVO.getAvailableStatus())
+                .eqIfPresent(MeetingRoomDO::getAllowBooking, reqVO.getAllowBooking())
                 .betweenIfPresent(MeetingRoomDO::getCreateTime, reqVO.getCreateTime())
                 .orderByAsc(MeetingRoomDO::getSort)
                 .orderByDesc(MeetingRoomDO::getId));

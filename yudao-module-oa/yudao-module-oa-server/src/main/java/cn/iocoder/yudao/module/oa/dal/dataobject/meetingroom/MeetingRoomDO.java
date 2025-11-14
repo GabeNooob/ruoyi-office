@@ -64,6 +64,16 @@ public class MeetingRoomDO extends BaseDO {
     private Integer availableStatus;
     
     /**
+     * 会议室图片URL
+     */
+    private String picUrl;
+    
+    /**
+     * 坐席数
+     */
+    private Integer seatCount;
+    
+    /**
      * 会议室设备（逗号分隔：tv,computer,remote,projector,water_dispenser,locker）
      */
     private String equipment;
