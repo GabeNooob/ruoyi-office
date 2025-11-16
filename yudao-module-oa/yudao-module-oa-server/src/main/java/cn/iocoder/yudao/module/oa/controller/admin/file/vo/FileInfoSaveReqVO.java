@@ -30,6 +30,9 @@ public class FileInfoSaveReqVO {
     @Schema(description = "文件后缀名（不含点号）", example = "pdf")
     private String fileSuffix;
 
+    @Schema(description = "文件分类（all全部 image图片 document文档 video视频 audio音频 archive压缩包 other其他）", example = "document")
+    private String fileCategory;
+
     @Schema(description = "文件大小(字节)", example = "1024")
     private Long fileSize;
 

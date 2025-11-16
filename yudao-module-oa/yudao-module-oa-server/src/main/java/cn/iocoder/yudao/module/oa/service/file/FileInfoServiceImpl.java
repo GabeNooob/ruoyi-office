@@ -9,6 +9,7 @@ import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
 import cn.iocoder.yudao.module.infra.api.file.FileApi;
 import cn.iocoder.yudao.module.oa.service.system.SystemService;
+import cn.iocoder.yudao.module.oa.util.FileCategoryUtils;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.FileInfoPageReqVO;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.FileInfoRespVO;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.FileInfoSaveReqVO;
@@ -54,6 +55,9 @@ public class FileInfoServiceImpl implements FileInfoService {
     @Resource
     private SystemService systemService;
 
+    @Resource
+    private FileCategoryUtils fileCategoryUtils;
+
     @Override
     public Long uploadFile(MultipartFile file, Long parentId) throws Exception {
         // 0. 验证文件大小（100MB限制）
@@ -81,13 +85,17 @@ public class FileInfoServiceImpl implements FileInfoService {
         // 3. 获取当前用户信息
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         
-        // 4. 创建文件信息记录
+        // 4. 根据文件后缀获取文件分类
+        String fileCategory = fileCategoryUtils.getFileCategoryBySuffix(fileSuffix);
+        
+        // 5. 创建文件信息记录
         FileInfoDO fileInfo = new FileInfoDO();
         fileInfo.setParentId(parentId);
         fileInfo.setFileType(1); // 1表示文件（0表示文件夹）
         fileInfo.setFileName(originalFilename);
         fileInfo.setFileExtension(fileExtension);
         fileInfo.setFileSuffix(fileSuffix);
+        fileInfo.setFileCategory(fileCategory);
         fileInfo.setFileSize(file.getSize());
         fileInfo.setFileUrl(fileUrl);
         fileInfo.setOwnerId(userId);
@@ -102,7 +110,7 @@ public class FileInfoServiceImpl implements FileInfoService {
         
         fileInfo.setSortOrder(0);
         
-        // 5. 插入数据库
+        // 6. 插入数据库
         fileInfoMapper.insert(fileInfo);
         
         return fileInfo.getId();
@@ -112,6 +120,13 @@ public class FileInfoServiceImpl implements FileInfoService {
     public Long createFileInfo(FileInfoSaveReqVO createReqVO) {
         // 插入
         FileInfoDO fileInfo = BeanUtils.toBean(createReqVO, FileInfoDO.class);
+        
+        // 如果是文件且有后缀，但没有设置分类，则根据后缀自动设置分类
+        if (fileInfo.getFileType() != null && fileInfo.getFileType() == 1 
+                && StrUtil.isNotBlank(fileInfo.getFileSuffix()) 
+                && StrUtil.isBlank(fileInfo.getFileCategory())) {
+            fileInfo.setFileCategory(fileCategoryUtils.getFileCategoryBySuffix(fileInfo.getFileSuffix()));
+        }
         
         // 如果没有设置所有者信息，则使用当前登录用户
         if (fileInfo.getOwnerId() == null) {

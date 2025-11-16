@@ -36,6 +36,34 @@ INSERT INTO `system_dict_data` (`sort`, `label`, `value`, `dict_type`, `status`,
 (2, '可管理', '1', 'oa_file_permission', 0, 'success', '', '可以管理文件')
 ON DUPLICATE KEY UPDATE `label` = VALUES(`label`), `value` = VALUES(`value`);
 
+-- 文件分类字典
+INSERT INTO `system_dict_type` (`name`, `type`, `status`, `remark`) 
+VALUES ('文件分类', 'oa_file_category', 0, '企业云盘的文件分类')
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+INSERT INTO `system_dict_data` (`sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`) VALUES
+(1, '全部', 'all', 'oa_file_category', 0, 'default', '', '全部文件'),
+(2, '图片', 'image', 'oa_file_category', 0, 'success', '', '图片文件'),
+(3, '文档', 'document', 'oa_file_category', 0, 'primary', '', '文档文件'),
+(4, '视频', 'video', 'oa_file_category', 0, 'warning', '', '视频文件'),
+(5, '音频', 'audio', 'oa_file_category', 0, 'info', '', '音频文件'),
+(6, '压缩包', 'archive', 'oa_file_category', 0, 'danger', '', '压缩包文件'),
+(7, '其他', 'other', 'oa_file_category', 0, 'default', '', '其他文件')
+ON DUPLICATE KEY UPDATE `label` = VALUES(`label`), `value` = VALUES(`value`);
+
+-- 文件分类与文件后缀映射字典
+INSERT INTO `system_dict_type` (`name`, `type`, `status`, `remark`) 
+VALUES ('文件分类后缀映射', 'oa_file_category_suffix', 0, '文件分类与文件后缀的映射关系，value格式：分类值，label格式：后缀1,后缀2,后缀3')
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+INSERT INTO `system_dict_data` (`sort`, `label`, `value`, `dict_type`, `status`, `color_type`, `css_class`, `remark`) VALUES
+(1, 'bmp,gif,jpeg,jpg,png,svg,webp,ico,heic,heif,raw,psd,ai,eps', 'image', 'oa_file_category_suffix', 0, 'default', '', '图片文件后缀'),
+(2, 'doc,docx,pdf,txt,rtf,odt,ppt,pptx,xls,xlsx,csv,md,html,htm,xml,json,yaml,yml,log', 'document', 'oa_file_category_suffix', 0, 'default', '', '文档文件后缀'),
+(3, 'mp4,avi,mkv,mov,wmv,flv,webm,m4v,3gp,rm,rmvb,mpg,mpeg,ts,m2ts', 'video', 'oa_file_category_suffix', 0, 'default', '', '视频文件后缀'),
+(4, 'mp3,wav,flac,aac,ogg,wma,m4a,ape,amr,mid,midi', 'audio', 'oa_file_category_suffix', 0, 'default', '', '音频文件后缀'),
+(5, 'zip,rar,7z,tar,gz,bz2,xz,iso,dmg,cab,arj,lzh', 'archive', 'oa_file_category_suffix', 0, 'default', '', '压缩包文件后缀')
+ON DUPLICATE KEY UPDATE `label` = VALUES(`label`), `value` = VALUES(`value`);
+
 -- ----------------------------
 -- 企业云盘菜单权限配置
 -- ----------------------------

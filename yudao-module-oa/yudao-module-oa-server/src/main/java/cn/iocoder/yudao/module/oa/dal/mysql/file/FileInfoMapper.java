@@ -23,9 +23,11 @@ public interface FileInfoMapper extends BaseMapperX<FileInfoDO> {
                 .eqIfPresent(FileInfoDO::getFileType, reqVO.getFileType())
                 .likeIfPresent(FileInfoDO::getFileName, reqVO.getFileName())
                 .eqIfPresent(FileInfoDO::getOwnerId, reqVO.getOwnerId())
+                .likeIfPresent(FileInfoDO::getOwnerName, reqVO.getOwnerName())
                 .eqIfPresent(FileInfoDO::getDeptId, reqVO.getDeptId())
                 .eqIfPresent(FileInfoDO::getIsShared, reqVO.getIsShared())
                 .eqIfPresent(FileInfoDO::getShareType, reqVO.getShareType())
+                .eqIfPresent(FileInfoDO::getFileCategory, reqVO.getFileCategoryFilter())
                 .betweenIfPresent(FileInfoDO::getCreateTime, reqVO.getCreateTime())
                 .orderByAsc(FileInfoDO::getFileType) // 文件夹排前面（0=文件夹，1=文件）
                 .orderByDesc(FileInfoDO::getUpdateTime) // 按更新时间倒序

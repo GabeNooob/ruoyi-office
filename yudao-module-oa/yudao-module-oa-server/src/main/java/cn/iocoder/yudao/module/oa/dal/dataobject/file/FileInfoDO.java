@@ -52,6 +52,11 @@ public class FileInfoDO extends BaseDO {
     private String fileSuffix;
     
     /**
+     * 文件分类（all全部 image图片 document文档 video视频 audio音频 archive压缩包 other其他）
+     */
+    private String fileCategory;
+    
+    /**
      * 文件大小(字节)
      */
     private Long fileSize;

@@ -42,6 +42,11 @@ public class FileInfoRespVO {
     @ExcelProperty("文件后缀名")
     private String fileSuffix;
 
+    @Schema(description = "文件分类（all全部 image图片 document文档 video视频 audio音频 archive压缩包 other其他）", example = "document")
+    @ExcelProperty(value = "文件分类", converter = DictConvert.class)
+    @DictFormat("oa_file_category")
+    private String fileCategory;
+
     @Schema(description = "文件大小(字节)", example = "1024")
     @ExcelProperty("文件大小")
     private Long fileSize;

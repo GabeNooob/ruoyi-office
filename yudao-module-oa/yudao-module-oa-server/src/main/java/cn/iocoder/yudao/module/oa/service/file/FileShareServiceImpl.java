@@ -1,13 +1,16 @@
 package cn.iocoder.yudao.module.oa.service.file;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.FileShareReqVO;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.FileShareRespVO;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.SharedFileListRespVO;
+import cn.iocoder.yudao.module.oa.dal.dataobject.file.FileFavoriteDO;
 import cn.iocoder.yudao.module.oa.dal.dataobject.file.FileInfoDO;
 import cn.iocoder.yudao.module.oa.dal.dataobject.file.FilePermissionDO;
+import cn.iocoder.yudao.module.oa.dal.mysql.file.FileFavoriteMapper;
 import cn.iocoder.yudao.module.oa.dal.mysql.file.FileInfoMapper;
 import cn.iocoder.yudao.module.oa.dal.mysql.file.FilePermissionMapper;
 import cn.iocoder.yudao.module.oa.service.system.SystemService;
@@ -36,6 +39,9 @@ public class FileShareServiceImpl implements FileShareService {
 
     @Resource
     private FilePermissionMapper filePermissionMapper;
+
+    @Resource
+    private FileFavoriteMapper fileFavoriteMapper;
 
     @Resource
     private SystemService systemService;
@@ -207,7 +213,7 @@ public class FileShareServiceImpl implements FileShareService {
                 .collect(Collectors.toList());
 
         // 6. 获取文件信息并转换为响应对象
-        return rootShares.stream()
+        List<SharedFileListRespVO> result = rootShares.stream()
                 .map(share -> {
                     FileInfoDO fileInfo = fileInfoMapper.selectById(share.getFileId());
                     if (fileInfo == null) return null;
@@ -226,6 +232,18 @@ public class FileShareServiceImpl implements FileShareService {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+
+        // 7. 补充收藏状态
+        if (userId != null && !result.isEmpty()) {
+            List<Long> fileIds = result.stream().map(SharedFileListRespVO::getFileId).collect(Collectors.toList());
+            List<FileFavoriteDO> favorites = fileFavoriteMapper.selectList(new cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX<FileFavoriteDO>()
+                    .eq(FileFavoriteDO::getUserId, userId)
+                    .in(FileFavoriteDO::getFileId, fileIds));
+            Set<Long> favoriteFileIds = favorites.stream().map(FileFavoriteDO::getFileId).collect(Collectors.toSet());
+            result.forEach(item -> item.setIsFavorite(favoriteFileIds.contains(item.getFileId())));
+        }
+
+        return result;
     }
 
     @Override
@@ -240,7 +258,7 @@ public class FileShareServiceImpl implements FileShareService {
         List<FileInfoDO> subFiles = fileInfoMapper.selectListByParentId(parentId);
 
         // 3. 转换为响应对象并设置权限信息
-        return subFiles.stream()
+        List<SharedFileListRespVO> result = subFiles.stream()
                 .map(file -> {
                     SharedFileListRespVO respVO = BeanUtils.toBean(file, SharedFileListRespVO.class);
                     respVO.setFileId(file.getId());
@@ -254,6 +272,18 @@ public class FileShareServiceImpl implements FileShareService {
                     return respVO;
                 })
                 .collect(Collectors.toList());
+
+        // 4. 补充收藏状态
+        if (userId != null && !result.isEmpty()) {
+            List<Long> fileIds = result.stream().map(SharedFileListRespVO::getFileId).collect(Collectors.toList());
+            List<FileFavoriteDO> favorites = fileFavoriteMapper.selectList(new cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX<FileFavoriteDO>()
+                    .eq(FileFavoriteDO::getUserId, userId)
+                    .in(FileFavoriteDO::getFileId, fileIds));
+            Set<Long> favoriteFileIds = favorites.stream().map(FileFavoriteDO::getFileId).collect(Collectors.toSet());
+            result.forEach(item -> item.setIsFavorite(favoriteFileIds.contains(item.getFileId())));
+        }
+
+        return result;
     }
 
     @Override
