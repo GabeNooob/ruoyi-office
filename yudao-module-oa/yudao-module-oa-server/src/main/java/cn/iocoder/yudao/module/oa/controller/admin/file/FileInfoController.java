@@ -161,6 +161,15 @@ public class FileInfoController {
         return success(list);
     }
 
+    @GetMapping("/storage-stats")
+    @Operation(summary = "获取用户文件存储统计信息")
+    @PreAuthorize("@ss.hasPermission('oa:file:query')")
+    public CommonResult<FileStorageStatsRespVO> getFileStorageStats() {
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        FileStorageStatsRespVO stats = fileInfoService.getFileStorageStats(userId);
+        return success(stats);
+    }
+
     // ==================== 文件分享相关接口 ====================
 
     @PostMapping("/share")

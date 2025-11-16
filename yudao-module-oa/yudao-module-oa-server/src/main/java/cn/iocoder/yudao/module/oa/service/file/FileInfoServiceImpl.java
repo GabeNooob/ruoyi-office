@@ -13,6 +13,7 @@ import cn.iocoder.yudao.module.oa.util.FileCategoryUtils;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.FileInfoPageReqVO;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.FileInfoRespVO;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.FileInfoSaveReqVO;
+import cn.iocoder.yudao.module.oa.controller.admin.file.vo.FileStorageStatsRespVO;
 import cn.iocoder.yudao.module.oa.dal.dataobject.file.FileFavoriteDO;
 import cn.iocoder.yudao.module.oa.dal.dataobject.file.FileInfoDO;
 import cn.iocoder.yudao.module.oa.dal.mysql.file.FileFavoriteMapper;
@@ -66,6 +67,21 @@ public class FileInfoServiceImpl implements FileInfoService {
             throw new IllegalArgumentException("上传文件不能超过100M，请压缩后上传");
         }
         
+        // 0.1. 获取当前用户信息
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        
+        // 0.2. 校验用户存储空间限制（5GB）
+        long maxStorageSize = 5L * 1024 * 1024 * 1024; // 5GB
+        Long tenantId = TenantContextHolder.getTenantId();
+        Long usedSize = fileInfoMapper.selectTotalFileSizeByOwnerId(userId, tenantId);
+        if (usedSize == null) {
+            usedSize = 0L;
+        }
+        if (usedSize + file.getSize() > maxStorageSize) {
+            throw new IllegalArgumentException("存储空间不足，您的存储空间限制为5G，当前已使用" + 
+                formatFileSize(usedSize) + "，无法上传该文件");
+        }
+        
         // 1. 上传文件到文件存储服务
         byte[] content = IoUtil.readBytes(file.getInputStream());
         String fileUrl = fileApi.createFile(content, file.getOriginalFilename(), "oa/cloud", file.getContentType());
@@ -82,8 +98,7 @@ public class FileInfoServiceImpl implements FileInfoService {
             fileSuffix = fileExtension.toLowerCase(); // 文件后缀统一小写
         }
         
-        // 3. 获取当前用户信息
-        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        // 3. 用户信息已在前面获取，这里不再重复获取
         
         // 4. 根据文件后缀获取文件分类
         String fileCategory = fileCategoryUtils.getFileCategoryBySuffix(fileSuffix);
@@ -303,6 +318,55 @@ public class FileInfoServiceImpl implements FileInfoService {
         result.forEach(item -> item.setIsFavorite(true));
         
         return result;
+    }
+
+    @Override
+    public FileStorageStatsRespVO getFileStorageStats(Long userId) {
+        Long tenantId = TenantContextHolder.getTenantId();
+        
+        // 查询已用空间（仅文件，不包括文件夹）
+        Long usedSize = fileInfoMapper.selectTotalFileSizeByOwnerId(userId, tenantId);
+        if (usedSize == null) {
+            usedSize = 0L;
+        }
+        
+        // 查询文件数量（仅文件，不包括文件夹）
+        Long fileCount = fileInfoMapper.selectFileCountByOwnerId(userId, tenantId);
+        if (fileCount == null) {
+            fileCount = 0L;
+        }
+        
+        // 查询共享文件数量
+        Long sharedFileCount = fileInfoMapper.selectSharedFileCountByOwnerId(userId, tenantId);
+        if (sharedFileCount == null) {
+            sharedFileCount = 0L;
+        }
+        
+        // 总空间限制：5GB
+        long totalSize = 5L * 1024 * 1024 * 1024;
+        
+        FileStorageStatsRespVO stats = new FileStorageStatsRespVO();
+        stats.setUsedSize(usedSize);
+        stats.setTotalSize(totalSize);
+        stats.setFileCount(fileCount);
+        stats.setSharedFileCount(sharedFileCount);
+        
+        return stats;
+    }
+
+    /**
+     * 格式化文件大小
+     */
+    private String formatFileSize(long bytes) {
+        if (bytes < 1024) {
+            return bytes + "B";
+        } else if (bytes < 1024 * 1024) {
+            return String.format("%.2fKB", bytes / 1024.0);
+        } else if (bytes < 1024 * 1024 * 1024) {
+            return String.format("%.2fMB", bytes / (1024.0 * 1024.0));
+        } else {
+            return String.format("%.2fGB", bytes / (1024.0 * 1024.0 * 1024.0));
+        }
     }
 
 }

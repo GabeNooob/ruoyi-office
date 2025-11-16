@@ -117,5 +117,13 @@ public interface FileInfoService {
      */
     List<FileInfoRespVO> getFavoriteFileList(Long userId);
 
+    /**
+     * 获取用户文件存储统计信息
+     *
+     * @param userId 用户ID
+     * @return 存储统计信息
+     */
+    FileStorageStatsRespVO getFileStorageStats(Long userId);
+
 }
 

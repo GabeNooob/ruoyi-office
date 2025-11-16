@@ -7,6 +7,8 @@ import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.module.oa.dal.dataobject.file.FileInfoDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import cn.iocoder.yudao.module.oa.controller.admin.file.vo.*;
 
 /**
@@ -50,6 +52,37 @@ public interface FileInfoMapper extends BaseMapperX<FileInfoDO> {
                 .orderByDesc(FileInfoDO::getUpdateTime) // 按更新时间倒序
                 .orderByAsc(FileInfoDO::getSortOrder));
     }
+
+    /**
+     * 查询用户上传的文件总大小（仅文件，不包括文件夹）
+     *
+     * @param ownerId 用户ID
+     * @return 文件总大小（字节）
+     */
+    @Select("SELECT COALESCE(SUM(file_size), 0) FROM oa_file_info " +
+            "WHERE owner_id = #{ownerId} AND file_type = 1 AND deleted = 0 AND tenant_id = #{tenantId}")
+    Long selectTotalFileSizeByOwnerId(@Param("ownerId") Long ownerId, @Param("tenantId") Long tenantId);
+
+    /**
+     * 查询用户上传的文件数量（仅文件，不包括文件夹）
+     *
+     * @param ownerId 用户ID
+     * @return 文件数量
+     */
+    @Select("SELECT COUNT(*) FROM oa_file_info " +
+            "WHERE owner_id = #{ownerId} AND file_type = 1 AND deleted = 0 AND tenant_id = #{tenantId}")
+    Long selectFileCountByOwnerId(@Param("ownerId") Long ownerId, @Param("tenantId") Long tenantId);
+
+    /**
+     * 查询用户共享的文件数量
+     *
+     * @param ownerId 用户ID
+     * @return 共享文件数量
+     */
+    @Select("SELECT COUNT(DISTINCT fp.file_id) FROM oa_file_permission fp " +
+            "INNER JOIN oa_file_info fi ON fp.file_id = fi.id " +
+            "WHERE fi.owner_id = #{ownerId} AND fp.deleted = 0 AND fi.deleted = 0 AND fp.tenant_id = #{tenantId}")
+    Long selectSharedFileCountByOwnerId(@Param("ownerId") Long ownerId, @Param("tenantId") Long tenantId);
 
 }
 
