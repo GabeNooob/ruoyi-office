@@ -72,5 +72,13 @@ public interface MeetingRoomBookingService {
      */
     void rejectMeetingRoomBooking(Long id);
 
+    /**
+     * 更新会议室预定申请单的使用状态
+     *
+     * @param id 编号
+     * @param useStatus 使用状态
+     */
+    void updateUseStatus(Long id, Integer useStatus);
+
 }
 

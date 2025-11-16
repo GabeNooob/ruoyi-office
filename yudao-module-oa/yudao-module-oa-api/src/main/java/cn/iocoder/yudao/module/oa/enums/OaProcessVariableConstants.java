@@ -19,5 +19,15 @@ public interface OaProcessVariableConstants {
      */
     String PV_SEAL_USE_MODE = "sealUseMode";
 
+    // ========== 会议室预定申请单流程变量 ==========
+
+    /**
+     * 预定需审批变量名
+     * 
+     * 用于在会议室预定申请单流程中传递是否需要审批信息
+     * true-需要审批，false-不需要审批
+     */
+    String PV_MEETING_ROOM_NEED_APPROVAL = "meetingRoomNeedApproval";
+
 
 }

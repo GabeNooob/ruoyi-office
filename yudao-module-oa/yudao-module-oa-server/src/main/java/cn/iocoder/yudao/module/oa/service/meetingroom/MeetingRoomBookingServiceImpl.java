@@ -5,6 +5,7 @@ import cn.iocoder.yudao.common.server.attachment.service.AttachmentService;
 import cn.iocoder.yudao.framework.common.enums.SystemEnum;
 import cn.iocoder.yudao.framework.common.util.bill.BillCodeUtils;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
+import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
@@ -25,9 +26,11 @@ import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 import cn.iocoder.yudao.module.oa.dal.mysql.meetingroom.MeetingRoomBookingMapper;
 import cn.iocoder.yudao.framework.common.service.FlowBillService;
 import cn.iocoder.yudao.module.bpm.util.BpmProcessVariableUtils;
+import cn.iocoder.yudao.module.oa.service.meetingroom.MeetingRoomService;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.oa.enums.ErrorCodeConstants.*;
+import static cn.iocoder.yudao.module.oa.enums.OaProcessVariableConstants.*;
 
 /**
  * 会议室预定申请单 Service 实现类
@@ -47,6 +50,9 @@ public class MeetingRoomBookingServiceImpl implements MeetingRoomBookingService,
 
     @Resource
     private AttachmentService attachmentService;
+
+    @Resource
+    private MeetingRoomService meetingRoomService;
 
 
     @Override
@@ -102,8 +108,19 @@ public class MeetingRoomBookingServiceImpl implements MeetingRoomBookingService,
 
         meetingRoomBookingMapper.insertOrUpdate(meetingRoomBooking);
 
+        // 查询会议室的"预定需审批"属性
+        Boolean needApproval = false;
+        if (saveReqVO.getRoomId() != null) {
+            var meetingRoom = meetingRoomService.getMeetingRoom(saveReqVO.getRoomId());
+            if (meetingRoom != null) {
+                needApproval = meetingRoom.getNeedApproval() != null ? meetingRoom.getNeedApproval() : false;
+            }
+        }
+
         // 智能提交 BPM 流程（如果流程实例不存在则创建，存在则审批发起人任务）
         Map<String, Object> processInstanceVariables = BpmProcessVariableUtils.buildBillVariables(saveReqVO);
+        // 添加会议室预定需审批流程变量
+        processInstanceVariables.put(PV_MEETING_ROOM_NEED_APPROVAL, needApproval);
         String processInstanceId = processInstanceApi.submitProcessInstance(Long.valueOf(saveReqVO.getCreator()),
                 new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(OaBillTypeEnum.OA_MEETING_ROOM_BOOKING.getProcessDefinitionKey())
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(meetingRoomBooking.getId()))
@@ -218,6 +235,11 @@ public class MeetingRoomBookingServiceImpl implements MeetingRoomBookingService,
 
     @Override
     public PageResult<MeetingRoomBookingDO> getMeetingRoomBookingPage(MeetingRoomBookingPageReqVO pageReqVO) {
+        // 自动添加创建人过滤条件（当前登录用户）
+        Long currentUserId = SecurityFrameworkUtils.getLoginUserId();
+        if (currentUserId != null) {
+            pageReqVO.setCreator(String.valueOf(currentUserId));
+        }
         return meetingRoomBookingMapper.selectPage(pageReqVO);
     }
 
@@ -253,6 +275,17 @@ public class MeetingRoomBookingServiceImpl implements MeetingRoomBookingService,
         meetingRoomBookingMapper.updateById(new MeetingRoomBookingDO()
                 .setId(id)
                 .setProcessStatus(3)); // 审批拒绝
+    }
+
+    @Override
+    public void updateUseStatus(Long id, Integer useStatus) {
+        // 校验存在
+        validateMeetingRoomBookingExists(id);
+
+        // 更新使用状态
+        meetingRoomBookingMapper.updateById(new MeetingRoomBookingDO()
+                .setId(id)
+                .setUseStatus(useStatus));
     }
 
     // ==================== FlowBillService 接口实现 ====================

@@ -58,5 +58,14 @@ public interface MeetingRoomService {
      */
     PageResult<MeetingRoomDO> getMeetingRoomPage(MeetingRoomPageReqVO pageReqVO);
 
+    /**
+     * 获得可预定的会议室信息分页（用于会议预定单选择会议室）
+     *
+     * @param pageReqVO 分页查询
+     * @param currentUserId 当前登录用户ID
+     * @return 会议室信息分页
+     */
+    PageResult<MeetingRoomDO> getBookableMeetingRoomPage(MeetingRoomPageReqVO pageReqVO, Long currentUserId);
+
 }
 

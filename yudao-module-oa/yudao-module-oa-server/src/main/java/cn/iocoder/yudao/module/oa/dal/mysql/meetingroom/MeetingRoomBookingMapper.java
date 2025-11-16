@@ -19,6 +19,7 @@ public interface MeetingRoomBookingMapper extends BaseMapperX<MeetingRoomBooking
 
     default PageResult<MeetingRoomBookingDO> selectPage(MeetingRoomBookingPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<MeetingRoomBookingDO>()
+                .eqIfPresent(MeetingRoomBookingDO::getCreator, reqVO.getCreator())
                 .likeIfPresent(MeetingRoomBookingDO::getBillCode, reqVO.getBillCode())
                 .likeIfPresent(MeetingRoomBookingDO::getRoomName, reqVO.getRoomName())
                 .likeIfPresent(MeetingRoomBookingDO::getMeetingTitle, reqVO.getMeetingTitle())

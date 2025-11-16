@@ -118,5 +118,15 @@ public class MeetingRoomBookingController {
         return success(true);
     }
 
+    @PutMapping("/update-use-status")
+    @Operation(summary = "更新会议室预定申请单的使用状态")
+    @PreAuthorize("@ss.hasPermission('oa:meeting-room-booking:update')")
+    public CommonResult<Boolean> updateUseStatus(
+            @RequestParam("id") Long id,
+            @RequestParam("useStatus") Integer useStatus) {
+        meetingRoomBookingService.updateUseStatus(id, useStatus);
+        return success(true);
+    }
+
 }
 

@@ -115,5 +115,47 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
         return meetingRoomMapper.selectPage(pageReqVO);
     }
 
+    @Override
+    public PageResult<MeetingRoomDO> getBookableMeetingRoomPage(MeetingRoomPageReqVO pageReqVO, Long currentUserId) {
+        // 设置过滤条件：可用状态为正常（0）、允许预定（true）
+        pageReqVO.setAvailableStatus(0);
+        pageReqVO.setAllowBooking(true);
+        
+        // 查询符合条件的会议室
+        PageResult<MeetingRoomDO> pageResult = meetingRoomMapper.selectPage(pageReqVO);
+        
+        // 如果当前用户ID不为空，则根据可用范围进一步过滤
+        if (currentUserId != null) {
+            List<MeetingRoomDO> filteredList = pageResult.getList().stream()
+                    .filter(room -> {
+                        // 如果可用范围为全部成员（0）或未设置，则允许
+                        if (room.getBookingScope() == null || room.getBookingScope() == 0) {
+                            return true;
+                        }
+                        // 如果可用范围为指定成员（1），则检查当前用户是否在可预定成员列表中
+                        if (room.getBookingScope() == 1) {
+                            if (StrUtil.isBlank(room.getBookingMembers())) {
+                                return false; // 指定成员但未设置成员列表，不允许
+                            }
+                            // 检查当前用户ID是否在可预定成员列表中
+                            String[] memberIds = room.getBookingMembers().split(",");
+                            for (String memberId : memberIds) {
+                                if (String.valueOf(currentUserId).equals(memberId.trim())) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                        return true;
+                    })
+                    .collect(Collectors.toList());
+            
+            // 重新构建分页结果，总数使用过滤后的列表大小
+            return new PageResult<>(filteredList, (long) filteredList.size());
+        }
+        
+        return pageResult;
+    }
+
 }
 
