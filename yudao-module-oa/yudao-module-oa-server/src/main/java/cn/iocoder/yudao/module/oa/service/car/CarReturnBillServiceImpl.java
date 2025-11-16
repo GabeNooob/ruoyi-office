@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.oa.service.car;
 
 import cn.iocoder.yudao.framework.common.enums.SystemEnum;
 import cn.iocoder.yudao.framework.common.util.bill.BillCodeUtils;
+import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
@@ -182,6 +183,11 @@ public class CarReturnBillServiceImpl implements CarReturnBillService, FlowBillS
 
     @Override
     public PageResult<CarReturnBillDO> getCarReturnBillPage(CarReturnBillPageReqVO pageReqVO) {
+        // 自动添加创建人过滤条件（当前登录用户）
+        Long currentUserId = SecurityFrameworkUtils.getLoginUserId();
+        if (currentUserId != null) {
+            pageReqVO.setCreator(String.valueOf(currentUserId));
+        }
         return carReturnBillMapper.selectPage(pageReqVO);
     }
 

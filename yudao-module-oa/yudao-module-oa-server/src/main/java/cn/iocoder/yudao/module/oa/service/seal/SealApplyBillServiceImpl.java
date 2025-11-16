@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.oa.service.seal;
 import cn.iocoder.yudao.framework.common.enums.SystemEnum;
 import cn.iocoder.yudao.framework.common.util.bill.BillCodeUtils;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
+import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
@@ -183,6 +184,11 @@ public class SealApplyBillServiceImpl implements SealApplyBillService, FlowBillS
 
     @Override
     public PageResult<SealApplyBillDO> getSealApplyBillPage(SealApplyBillPageReqVO pageReqVO) {
+        // 自动添加创建人过滤条件（当前登录用户）
+        Long currentUserId = SecurityFrameworkUtils.getLoginUserId();
+        if (currentUserId != null) {
+            pageReqVO.setCreator(String.valueOf(currentUserId));
+        }
         return sealApplyBillMapper.selectPage(pageReqVO);
     }
 

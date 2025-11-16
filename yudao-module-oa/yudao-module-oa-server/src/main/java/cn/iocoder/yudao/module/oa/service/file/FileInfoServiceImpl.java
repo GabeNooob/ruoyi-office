@@ -216,6 +216,12 @@ public class FileInfoServiceImpl implements FileInfoService {
 
     @Override
     public PageResult<FileInfoRespVO> getFileInfoPage(FileInfoPageReqVO pageReqVO) {
+        // 自动添加所有者过滤条件（当前登录用户）
+        Long currentUserId = SecurityFrameworkUtils.getLoginUserId();
+        if (currentUserId != null) {
+            pageReqVO.setOwnerId(currentUserId);
+        }
+        
         PageResult<FileInfoDO> pageResult = fileInfoMapper.selectPage(pageReqVO);
         PageResult<FileInfoRespVO> result = BeanUtils.toBean(pageResult, FileInfoRespVO.class);
         

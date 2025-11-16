@@ -33,6 +33,7 @@ public interface CarReturnBillMapper extends BaseMapperX<CarReturnBillDO> {
                 .eqIfPresent(CarReturnBillDO::getApplyer, reqVO.getApplyer())
                 .eqIfPresent(CarReturnBillDO::getPassenger, reqVO.getPassenger())
                 .eqIfPresent(CarReturnBillDO::getRemark, reqVO.getRemark())
+                .eqIfPresent(CarReturnBillDO::getCreator, reqVO.getCreator())
                 .likeIfPresent(CarReturnBillDO::getCreatorName, reqVO.getCreatorName())
                 .betweenIfPresent(CarReturnBillDO::getCreateTime, reqVO.getCreateTime())
                 .eqIfPresent(CarReturnBillDO::getParentId, reqVO.getParentId())

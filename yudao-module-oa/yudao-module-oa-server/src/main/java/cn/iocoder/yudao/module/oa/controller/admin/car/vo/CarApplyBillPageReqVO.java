@@ -51,6 +51,9 @@ public class CarApplyBillPageReqVO extends PageParam {
     @Schema(description = "随行人")
     private String passenger;
 
+    @Schema(description = "创建人（用户ID）", example = "1")
+    private String creator;
+
     @Schema(description = "创建者姓名", example = "芋艿")
     private String creatorName;
 

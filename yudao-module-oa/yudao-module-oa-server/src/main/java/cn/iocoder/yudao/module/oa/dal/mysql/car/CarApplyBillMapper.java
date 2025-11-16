@@ -31,6 +31,7 @@ public interface CarApplyBillMapper extends BaseMapperX<CarApplyBillDO> {
                 .eqIfPresent(CarApplyBillDO::getCause, reqVO.getCause())
                 .eqIfPresent(CarApplyBillDO::getApplyer, reqVO.getApplyer())
                 .eqIfPresent(CarApplyBillDO::getPassenger, reqVO.getPassenger())
+                .eqIfPresent(CarApplyBillDO::getCreator, reqVO.getCreator())
                 .likeIfPresent(CarApplyBillDO::getCreatorName, reqVO.getCreatorName())
                 .betweenIfPresent(CarApplyBillDO::getCreateTime, reqVO.getCreateTime())
                 .eqIfPresent(CarApplyBillDO::getDeptId, reqVO.getDeptId())
