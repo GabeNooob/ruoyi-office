@@ -106,6 +106,10 @@ public class MeetingRoomBookingRespVO {
     @ExcelProperty("部门名称")
     private String deptName;
 
+    @Schema(description = "创建人")
+    @ExcelProperty("创建人")
+    private String creator;
+
     @Schema(description = "备注", example = "备注信息")
     @ExcelProperty("备注")
     private String remark;
