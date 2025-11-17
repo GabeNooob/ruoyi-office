@@ -80,5 +80,13 @@ public interface MeetingRoomBookingService {
      */
     void updateUseStatus(Long id, Integer useStatus);
 
+    /**
+     * 查询会议室预约信息（用于展示预约时间网格）
+     *
+     * @param reqVO 查询条件
+     * @return 预约信息
+     */
+    MeetingRoomBookingScheduleRespVO getMeetingRoomBookingSchedule(MeetingRoomBookingScheduleReqVO reqVO);
+
 }
 

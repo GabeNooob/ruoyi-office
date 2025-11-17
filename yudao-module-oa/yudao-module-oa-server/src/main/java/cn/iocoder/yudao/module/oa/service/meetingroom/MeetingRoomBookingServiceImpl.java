@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import cn.iocoder.yudao.module.oa.controller.admin.meetingroom.vo.*;
@@ -311,7 +312,78 @@ public class MeetingRoomBookingServiceImpl implements MeetingRoomBookingService,
         meetingRoomBookingMapper.updateById(updateObj);
     }
 
+    @Override
+    public MeetingRoomBookingScheduleRespVO getMeetingRoomBookingSchedule(MeetingRoomBookingScheduleReqVO reqVO) {
+        // 查询指定会议室在指定日期范围内的所有预约记录
+        LocalDateTime startDateTime = reqVO.getStartDate().atStartOfDay();
+        LocalDateTime endDateTime = reqVO.getEndDate().atTime(23, 59, 59);
 
+        List<MeetingRoomBookingDO> bookings = meetingRoomBookingMapper.selectList(
+                new LambdaQueryWrapperX<MeetingRoomBookingDO>()
+                        .eq(MeetingRoomBookingDO::getRoomId, reqVO.getRoomId())
+                        .and(wrapper -> wrapper
+                                // 预约开始时间在查询范围内
+                                .or(w -> w.ge(MeetingRoomBookingDO::getMeetingStartTime, startDateTime)
+                                        .le(MeetingRoomBookingDO::getMeetingStartTime, endDateTime))
+                                // 预约结束时间在查询范围内
+                                .or(w -> w.ge(MeetingRoomBookingDO::getMeetingEndTime, startDateTime)
+                                        .le(MeetingRoomBookingDO::getMeetingEndTime, endDateTime))
+                                // 预约时间段完全包含查询范围
+                                .or(w -> w.le(MeetingRoomBookingDO::getMeetingStartTime, startDateTime)
+                                        .ge(MeetingRoomBookingDO::getMeetingEndTime, endDateTime))
+                        )
+                        .orderByAsc(MeetingRoomBookingDO::getMeetingStartTime)
+        );
+
+        // 转换为响应VO
+        List<MeetingRoomBookingScheduleRespVO.BookingItem> bookingItems = bookings.stream()
+                .map(booking -> {
+                    MeetingRoomBookingScheduleRespVO.BookingItem item = new MeetingRoomBookingScheduleRespVO.BookingItem();
+                    item.setId(booking.getId());
+                    item.setBillCode(booking.getBillCode());
+                    item.setMeetingTitle(booking.getMeetingTitle());
+                    item.setMeetingStartTime(booking.getMeetingStartTime());
+                    item.setMeetingEndTime(booking.getMeetingEndTime());
+                    item.setModeratorName(booking.getModeratorName());
+                    item.setCreatorName(booking.getCreatorName());
+                    item.setProcessStatus(booking.getProcessStatus());
+                    item.setUseStatus(booking.getUseStatus());
+                    return item;
+                })
+                .toList();
+
+        // 查询当天审批通过的预约记录（用于会议室信息列表展示）
+        LocalDate today = LocalDate.now();
+        List<MeetingRoomBookingDO> todayApprovedBookings = meetingRoomBookingMapper.selectList(
+                new LambdaQueryWrapperX<MeetingRoomBookingDO>()
+                        .eq(MeetingRoomBookingDO::getRoomId, reqVO.getRoomId())
+                        .eq(MeetingRoomBookingDO::getProcessStatus, 2) // 审批通过
+                        .ge(MeetingRoomBookingDO::getMeetingStartTime, today.atStartOfDay())
+                        .lt(MeetingRoomBookingDO::getMeetingStartTime, today.plusDays(1).atStartOfDay())
+                        .orderByDesc(MeetingRoomBookingDO::getMeetingStartTime)
+        );
+
+        List<MeetingRoomBookingScheduleRespVO.BookingItem> todayApprovedItems = todayApprovedBookings.stream()
+                .map(booking -> {
+                    MeetingRoomBookingScheduleRespVO.BookingItem item = new MeetingRoomBookingScheduleRespVO.BookingItem();
+                    item.setId(booking.getId());
+                    item.setBillCode(booking.getBillCode());
+                    item.setMeetingTitle(booking.getMeetingTitle());
+                    item.setMeetingStartTime(booking.getMeetingStartTime());
+                    item.setMeetingEndTime(booking.getMeetingEndTime());
+                    item.setModeratorName(booking.getModeratorName());
+                    item.setCreatorName(booking.getCreatorName());
+                    item.setProcessStatus(booking.getProcessStatus());
+                    item.setUseStatus(booking.getUseStatus());
+                    return item;
+                })
+                .toList();
+
+        MeetingRoomBookingScheduleRespVO respVO = new MeetingRoomBookingScheduleRespVO();
+        respVO.setBookings(bookingItems);
+        respVO.setTodayApprovedBookings(todayApprovedItems);
+        return respVO;
+    }
 
 }
 

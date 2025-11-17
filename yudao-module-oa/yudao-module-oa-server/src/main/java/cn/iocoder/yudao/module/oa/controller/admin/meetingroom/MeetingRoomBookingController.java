@@ -128,5 +128,14 @@ public class MeetingRoomBookingController {
         return success(true);
     }
 
+    @GetMapping("/schedule")
+    @Operation(summary = "查询会议室预约信息（用于展示预约时间网格）")
+    @PreAuthorize("@ss.hasPermission('oa:meeting-room-booking:query')")
+    public CommonResult<MeetingRoomBookingScheduleRespVO> getMeetingRoomBookingSchedule(
+            @Valid MeetingRoomBookingScheduleReqVO reqVO) {
+        MeetingRoomBookingScheduleRespVO schedule = meetingRoomBookingService.getMeetingRoomBookingSchedule(reqVO);
+        return success(schedule);
+    }
+
 }
 
