@@ -8,8 +8,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static cn.iocoder.yudao.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY;
 
 @Schema(description = "管理后台 - 员工档案 Response VO")
 @Data
@@ -33,9 +38,10 @@ public class EmployeeRespVO {
     @DictFormat("system_user_sex")
     private Integer sex;
 
-    @Schema(description = "出生日期", example = "2000-01-01 00:00:00")
+    @Schema(description = "出生日期", example = "2000-01-01")
     @ExcelProperty("出生日期")
-    private LocalDateTime birthday;
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate birthday;
 
     @Schema(description = "血型（1:A 2:B 3:AB 4:O）", example = "1")
     @ExcelProperty(value = "血型", converter = DictConvert.class)
@@ -123,13 +129,15 @@ public class EmployeeRespVO {
     @ExcelProperty("所属单位")
     private String companyName;
 
-    @Schema(description = "入职日期", example = "2023-01-01 00:00:00")
+    @Schema(description = "入职日期", example = "2023-01-01")
     @ExcelProperty("入职日期")
-    private LocalDateTime entryDate;
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate entryDate;
 
-    @Schema(description = "转正日期", example = "2023-04-01 00:00:00")
+    @Schema(description = "转正日期", example = "2023-04-01")
     @ExcelProperty("转正日期")
-    private LocalDateTime formalDate;
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate formalDate;
 
     @Schema(description = "备注", example = "优秀员工")
     @ExcelProperty("备注")

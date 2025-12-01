@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * 员工工作经历 DO
@@ -37,12 +37,12 @@ public class EmployeeWorkExperienceDO extends BaseDO {
     /**
      * 开始时间
      */
-    private LocalDateTime startTime;
+    private LocalDate startTime;
 
     /**
      * 截止时间
      */
-    private LocalDateTime endTime;
+    private LocalDate endTime;
 
     /**
      * 职务

@@ -6,8 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.List;
+
+import static cn.iocoder.yudao.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY;
 
 @Schema(description = "管理后台 - 员工档案保存 Request VO")
 @Data
@@ -28,8 +31,9 @@ public class EmployeeSaveReqVO {
     @NotNull(message = "性别不能为空")
     private Integer sex;
 
-    @Schema(description = "出生日期", example = "2000-01-01 00:00:00")
-    private LocalDateTime birthday;
+    @Schema(description = "出生日期", example = "2000-01-01")
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate birthday;
 
     @Schema(description = "血型（1:A 2:B 3:AB 4:O）", example = "1")
     private Integer bloodType;
@@ -93,11 +97,13 @@ public class EmployeeSaveReqVO {
     @Schema(description = "所属单位", example = "北京创星科技发展有限公司")
     private String companyName;
 
-    @Schema(description = "入职日期", example = "2023-01-01 00:00:00")
-    private LocalDateTime entryDate;
+    @Schema(description = "入职日期", example = "2023-01-01")
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate entryDate;
 
-    @Schema(description = "转正日期", example = "2023-04-01 00:00:00")
-    private LocalDateTime formalDate;
+    @Schema(description = "转正日期", example = "2023-04-01")
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
+    private LocalDate formalDate;
 
     @Schema(description = "备注", example = "优秀员工")
     private String remark;

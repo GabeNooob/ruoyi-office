@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * 员工档案 DO
@@ -48,7 +48,7 @@ public class EmployeeDO extends BaseDO {
     /**
      * 出生日期
      */
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 
     /**
      * 血型（1:A 2:B 3:AB 4:O）
@@ -153,12 +153,12 @@ public class EmployeeDO extends BaseDO {
     /**
      * 入职日期
      */
-    private LocalDateTime entryDate;
+    private LocalDate entryDate;
 
     /**
      * 转正日期
      */
-    private LocalDateTime formalDate;
+    private LocalDate formalDate;
 
     /**
      * 备注

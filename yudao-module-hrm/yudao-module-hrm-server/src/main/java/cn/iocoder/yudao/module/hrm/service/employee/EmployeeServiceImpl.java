@@ -197,6 +197,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         List<EmployeeWorkExperienceDO> workExperiences = BeanUtils.toBean(workExperienceList, EmployeeWorkExperienceDO.class);
         workExperiences.forEach(item -> {
+            item.setId(null);
             item.setEmployeeId(employeeId);
             employeeWorkExperienceMapper.insert(item);
         });
@@ -211,6 +212,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         List<EmployeeEducationDO> educations = BeanUtils.toBean(educationList, EmployeeEducationDO.class);
         educations.forEach(item -> {
+            item.setId(null);
             item.setEmployeeId(employeeId);
             employeeEducationMapper.insert(item);
         });
@@ -225,6 +227,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         List<EmployeeFamilyDO> families = BeanUtils.toBean(familyList, EmployeeFamilyDO.class);
         families.forEach(item -> {
+            item.setId(null);
             item.setEmployeeId(employeeId);
             employeeFamilyMapper.insert(item);
         });
