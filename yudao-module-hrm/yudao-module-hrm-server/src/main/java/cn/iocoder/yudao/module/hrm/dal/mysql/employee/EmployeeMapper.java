@@ -26,5 +26,28 @@ public interface EmployeeMapper extends BaseMapperX<EmployeeDO> {
                 .orderByDesc(EmployeeDO::getId));
     }
 
+    /**
+     * 获取最大的员工工号（数字部分）
+     * 用于自动生成员工工号
+     *
+     * @return 最大员工工号的数字部分，如果没有记录则返回 9999999（10000000 - 1）
+     */
+    default Long selectMaxEmployeeNo() {
+        EmployeeDO maxEmployee = selectOne(new LambdaQueryWrapperX<EmployeeDO>()
+                .select(EmployeeDO::getEmployeeNo)
+                .orderByDesc(EmployeeDO::getEmployeeNo)
+                .last("LIMIT 1"));
+        if (maxEmployee == null || maxEmployee.getEmployeeNo() == null) {
+            return 9999999L; // 返回 10000000 - 1，这样下一个就是 10000000
+        }
+        try {
+            Long employeeNo = Long.parseLong(maxEmployee.getEmployeeNo());
+            return employeeNo >= 10000000 ? employeeNo : 9999999L;
+        } catch (NumberFormatException e) {
+            // 如果员工工号不是纯数字，返回默认值
+            return 9999999L;
+        }
+    }
+
 }
 

@@ -19,8 +19,7 @@ public class EmployeeSaveReqVO {
     @Schema(description = "编号", example = "1")
     private Long id;
 
-    @Schema(description = "员工编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "EMP001")
-    @NotBlank(message = "员工编号不能为空")
+    @Schema(description = "员工编号", example = "10000000")
     private String employeeNo;
 
     @Schema(description = "姓名", requiredMode = Schema.RequiredMode.REQUIRED, example = "张三")

@@ -44,7 +44,7 @@ VALUES ('员工档案导出', 'hrm:employee-archive:export', 3, 5, @parent_menu_
 INSERT INTO system_dict_type(name, type, status, remark, creator, create_time, updater, update_time, deleted, deleted_time)
 VALUES ('血型', 'hrm_blood_type', 0, '员工血型', '1', NOW(), '1', NOW(), false, NULL);
 
-SET @dict_type_id = LAST_INSERT_ID();
+SET @dict_type_id = 'hrm_blood_type';
 
 INSERT INTO system_dict_data(dict_type, label, value, sort, status, color_type, css_class, remark, creator, create_time, updater, update_time, deleted) VALUES
 (@dict_type_id, 'A型', '1', 1, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
@@ -56,7 +56,7 @@ INSERT INTO system_dict_data(dict_type, label, value, sort, status, color_type, 
 INSERT INTO system_dict_type(name, type, status, remark, creator, create_time, updater, update_time, deleted, deleted_time)
 VALUES ('人员状态', 'hrm_employee_status', 0, '员工人员状态', '1', NOW(), '1', NOW(), false, NULL);
 
-SET @dict_type_id = LAST_INSERT_ID();
+SET @dict_type_id = 'hrm_employee_status';
 
 INSERT INTO system_dict_data(dict_type, label, value, sort, status, color_type, css_class, remark, creator, create_time, updater, update_time, deleted) VALUES
 (@dict_type_id, '正式', '1', 1, 0, 'success', '', '', '1', NOW(), '1', NOW(), false),
@@ -64,4 +64,38 @@ INSERT INTO system_dict_data(dict_type, label, value, sort, status, color_type, 
 (@dict_type_id, '实习生', '3', 3, 0, 'info', '', '', '1', NOW(), '1', NOW(), false),
 (@dict_type_id, '兼职', '4', 4, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
 (@dict_type_id, '零时工', '5', 5, 0, 'default', '', '', '1', NOW(), '1', NOW(), false);
+
+-- 职务字典
+INSERT INTO system_dict_type(name, type, status, remark, creator, create_time, updater, update_time, deleted, deleted_time)
+VALUES ('职务', 'hrm_job_position', 0, '员工职务', '1', NOW(), '1', NOW(), false, NULL);
+
+SET @dict_type_id = 'hrm_job_position';
+
+INSERT INTO system_dict_data(dict_type, label, value, sort, status, color_type, css_class, remark, creator, create_time, updater, update_time, deleted) VALUES
+(@dict_type_id, '总经理', '1', 1, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '副总经理', '2', 2, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '部门经理', '3', 3, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '副部门经理', '4', 4, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '主管', '5', 5, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '副主管', '6', 6, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '专员', '7', 7, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '助理', '8', 8, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '其他', '9', 9, 0, 'default', '', '', '1', NOW(), '1', NOW(), false);
+
+-- 文化程度字典
+INSERT INTO system_dict_type(name, type, status, remark, creator, create_time, updater, update_time, deleted, deleted_time)
+VALUES ('文化程度', 'hrm_education', 0, '员工文化程度', '1', NOW(), '1', NOW(), false, NULL);
+
+SET @dict_type_id = 'hrm_education';
+
+INSERT INTO system_dict_data(dict_type, label, value, sort, status, color_type, css_class, remark, creator, create_time, updater, update_time, deleted) VALUES
+(@dict_type_id, '小学', '1', 1, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '初中', '2', 2, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '高中', '3', 3, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '中专', '4', 4, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '大专', '5', 5, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '本科', '6', 6, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '硕士', '7', 7, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '博士', '8', 8, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '其他', '9', 9, 0, 'default', '', '', '1', NOW(), '1', NOW(), false);
 

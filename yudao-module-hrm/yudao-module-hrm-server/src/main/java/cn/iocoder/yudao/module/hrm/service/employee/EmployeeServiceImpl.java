@@ -48,6 +48,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createEmployeeArchive(EmployeeSaveReqVO createReqVO) {
+        // 自动生成员工工号（如果未提供）
+        if (createReqVO.getEmployeeNo() == null || createReqVO.getEmployeeNo().trim().isEmpty()) {
+            Long maxEmployeeNo = employeeArchiveMapper.selectMaxEmployeeNo();
+            Long nextEmployeeNo = maxEmployeeNo + 1;
+
+            createReqVO.setEmployeeNo(String.format("%08d", nextEmployeeNo));
+        }
+        
         // 插入主表
         EmployeeDO archive = BeanUtils.toBean(createReqVO, EmployeeDO.class);
         employeeArchiveMapper.insert(archive);
