@@ -62,6 +62,9 @@ public class EmployeeSaveReqVO {
     @NotBlank(message = "手机号不能为空")
     private String mobile;
 
+    @Schema(description = "邮箱", example = "zhangsan@example.com")
+    private String email;
+
     @Schema(description = "户籍所在地", example = "北京市海淀区中关村大街1号")
     private String householdAddress;
 

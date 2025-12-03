@@ -60,5 +60,21 @@ public interface EmployeeService {
      */
     PageResult<EmployeeRespVO> getEmployeeArchivePage(EmployeePageReqVO pageReqVO);
 
+    /**
+     * 为员工生成系统用户
+     *
+     * @param employeeId 员工编号
+     * @return 生成的用户编号
+     */
+    Long generateUserForEmployee(Long employeeId);
+
+    /**
+     * 批量为员工生成系统用户
+     *
+     * @param employeeIds 员工编号列表
+     * @return 生成结果（成功数量、失败数量）
+     */
+    void batchGenerateUserForEmployee(List<Long> employeeIds);
+
 }
 

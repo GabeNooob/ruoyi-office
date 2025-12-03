@@ -94,5 +94,26 @@ public class EmployeeController {
         ExcelUtils.write(response, "员工档案.xls", "数据", EmployeeRespVO.class, list);
     }
 
+    @PostMapping("/generate-user")
+    @Operation(summary = "为员工生成系统用户")
+    @Parameter(name = "id", description = "员工编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('hrm:employee-archive:create')")
+    public CommonResult<Long> generateUserForEmployee(@RequestParam("id") Long id) {
+        Long userId = employeeArchiveService.generateUserForEmployee(id);
+        return success(userId);
+    }
+
+    @PostMapping("/batch-generate-user")
+    @Operation(summary = "批量为员工生成系统用户")
+    @Parameter(name = "ids", description = "员工编号列表", required = true, example = "[1,2,3]")
+    @PreAuthorize("@ss.hasPermission('hrm:employee-archive:create')")
+    public CommonResult<Boolean> batchGenerateUserForEmployee(@RequestParam("ids") String ids) {
+        List<Long> idList = List.of(ids.split(",")).stream()
+                .map(Long::valueOf)
+                .collect(java.util.stream.Collectors.toList());
+        employeeArchiveService.batchGenerateUserForEmployee(idList);
+        return success(true);
+    }
+
 }
 

@@ -7,8 +7,12 @@ import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.*;
 import cn.iocoder.yudao.module.hrm.dal.dataobject.employee.*;
 import cn.iocoder.yudao.module.hrm.dal.mysql.employee.*;
+import cn.iocoder.yudao.module.infra.api.config.ConfigApi;
 import cn.iocoder.yudao.module.system.api.dept.DeptApi;
 import cn.iocoder.yudao.module.system.api.dept.dto.DeptRespDTO;
+import cn.iocoder.yudao.module.system.api.user.AdminUserApi;
+import cn.iocoder.yudao.module.system.api.user.dto.AdminUserCreateReqDTO;
+import cn.iocoder.yudao.module.system.api.user.dto.AdminUserUpdateReqDTO;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +49,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Resource
     private DeptApi deptApi;
 
+    @Resource
+    private AdminUserApi adminUserApi;
+
+    @Resource
+    private ConfigApi configApi;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createEmployeeArchive(EmployeeSaveReqVO createReqVO) {
@@ -76,7 +86,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(rollbackFor = Exception.class)
     public void updateEmployeeArchive(EmployeeSaveReqVO updateReqVO) {
         // 校验存在
-        validateEmployeeArchiveExists(updateReqVO.getId());
+        EmployeeDO oldEmployee = employeeArchiveMapper.selectById(updateReqVO.getId());
+        if (oldEmployee == null) {
+            throw exception(EMPLOYEE_ARCHIVE_NOT_EXISTS);
+        }
 
         // 更新主表
         EmployeeDO updateObj = BeanUtils.toBean(updateReqVO, EmployeeDO.class);
@@ -91,6 +104,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         saveWorkExperiences(updateReqVO.getId(), updateReqVO.getWorkExperienceList());
         saveEducations(updateReqVO.getId(), updateReqVO.getEducationList());
         saveFamilies(updateReqVO.getId(), updateReqVO.getFamilyList());
+
+        // 如果已生成用户，同步更新用户信息
+        if (oldEmployee.getUserGenerated() != null && oldEmployee.getUserGenerated() && oldEmployee.getUserId() != null) {
+            syncEmployeeToUser(updateReqVO, oldEmployee.getUserId());
+        }
     }
 
     @Override
@@ -239,6 +257,86 @@ public class EmployeeServiceImpl implements EmployeeService {
             item.setEmployeeId(employeeId);
             employeeFamilyMapper.insert(item);
         });
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long generateUserForEmployee(Long employeeId) {
+        // 1. 校验员工存在
+        EmployeeDO employee = employeeArchiveMapper.selectById(employeeId);
+        if (employee == null) {
+            throw exception(EMPLOYEE_ARCHIVE_NOT_EXISTS);
+        }
+
+        // 2. 校验是否已生成用户
+        if (employee.getUserGenerated() != null && employee.getUserGenerated() && employee.getUserId() != null) {
+            throw new RuntimeException("该员工已生成用户，无需重复生成");
+        }
+
+        // 3. 创建用户
+        AdminUserCreateReqDTO userCreateReqDTO = new AdminUserCreateReqDTO();
+        userCreateReqDTO.setUsername(employee.getEmployeeNo()); // 用户名为员工工号
+        userCreateReqDTO.setNickname(employee.getName()); // 用户昵称为员工姓名
+        userCreateReqDTO.setMobile(employee.getMobile()); // 手机号
+        userCreateReqDTO.setEmail(employee.getEmail()); // 邮箱
+        userCreateReqDTO.setSex(employee.getSex()); // 性别
+        userCreateReqDTO.setAvatar(employee.getAvatar()); // 头像
+        userCreateReqDTO.setDeptId(employee.getDeptId()); // 部门ID
+        userCreateReqDTO.setRemark(employee.getRemark()); // 备注
+
+        // 获取初始密码配置
+        String initPassword = "123456"; // 默认密码
+        CommonResult<String> configResult = configApi.getConfigValueByKey("system.user.init-password");
+        if (configResult != null && configResult.isSuccess() && configResult.getData() != null) {
+            initPassword = configResult.getData();
+        }
+        userCreateReqDTO.setPassword(initPassword);
+
+        Long userId = adminUserApi.createUser(userCreateReqDTO).getCheckedData();
+
+        // 4. 更新员工关联信息
+        EmployeeDO updateObj = new EmployeeDO();
+        updateObj.setId(employeeId);
+        updateObj.setUserId(userId);
+        updateObj.setUserGenerated(true);
+        employeeArchiveMapper.updateById(updateObj);
+
+        return userId;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchGenerateUserForEmployee(List<Long> employeeIds) {
+        if (CollUtil.isEmpty(employeeIds)) {
+            return;
+        }
+
+        for (Long employeeId : employeeIds) {
+            try {
+                generateUserForEmployee(employeeId);
+            } catch (Exception e) {
+                // 记录错误，继续处理下一个
+                // 可以根据需要记录日志
+            }
+        }
+    }
+
+    /**
+     * 同步员工信息到用户
+     */
+    private void syncEmployeeToUser(EmployeeSaveReqVO employee, Long userId) {
+        AdminUserUpdateReqDTO userUpdateReqDTO = new AdminUserUpdateReqDTO();
+        userUpdateReqDTO.setId(userId);
+        userUpdateReqDTO.setUsername(employee.getEmployeeNo()); // 用户名为员工工号
+        userUpdateReqDTO.setNickname(employee.getName()); // 用户昵称为员工姓名
+        userUpdateReqDTO.setMobile(employee.getMobile()); // 手机号
+        userUpdateReqDTO.setEmail(employee.getEmail()); // 邮箱
+        userUpdateReqDTO.setSex(employee.getSex()); // 性别
+        userUpdateReqDTO.setAvatar(employee.getAvatar()); // 头像
+        userUpdateReqDTO.setDeptId(employee.getDeptId()); // 部门ID
+        userUpdateReqDTO.setRemark(employee.getRemark()); // 备注
+
+        adminUserApi.updateUser(userUpdateReqDTO);
     }
 
 }

@@ -11,8 +11,13 @@ import feign.FeignIgnore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import cn.iocoder.yudao.module.system.api.user.dto.AdminUserCreateReqDTO;
+import cn.iocoder.yudao.module.system.api.user.dto.AdminUserUpdateReqDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collection;
@@ -80,6 +85,14 @@ public interface AdminUserApi extends AutoTransable<AdminUserRespDTO> {
     @Operation(summary = "校验用户们是否有效")
     @Parameter(name = "ids", description = "用户编号数组", example = "3,5", required = true)
     CommonResult<Boolean> validateUserList(@RequestParam("ids") Collection<Long> ids);
+
+    @PostMapping(PREFIX + "/create")
+    @Operation(summary = "创建用户")
+    CommonResult<Long> createUser(@RequestBody AdminUserCreateReqDTO createReqDTO);
+
+    @PutMapping(PREFIX + "/update")
+    @Operation(summary = "更新用户")
+    CommonResult<Boolean> updateUser(@RequestBody AdminUserUpdateReqDTO updateReqDTO);
 
     @Override
     @FeignIgnore

@@ -24,6 +24,8 @@ import cn.iocoder.yudao.module.system.dal.dataobject.dept.UserPostDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
 import cn.iocoder.yudao.module.system.dal.mysql.dept.UserPostMapper;
 import cn.iocoder.yudao.module.system.dal.mysql.user.AdminUserMapper;
+import cn.iocoder.yudao.module.hrm.api.employee.EmployeeApi;
+import cn.iocoder.yudao.module.hrm.api.employee.dto.EmployeeUpdateReqDTO;
 import cn.iocoder.yudao.module.system.service.dept.DeptService;
 import cn.iocoder.yudao.module.system.service.dept.PostService;
 import cn.iocoder.yudao.module.system.service.permission.PermissionService;
@@ -81,6 +83,10 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Resource
     private ConfigApi configApi;
+
+    @Resource
+    @Lazy // 延迟，避免循环依赖报错
+    private EmployeeApi employeeApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -152,6 +158,8 @@ public class AdminUserServiceImpl implements AdminUserService {
         userMapper.updateById(updateObj);
         // 2.2 更新岗位
         updateUserPost(updateReqVO, updateObj);
+        // 2.3 如果关联了员工，同步更新员工信息
+        syncUserToEmployee(updateReqVO);
 
         // 3. 记录操作日志上下文
         LogRecordContext.putVariable(DiffParseFunction.OLD_OBJECT, BeanUtils.toBean(oldUser, UserSaveReqVO.class));
@@ -243,6 +251,8 @@ public class AdminUserServiceImpl implements AdminUserService {
         permissionService.processUserDeleted(id);
         // 2.2 删除用户岗位
         userPostMapper.deleteByUserId(id);
+        // 2.3 更新关联员工的用户生成标记
+        updateEmployeeUserGeneratedStatus(id, false);
 
         // 3. 记录操作日志上下文
         LogRecordContext.putVariable("user", user);
@@ -258,6 +268,8 @@ public class AdminUserServiceImpl implements AdminUserService {
         ids.forEach(id -> {
             permissionService.processUserDeleted(id);
             userPostMapper.deleteByUserId(id);
+            // 更新关联员工的用户生成标记
+            updateEmployeeUserGeneratedStatus(id, false);
         });
     }
 
@@ -528,6 +540,40 @@ public class AdminUserServiceImpl implements AdminUserService {
      */
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    /**
+     * 更新员工的用户生成标记
+     *
+     * @param userId 用户ID
+     * @param userGenerated 是否已生成用户
+     */
+    private void updateEmployeeUserGeneratedStatus(Long userId, Boolean userGenerated) {
+        if (userId == null) {
+            return;
+        }
+        employeeApi.updateUserGeneratedStatus(userId, userGenerated);
+    }
+
+    /**
+     * 同步用户信息到员工
+     *
+     * @param userUpdateReqVO 用户更新信息
+     */
+    private void syncUserToEmployee(UserSaveReqVO userUpdateReqVO) {
+        if (userUpdateReqVO.getId() == null) {
+            return;
+        }
+        EmployeeUpdateReqDTO employeeUpdateReqDTO = new EmployeeUpdateReqDTO();
+        employeeUpdateReqDTO.setName(userUpdateReqVO.getNickname()); // 员工姓名为用户昵称
+        employeeUpdateReqDTO.setMobile(userUpdateReqVO.getMobile()); // 手机号
+        employeeUpdateReqDTO.setEmail(userUpdateReqVO.getEmail()); // 邮箱
+        employeeUpdateReqDTO.setSex(userUpdateReqVO.getSex()); // 性别
+        employeeUpdateReqDTO.setAvatar(userUpdateReqVO.getAvatar()); // 头像
+        employeeUpdateReqDTO.setDeptId(userUpdateReqVO.getDeptId()); // 部门ID
+        employeeUpdateReqDTO.setRemark(userUpdateReqVO.getRemark()); // 备注
+
+        employeeApi.updateEmployeeByUserId(userUpdateReqVO.getId(), employeeUpdateReqDTO);
     }
 
 }

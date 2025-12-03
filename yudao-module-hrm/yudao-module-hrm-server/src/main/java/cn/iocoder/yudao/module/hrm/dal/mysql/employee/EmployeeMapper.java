@@ -49,5 +49,16 @@ public interface EmployeeMapper extends BaseMapperX<EmployeeDO> {
         }
     }
 
+    /**
+     * 根据用户ID查询员工
+     *
+     * @param userId 用户ID
+     * @return 员工信息
+     */
+    default EmployeeDO selectByUserId(Long userId) {
+        return selectOne(new LambdaQueryWrapperX<EmployeeDO>()
+                .eq(EmployeeDO::getUserId, userId));
+    }
+
 }
 

@@ -21,6 +21,7 @@ CREATE TABLE `hrm_employee` (
   `weight` decimal(5,2) DEFAULT NULL COMMENT '体重(kg)',
   `id_card` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '身份证号码',
   `mobile` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '手机号',
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '邮箱',
   `household_address` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '户籍所在地',
   `current_address` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '现居住地址',
   `emergency_contact` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '紧急联系人',
@@ -35,6 +36,8 @@ CREATE TABLE `hrm_employee` (
   `entry_date` date DEFAULT NULL COMMENT '入职日期',
   `formal_date` date DEFAULT NULL COMMENT '转正日期',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `user_id` bigint DEFAULT NULL COMMENT '关联用户ID',
+  `user_generated` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否已生成用户',
   `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '创建者',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '更新者',
@@ -44,7 +47,8 @@ CREATE TABLE `hrm_employee` (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_employee_no` (`employee_no`,`deleted`,`tenant_id`) USING BTREE,
   KEY `idx_dept_id` (`dept_id`) USING BTREE,
-  KEY `idx_employee_status` (`employee_status`) USING BTREE
+  KEY `idx_employee_status` (`employee_status`) USING BTREE,
+  KEY `idx_user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='员工信息表';
 
 -- ----------------------------

@@ -80,6 +80,10 @@ public class EmployeeRespVO {
     @ExcelProperty("手机号")
     private String mobile;
 
+    @Schema(description = "邮箱", example = "zhangsan@example.com")
+    @ExcelProperty("邮箱")
+    private String email;
+
     @Schema(description = "户籍所在地", example = "北京市海淀区中关村大街1号")
     @ExcelProperty("户籍所在地")
     private String householdAddress;
@@ -142,6 +146,13 @@ public class EmployeeRespVO {
     @Schema(description = "备注", example = "优秀员工")
     @ExcelProperty("备注")
     private String remark;
+
+    @Schema(description = "关联用户ID", example = "1")
+    private Long userId;
+
+    @Schema(description = "是否已生成用户", example = "true")
+    @ExcelProperty("是否已生成用户")
+    private Boolean userGenerated;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")

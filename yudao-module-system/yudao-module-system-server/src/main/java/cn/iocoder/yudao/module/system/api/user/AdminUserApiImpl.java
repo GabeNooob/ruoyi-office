@@ -5,7 +5,10 @@ import cn.hutool.core.util.ObjUtil;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 import cn.iocoder.yudao.framework.datapermission.core.util.DataPermissionUtils;
+import cn.iocoder.yudao.module.system.api.user.dto.AdminUserCreateReqDTO;
 import cn.iocoder.yudao.module.system.api.user.dto.AdminUserRespDTO;
+import cn.iocoder.yudao.module.system.api.user.dto.AdminUserUpdateReqDTO;
+import cn.iocoder.yudao.module.system.controller.admin.user.vo.user.UserSaveReqVO;
 import cn.iocoder.yudao.module.system.dal.dataobject.dept.DeptDO;
 import cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO;
 import cn.iocoder.yudao.module.system.service.dept.DeptService;
@@ -88,6 +91,20 @@ public class AdminUserApiImpl implements AdminUserApi {
     @Override
     public CommonResult<Boolean> validateUserList(Collection<Long> ids) {
         userService.validateUserList(ids);
+        return success(true);
+    }
+
+    @Override
+    public CommonResult<Long> createUser(AdminUserCreateReqDTO createReqDTO) {
+        UserSaveReqVO createReqVO = BeanUtils.toBean(createReqDTO, UserSaveReqVO.class);
+        Long userId = userService.createUser(createReqVO);
+        return success(userId);
+    }
+
+    @Override
+    public CommonResult<Boolean> updateUser(AdminUserUpdateReqDTO updateReqDTO) {
+        UserSaveReqVO updateReqVO = BeanUtils.toBean(updateReqDTO, UserSaveReqVO.class);
+        userService.updateUser(updateReqVO);
         return success(true);
     }
 

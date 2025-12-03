@@ -96,6 +96,11 @@ public class EmployeeDO extends BaseDO {
     private String mobile;
 
     /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
      * 户籍所在地
      */
     private String householdAddress;
@@ -164,6 +169,16 @@ public class EmployeeDO extends BaseDO {
      * 备注
      */
     private String remark;
+
+    /**
+     * 关联用户ID
+     */
+    private Long userId;
+
+    /**
+     * 是否已生成用户
+     */
+    private Boolean userGenerated;
 
 }
 
