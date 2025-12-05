@@ -94,6 +94,16 @@ public interface AdminUserApi extends AutoTransable<AdminUserRespDTO> {
     @Operation(summary = "更新用户")
     CommonResult<Boolean> updateUser(@RequestBody AdminUserUpdateReqDTO updateReqDTO);
 
+    @PostMapping(PREFIX + "/delete")
+    @Operation(summary = "删除用户")
+    @Parameter(name = "id", description = "用户编号", example = "1", required = true)
+    CommonResult<Boolean> deleteUser(@RequestParam("id") Long id);
+
+    @PostMapping(PREFIX + "/delete-list")
+    @Operation(summary = "批量删除用户")
+    @Parameter(name = "ids", description = "用户编号数组", example = "1,2,3", required = true)
+    CommonResult<Boolean> deleteUserList(@RequestParam("ids") List<Long> ids);
+
     @Override
     @FeignIgnore
     default List<AdminUserRespDTO> selectByIds(List<?> ids) {

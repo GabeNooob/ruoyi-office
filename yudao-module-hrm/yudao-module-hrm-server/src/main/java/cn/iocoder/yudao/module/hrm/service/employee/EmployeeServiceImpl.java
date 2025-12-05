@@ -115,7 +115,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteEmployeeArchive(Long id) {
         // 校验存在
-        validateEmployeeArchiveExists(id);
+        EmployeeDO employee = employeeArchiveMapper.selectById(id);
+        if (employee == null) {
+            throw exception(EMPLOYEE_ARCHIVE_NOT_EXISTS);
+        }
+
+        // 如果已生成用户，则删除关联的用户
+        if (employee.getUserGenerated() != null && employee.getUserGenerated() && employee.getUserId() != null) {
+            adminUserApi.deleteUser(employee.getUserId());
+        }
 
         // 删除主表
         employeeArchiveMapper.deleteById(id);
@@ -131,6 +139,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void deleteEmployeeArchiveList(List<Long> ids) {
         // 校验存在
         validateEmployeeArchiveExists(ids);
+
+        // 查询所有员工信息，收集需要删除的用户ID
+        List<EmployeeDO> employees = employeeArchiveMapper.selectList(EmployeeDO::getId, ids);
+        List<Long> userIdsToDelete = employees.stream()
+                .filter(emp -> emp.getUserGenerated() != null && emp.getUserGenerated() && emp.getUserId() != null)
+                .map(EmployeeDO::getUserId)
+                .collect(Collectors.toList());
+
+        // 如果已生成用户，则批量删除关联的用户
+        if (!userIdsToDelete.isEmpty()) {
+            adminUserApi.deleteUserList(userIdsToDelete);
+        }
 
         // 删除主表
         employeeArchiveMapper.deleteBatchIds(ids);

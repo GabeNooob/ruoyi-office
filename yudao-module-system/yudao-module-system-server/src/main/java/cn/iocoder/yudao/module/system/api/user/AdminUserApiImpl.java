@@ -108,4 +108,16 @@ public class AdminUserApiImpl implements AdminUserApi {
         return success(true);
     }
 
+    @Override
+    public CommonResult<Boolean> deleteUser(Long id) {
+        userService.deleteUser(id);
+        return success(true);
+    }
+
+    @Override
+    public CommonResult<Boolean> deleteUserList(List<Long> ids) {
+        userService.deleteUserList(ids);
+        return success(true);
+    }
+
 }
