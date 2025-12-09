@@ -12,5 +12,8 @@ public interface ErrorCodeConstants {
     // ========== 员工档案 1-050-001-000 ==========
     ErrorCode EMPLOYEE_ARCHIVE_NOT_EXISTS = new ErrorCode(1_050_001_001, "员工档案不存在");
 
+    // ========== 员工入职申请单 1-050-002-000 ==========
+    ErrorCode EMPLOYEE_ENTRY_BILL_NOT_EXISTS = new ErrorCode(1_050_002_001, "员工入职申请单不存在");
+
 }
 
