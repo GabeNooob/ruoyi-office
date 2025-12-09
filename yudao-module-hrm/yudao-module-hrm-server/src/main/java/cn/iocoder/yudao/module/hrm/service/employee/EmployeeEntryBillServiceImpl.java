@@ -321,7 +321,8 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
         
         // 工作信息
         employeeSaveReqVO.setEntryDate(entryBillRespVO.getEntryDate());
-        employeeSaveReqVO.setDeptId(entryBillRespVO.getDeptId());
+        employeeSaveReqVO.setDeptId(entryBillRespVO.getEmpDeptId());
+        employeeSaveReqVO.setCompanyName(entryBillRespVO.getEmpCompanyName());
         employeeSaveReqVO.setJobPosition(entryBillRespVO.getJobPosition());
         employeeSaveReqVO.setJobTitle(entryBillRespVO.getJobTitle());
         employeeSaveReqVO.setEmployeeStatus(entryBillRespVO.getEmployeeStatus());
@@ -379,7 +380,7 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
             List<EmployeeEntryBillWorkExperienceDO> workExperiences = BeanUtils.toBean(saveReqVO.getWorkExperienceList(), EmployeeEntryBillWorkExperienceDO.class);
             workExperiences.forEach(item -> {
                 item.setId(null);
-                item.setEntryBillId(entryBillId);
+                item.setBillId(entryBillId);
                 entryBillWorkExperienceMapper.insert(item);
             });
         }
@@ -389,7 +390,7 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
             List<EmployeeEntryBillEducationDO> educations = BeanUtils.toBean(saveReqVO.getEducationList(), EmployeeEntryBillEducationDO.class);
             educations.forEach(item -> {
                 item.setId(null);
-                item.setEntryBillId(entryBillId);
+                item.setBillId(entryBillId);
                 entryBillEducationMapper.insert(item);
             });
         }
@@ -399,7 +400,7 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
             List<EmployeeEntryBillFamilyDO> families = BeanUtils.toBean(saveReqVO.getFamilyList(), EmployeeEntryBillFamilyDO.class);
             families.forEach(item -> {
                 item.setId(null);
-                item.setEntryBillId(entryBillId);
+                item.setBillId(entryBillId);
                 entryBillFamilyMapper.insert(item);
             });
         }

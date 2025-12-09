@@ -29,17 +29,17 @@ public class EmployeeEntryBillPageReqVO extends PageParam {
     @Schema(description = "手机号", example = "13800138000")
     private String mobile;
 
-    @Schema(description = "部门ID", example = "1")
-    private Long deptId;
+    @Schema(description = "员工所属部门ID", example = "1")
+    private Long empDeptId;
 
-    @Schema(description = "部门名称", example = "技术部")
-    private String deptName;
+    @Schema(description = "员工所属部门名称", example = "技术部")
+    private String empDeptName;
 
-    @Schema(description = "公司ID", example = "1")
-    private Long companyId;
+    @Schema(description = "员工所属公司ID", example = "1")
+    private Long empCompanyId;
 
-    @Schema(description = "公司名称", example = "芋道科技")
-    private String companyName;
+    @Schema(description = "员工所属公司名称", example = "芋道科技")
+    private String empCompanyName;
 
     @Schema(description = "人员状态", example = "2")
     private Integer employeeStatus;

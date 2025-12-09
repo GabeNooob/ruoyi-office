@@ -1,9 +1,11 @@
 package cn.iocoder.yudao.module.hrm.controller.admin.employee.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import jakarta.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.List;
 import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentSaveReqVO;
@@ -67,7 +69,7 @@ public class EmployeeEntryBillSaveReqVO {
     @Schema(description = "照片", example = "http://127.0.0.1:48080/admin-api/infra/file/4/get/xxx.jpg")
     private String avatar;
 
-    // ========== 入职相关信息 ==========
+    // ========== 入职相关信息（员工所属的组织信息） ==========
     @Schema(description = "入职日期", requiredMode = Schema.RequiredMode.REQUIRED, example = "2023-01-01")
     @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
     private LocalDate entryDate;
@@ -79,11 +81,17 @@ public class EmployeeEntryBillSaveReqVO {
     @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
     private LocalDate expectedFormalDate;
 
-    @Schema(description = "所属部门ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    private Long deptId;
+    @Schema(description = "员工所属部门ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    private Long empDeptId;
 
-    @Schema(description = "所属部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "技术部")
-    private String deptName;
+    @Schema(description = "员工所属部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "技术部")
+    private String empDeptName;
+
+    @Schema(description = "员工所属公司ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    private Long empCompanyId;
+
+    @Schema(description = "员工所属公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    private String empCompanyName;
 
     @Schema(description = "职务", example = "部门经理")
     private String jobPosition;
@@ -110,10 +118,21 @@ public class EmployeeEntryBillSaveReqVO {
     @Schema(description = "关联的员工档案ID（审批通过后创建）", example = "1")
     private Long employeeId;
 
-    @Schema(description = "公司ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    // ========== 制单人信息（单据必须的信息） ==========
+    @Schema(description = "制单人部门ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @NotNull(message = "制单人部门ID不能为空")
+    private Long deptId;
+
+    @Schema(description = "制单人部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "人事部")
+    @NotEmpty(message = "制单人部门名称不能为空")
+    private String deptName;
+
+    @Schema(description = "制单人公司ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @NotNull(message = "制单人公司ID不能为空")
     private Long companyId;
 
-    @Schema(description = "公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @Schema(description = "制单人公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @NotEmpty(message = "制单人公司名称不能为空")
     private String companyName;
 
     @Schema(description = "创建人")

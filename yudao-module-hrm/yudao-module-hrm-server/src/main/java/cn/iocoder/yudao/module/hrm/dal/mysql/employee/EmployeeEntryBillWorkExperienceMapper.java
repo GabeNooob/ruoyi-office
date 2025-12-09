@@ -17,13 +17,13 @@ public interface EmployeeEntryBillWorkExperienceMapper extends BaseMapperX<Emplo
 
     default List<EmployeeEntryBillWorkExperienceDO> selectListByEntryBillId(Long entryBillId) {
         return selectList(new LambdaQueryWrapperX<EmployeeEntryBillWorkExperienceDO>()
-                .eq(EmployeeEntryBillWorkExperienceDO::getEntryBillId, entryBillId)
+                .eq(EmployeeEntryBillWorkExperienceDO::getBillId, entryBillId)
                 .orderByDesc(EmployeeEntryBillWorkExperienceDO::getStartTime));
     }
 
     default void deleteByEntryBillId(Long entryBillId) {
         delete(new LambdaQueryWrapperX<EmployeeEntryBillWorkExperienceDO>()
-                .eq(EmployeeEntryBillWorkExperienceDO::getEntryBillId, entryBillId));
+                .eq(EmployeeEntryBillWorkExperienceDO::getBillId, entryBillId));
     }
 
 }

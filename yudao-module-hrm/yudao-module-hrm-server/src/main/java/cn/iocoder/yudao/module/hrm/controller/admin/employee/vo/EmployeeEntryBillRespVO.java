@@ -84,7 +84,7 @@ public class EmployeeEntryBillRespVO {
     @ExcelProperty("照片")
     private String avatar;
 
-    // ========== 入职相关信息 ==========
+    // ========== 入职相关信息（员工所属的组织信息） ==========
     @Schema(description = "入职日期", requiredMode = Schema.RequiredMode.REQUIRED, example = "2023-01-01")
     @ExcelProperty("入职日期")
     private LocalDate entryDate;
@@ -97,13 +97,21 @@ public class EmployeeEntryBillRespVO {
     @ExcelProperty("预计转正日期")
     private LocalDate expectedFormalDate;
 
-    @Schema(description = "所属部门ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @ExcelProperty("所属部门ID")
-    private Long deptId;
+    @Schema(description = "员工所属部门ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @ExcelProperty("员工所属部门ID")
+    private Long empDeptId;
 
-    @Schema(description = "所属部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "技术部")
-    @ExcelProperty("所属部门名称")
-    private String deptName;
+    @Schema(description = "员工所属部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "技术部")
+    @ExcelProperty("员工所属部门名称")
+    private String empDeptName;
+
+    @Schema(description = "员工所属公司ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @ExcelProperty("员工所属公司ID")
+    private Long empCompanyId;
+
+    @Schema(description = "员工所属公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @ExcelProperty("员工所属公司名称")
+    private String empCompanyName;
 
     @Schema(description = "职务", example = "部门经理")
     @ExcelProperty("职务")
@@ -138,12 +146,21 @@ public class EmployeeEntryBillRespVO {
     @ExcelProperty("关联的员工档案ID")
     private Long employeeId;
 
-    @Schema(description = "公司ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @ExcelProperty("公司ID")
+    // ========== 制单人信息（单据必须的信息） ==========
+    @Schema(description = "制单人部门ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @ExcelProperty("制单人部门ID")
+    private Long deptId;
+
+    @Schema(description = "制单人部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "人事部")
+    @ExcelProperty("制单人部门名称")
+    private String deptName;
+
+    @Schema(description = "制单人公司ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @ExcelProperty("制单人公司ID")
     private Long companyId;
 
-    @Schema(description = "公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
-    @ExcelProperty("公司名称")
+    @Schema(description = "制单人公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @ExcelProperty("制单人公司名称")
     private String companyName;
 
     @Schema(description = "创建者", example = "1")

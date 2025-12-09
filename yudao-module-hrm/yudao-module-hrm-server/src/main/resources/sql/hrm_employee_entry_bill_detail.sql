@@ -6,7 +6,7 @@
 DROP TABLE IF EXISTS `hrm_employee_entry_bill_work_experience`;
 CREATE TABLE `hrm_employee_entry_bill_work_experience` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `entry_bill_id` bigint NOT NULL COMMENT '入职申请单ID',
+  `bill_id` bigint NOT NULL COMMENT '入职申请单ID',
   `start_time` date DEFAULT NULL COMMENT '开始时间',
   `end_time` date DEFAULT NULL COMMENT '截止时间',
   `job_position` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '职务',
@@ -18,14 +18,14 @@ CREATE TABLE `hrm_employee_entry_bill_work_experience` (
   `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
   `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `idx_entry_bill_id` (`entry_bill_id`) USING BTREE
+  KEY `idx_bill_id` (`bill_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='员工入职申请单工作经历明细表';
 
 -- 教育经历明细表（临时存储）
 DROP TABLE IF EXISTS `hrm_employee_entry_bill_education`;
 CREATE TABLE `hrm_employee_entry_bill_education` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `entry_bill_id` bigint NOT NULL COMMENT '入职申请单ID',
+  `bill_id` bigint NOT NULL COMMENT '入职申请单ID',
   `start_time` date DEFAULT NULL COMMENT '开始时间',
   `end_time` date DEFAULT NULL COMMENT '截止时间',
   `major` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '专业',
@@ -37,14 +37,14 @@ CREATE TABLE `hrm_employee_entry_bill_education` (
   `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
   `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `idx_entry_bill_id` (`entry_bill_id`) USING BTREE
+  KEY `idx_bill_id` (`bill_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='员工入职申请单教育经历明细表';
 
 -- 家属信息明细表（临时存储）
 DROP TABLE IF EXISTS `hrm_employee_entry_bill_family`;
 CREATE TABLE `hrm_employee_entry_bill_family` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `entry_bill_id` bigint NOT NULL COMMENT '入职申请单ID',
+  `bill_id` bigint NOT NULL COMMENT '入职申请单ID',
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '姓名',
   `relationship` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '关系',
   `mobile` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '联系电话',
@@ -56,7 +56,7 @@ CREATE TABLE `hrm_employee_entry_bill_family` (
   `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
   `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `idx_entry_bill_id` (`entry_bill_id`) USING BTREE
+  KEY `idx_bill_id` (`bill_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='员工入职申请单家属信息明细表';
 
 

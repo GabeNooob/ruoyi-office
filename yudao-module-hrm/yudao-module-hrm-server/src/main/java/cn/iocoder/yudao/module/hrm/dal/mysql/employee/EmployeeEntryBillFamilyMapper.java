@@ -17,12 +17,12 @@ public interface EmployeeEntryBillFamilyMapper extends BaseMapperX<EmployeeEntry
 
     default List<EmployeeEntryBillFamilyDO> selectListByEntryBillId(Long entryBillId) {
         return selectList(new LambdaQueryWrapperX<EmployeeEntryBillFamilyDO>()
-                .eq(EmployeeEntryBillFamilyDO::getEntryBillId, entryBillId));
+                .eq(EmployeeEntryBillFamilyDO::getBillId, entryBillId));
     }
 
     default void deleteByEntryBillId(Long entryBillId) {
         delete(new LambdaQueryWrapperX<EmployeeEntryBillFamilyDO>()
-                .eq(EmployeeEntryBillFamilyDO::getEntryBillId, entryBillId));
+                .eq(EmployeeEntryBillFamilyDO::getBillId, entryBillId));
     }
 
 }

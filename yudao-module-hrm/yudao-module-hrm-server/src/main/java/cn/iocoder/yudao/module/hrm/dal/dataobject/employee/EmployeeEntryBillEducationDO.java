@@ -32,7 +32,7 @@ public class EmployeeEntryBillEducationDO extends BaseDO {
     /**
      * 入职申请单ID
      */
-    private Long entryBillId;
+    private Long billId;
 
     /**
      * 开始时间

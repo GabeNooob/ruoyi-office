@@ -111,7 +111,7 @@ public class EmployeeEntryBillDO extends BaseDO {
      */
     private String avatar;
 
-    // ========== 入职相关信息 ==========
+    // ========== 入职相关信息（员工所属的组织信息） ==========
     /**
      * 入职日期
      */
@@ -128,14 +128,24 @@ public class EmployeeEntryBillDO extends BaseDO {
     private LocalDate expectedFormalDate;
 
     /**
-     * 所属部门ID
+     * 员工所属部门ID
      */
-    private Long deptId;
+    private Long empDeptId;
 
     /**
-     * 所属部门名称
+     * 员工所属部门名称
      */
-    private String deptName;
+    private String empDeptName;
+
+    /**
+     * 员工所属公司ID
+     */
+    private Long empCompanyId;
+
+    /**
+     * 员工所属公司名称
+     */
+    private String empCompanyName;
 
     /**
      * 职务
@@ -178,13 +188,24 @@ public class EmployeeEntryBillDO extends BaseDO {
      */
     private Long employeeId;
 
+    // ========== 制单人信息（单据必须的信息） ==========
     /**
-     * 公司ID
+     * 制单人部门ID
+     */
+    private Long deptId;
+
+    /**
+     * 制单人部门名称
+     */
+    private String deptName;
+
+    /**
+     * 制单人公司ID
      */
     private Long companyId;
 
     /**
-     * 公司名称
+     * 制单人公司名称
      */
     private String companyName;
 
