@@ -1,13 +1,13 @@
-package cn.iocoder.yudao.module.oa.process.fegin;
+package cn.iocoder.yudao.module.hrm.process.feign;
 
 import cn.iocoder.yudao.common.server.process.controller.AbstractFlowNotificationController;
 import cn.iocoder.yudao.framework.common.enums.SystemEnum;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import cn.iocoder.yudao.framework.common.service.FlowBillServiceFactory;
 import cn.iocoder.yudao.module.bpm.api.event.BpmProcessInstanceStatusMessage;
-import cn.iocoder.yudao.module.oa.enums.ApiConstants;
-import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
-import cn.iocoder.yudao.module.oa.service.OaFlowBillServiceFactory;
+import cn.iocoder.yudao.module.hrm.enums.ApiConstants;
+import cn.iocoder.yudao.module.hrm.enums.HrmBillTypeEnum;
+import cn.iocoder.yudao.module.hrm.service.HrmFlowBillServiceFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -19,28 +19,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * OA 流程回调 Controller
- * 接收来自BPM服务的Feign调用
+ * HRM 模块 BPM 回调（Feign）
  *
- * @author 芋道源码
+ * @author 芋道
  */
-@Tag(name = "管理后台 - OA流程回调")
+@Tag(name = "管理后台 - HRM流程回调")
 @RestController
 @RequestMapping(ApiConstants.PREFIX + "/process-callback")
 @Validated
 @Slf4j
-public class OaFeignNotificationController extends AbstractFlowNotificationController<OaBillTypeEnum> {
+public class HrmFeignNotificationController extends AbstractFlowNotificationController<HrmBillTypeEnum> {
 
     @Resource
-    private OaFlowBillServiceFactory flowBillServiceFactory;
+    private HrmFlowBillServiceFactory flowBillServiceFactory;
 
     @Override
     protected SystemEnum getSystem() {
-        return SystemEnum.OA;
+        return SystemEnum.HRM;
     }
 
     @Override
-    protected FlowBillServiceFactory<OaBillTypeEnum> getFlowBillServiceFactory() {
+    protected FlowBillServiceFactory<HrmBillTypeEnum> getFlowBillServiceFactory() {
         return flowBillServiceFactory;
     }
 
@@ -51,9 +50,10 @@ public class OaFeignNotificationController extends AbstractFlowNotificationContr
     }
 
     @PostMapping("/status-change")
-    @Operation(summary = "接收流程状态变化回调（兼容旧版本）")
     @Deprecated
+    @Operation(summary = "接收流程状态变化回调（兼容旧版本）")
     public CommonResult<Boolean> processStatusChange(@RequestBody BpmProcessInstanceStatusMessage message) {
         return doHandleProcessStatusChange(message);
     }
 }
+

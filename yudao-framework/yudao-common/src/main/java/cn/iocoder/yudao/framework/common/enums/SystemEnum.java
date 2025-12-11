@@ -18,7 +18,12 @@ public enum SystemEnum {
     /**
      * OA系统
      */
-    OA("OA", "OA系统");
+    OA("OA", "OA系统"),
+
+    /**
+     * 人力资源系统
+     */
+    HRM("HR", "人力资源系统");
 
     /**
      * 系统代码

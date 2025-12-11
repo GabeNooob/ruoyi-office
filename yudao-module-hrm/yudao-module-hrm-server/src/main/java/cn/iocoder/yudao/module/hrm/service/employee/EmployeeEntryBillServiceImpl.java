@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.*;
 import cn.iocoder.yudao.module.hrm.dal.dataobject.employee.*;
+import cn.iocoder.yudao.module.hrm.dal.dataobject.employee.EmployeeDO;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 import cn.iocoder.yudao.module.hrm.dal.mysql.employee.*;
@@ -28,6 +29,8 @@ import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentRespVO;
 import cn.iocoder.yudao.framework.common.service.FlowBillService;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.iocoder.yudao.module.hrm.enums.ErrorCodeConstants.EMPLOYEE_ENTRY_BILL_ID_CARD_EXISTS;
+import static cn.iocoder.yudao.module.hrm.enums.ErrorCodeConstants.EMPLOYEE_ENTRY_BILL_MOBILE_EXISTS;
 import static cn.iocoder.yudao.module.hrm.enums.ErrorCodeConstants.EMPLOYEE_ENTRY_BILL_NOT_EXISTS;
 import static cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum.RUNNING;
 import static cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum.APPROVE;
@@ -80,8 +83,11 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
     public Long saveEmployeeEntryBill(EmployeeEntryBillSaveReqVO saveReqVO) {
         // 如果单号为空，需要生成
         if(StringUtils.isBlank(saveReqVO.getBillCode())){
-            saveReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.SYSTEM, HrmBillTypeEnum.HRM_EMPLOYEE_ENTRY_BILL));
+            saveReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.HRM, HrmBillTypeEnum.HRM_EMPLOYEE_ENTRY_BILL));
         }
+
+        // 校验手机号与身份证号在员工档案中唯一
+        validateMobileAndIdCardUnique(saveReqVO);
 
         // 插入或更新
         EmployeeEntryBillDO entryBill = BeanUtils.toBean(saveReqVO, EmployeeEntryBillDO.class);
@@ -104,8 +110,11 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
     public Long submitEmployeeEntryBill(EmployeeEntryBillSaveReqVO saveReqVO) {
         // 如果单号为空，需要生成
         if(StringUtils.isBlank(saveReqVO.getBillCode())){
-            saveReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.SYSTEM, HrmBillTypeEnum.HRM_EMPLOYEE_ENTRY_BILL));
+            saveReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.HRM, HrmBillTypeEnum.HRM_EMPLOYEE_ENTRY_BILL));
         }
+
+        // 校验手机号与身份证号在员工档案中唯一
+        validateMobileAndIdCardUnique(saveReqVO);
 
         // 保存或更新
         EmployeeEntryBillDO entryBill = BeanUtils.toBean(saveReqVO, EmployeeEntryBillDO.class)
@@ -137,8 +146,10 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
     @Override
     public Long createEmployeeEntryBill(EmployeeEntryBillSaveReqVO createReqVO) {
         // 插入
-        String billCode = BillCodeUtils.generateBillCode(SystemEnum.SYSTEM, HrmBillTypeEnum.HRM_EMPLOYEE_ENTRY_BILL);
+        String billCode = BillCodeUtils.generateBillCode(SystemEnum.HRM, HrmBillTypeEnum.HRM_EMPLOYEE_ENTRY_BILL);
         createReqVO.setBillCode(billCode);
+        // 校验手机号与身份证号在员工档案中唯一
+        validateMobileAndIdCardUnique(createReqVO);
         // 插入
         EmployeeEntryBillDO entryBill = BeanUtils.toBean(createReqVO, EmployeeEntryBillDO.class);
         employeeEntryBillMapper.insertOrUpdate(entryBill);
@@ -403,6 +414,34 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
                 item.setBillId(entryBillId);
                 entryBillFamilyMapper.insert(item);
             });
+        }
+    }
+
+    /**
+     * 校验手机号与身份证号在员工档案表唯一
+     *
+     * @param reqVO 入职申请单保存/提交请求
+     */
+    private void validateMobileAndIdCardUnique(EmployeeEntryBillSaveReqVO reqVO) {
+        // 校验手机号
+        if (StringUtils.isNotBlank(reqVO.getMobile())) {
+            Long mobileCount = employeeMapper.selectCount(
+                    new LambdaQueryWrapperX<EmployeeDO>()
+                            .eq(EmployeeDO::getMobile, reqVO.getMobile())
+            );
+            if (mobileCount != null && mobileCount > 0) {
+                throw exception(EMPLOYEE_ENTRY_BILL_MOBILE_EXISTS);
+            }
+        }
+        // 校验身份证号
+        if (StringUtils.isNotBlank(reqVO.getIdCard())) {
+            Long idCardCount = employeeMapper.selectCount(
+                    new LambdaQueryWrapperX<EmployeeDO>()
+                            .eq(EmployeeDO::getIdCard, reqVO.getIdCard())
+            );
+            if (idCardCount != null && idCardCount > 0) {
+                throw exception(EMPLOYEE_ENTRY_BILL_ID_CARD_EXISTS);
+            }
         }
     }
 

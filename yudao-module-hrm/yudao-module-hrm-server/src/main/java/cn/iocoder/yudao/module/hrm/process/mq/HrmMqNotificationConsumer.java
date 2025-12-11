@@ -1,34 +1,35 @@
-package cn.iocoder.yudao.module.oa.process.mq;
+package cn.iocoder.yudao.module.hrm.process.mq;
 
 import cn.iocoder.yudao.common.server.process.mq.AbstractFlowMqNotificationConsumer;
 import cn.iocoder.yudao.framework.common.enums.SystemEnum;
 import cn.iocoder.yudao.framework.common.service.FlowBillServiceFactory;
-import cn.iocoder.yudao.module.oa.enums.OaBillTypeEnum;
-import cn.iocoder.yudao.module.oa.service.OaFlowBillServiceFactory;
+import cn.iocoder.yudao.module.hrm.enums.HrmBillTypeEnum;
+import cn.iocoder.yudao.module.hrm.service.HrmFlowBillServiceFactory;
 import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
- * OA 模块统一BPM事件MQ消费者
+ * HRM 模块统一BPM事件MQ消费者
  * 支持流程实例事件和任务事件的统一处理
  *
  * @author 芋道源码
  */
 @Component
 @ConditionalOnProperty(name = "yudao.bpm.notification.mq.enabled", havingValue = "true", matchIfMissing = false)
-public class OaMqNotificationConsumer extends AbstractFlowMqNotificationConsumer<OaBillTypeEnum> {
+public class HrmMqNotificationConsumer extends AbstractFlowMqNotificationConsumer<HrmBillTypeEnum> {
 
     @Resource
-    private OaFlowBillServiceFactory flowBillServiceFactory;
+    private HrmFlowBillServiceFactory flowBillServiceFactory;
 
     @Override
     protected SystemEnum getSystem() {
-        return SystemEnum.OA;
+        return SystemEnum.HRM;
     }
 
     @Override
-    protected FlowBillServiceFactory<OaBillTypeEnum> getFlowBillServiceFactory() {
+    protected FlowBillServiceFactory<HrmBillTypeEnum> getFlowBillServiceFactory() {
         return flowBillServiceFactory;
     }
 }
+

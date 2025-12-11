@@ -99,3 +99,92 @@ INSERT INTO system_dict_data(dict_type, label, value, sort, status, color_type, 
 (@dict_type_id, '博士', '8', 8, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
 (@dict_type_id, '其他', '9', 9, 0, 'default', '', '', '1', NOW(), '1', NOW(), false);
 
+-- 民族字典
+INSERT INTO system_dict_type(name, type, status, remark, creator, create_time, updater, update_time, deleted, deleted_time)
+VALUES ('民族', 'hrm_nation', 0, '员工民族', '1', NOW(), '1', NOW(), false, NULL);
+
+SET @dict_type_id = 'hrm_nation';
+
+INSERT INTO system_dict_data(dict_type, label, value, sort, status, color_type, css_class, remark, creator, create_time, updater, update_time, deleted) VALUES
+(@dict_type_id, '汉族', '1', 1, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '蒙古族', '2', 2, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '回族', '3', 3, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '藏族', '4', 4, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '维吾尔族', '5', 5, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '苗族', '6', 6, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '彝族', '7', 7, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '壮族', '8', 8, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '布依族', '9', 9, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '朝鲜族', '10', 10, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '满族', '11', 11, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '侗族', '12', 12, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '瑶族', '13', 13, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '白族', '14', 14, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '土家族', '15', 15, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '哈尼族', '16', 16, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '哈萨克族', '17', 17, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '傣族', '18', 18, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '黎族', '19', 19, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '傈僳族', '20', 20, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '佤族', '21', 21, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '畲族', '22', 22, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '高山族', '23', 23, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '拉祜族', '24', 24, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '水族', '25', 25, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '东乡族', '26', 26, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '纳西族', '27', 27, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '景颇族', '28', 28, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '柯尔克孜族', '29', 29, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '土族', '30', 30, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '达斡尔族', '31', 31, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '仫佬族', '32', 32, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '羌族', '33', 33, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '布朗族', '34', 34, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '撒拉族', '35', 35, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '毛南族', '36', 36, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '仡佬族', '37', 37, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '锡伯族', '38', 38, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '阿昌族', '39', 39, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '普米族', '40', 40, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '塔吉克族', '41', 41, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '怒族', '42', 42, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '乌孜别克族', '43', 43, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '俄罗斯族', '44', 44, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '鄂温克族', '45', 45, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '德昂族', '46', 46, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '保安族', '47', 47, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '裕固族', '48', 48, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '京族', '49', 49, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '塔塔尔族', '50', 50, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '独龙族', '51', 51, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '鄂伦春族', '52', 52, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '赫哲族', '53', 53, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '门巴族', '54', 54, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '珞巴族', '55', 55, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '基诺族', '56', 56, 0, 'default', '', '', '1', NOW(), '1', NOW(), false);
+
+-- 政治面貌字典
+INSERT INTO system_dict_type(name, type, status, remark, creator, create_time, updater, update_time, deleted, deleted_time)
+VALUES ('政治面貌', 'hrm_political_status', 0, '员工政治面貌', '1', NOW(), '1', NOW(), false, NULL);
+
+SET @dict_type_id = 'hrm_political_status';
+
+INSERT INTO system_dict_data(dict_type, label, value, sort, status, color_type, css_class, remark, creator, create_time, updater, update_time, deleted) VALUES
+(@dict_type_id, '中共党员', '1', 1, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '中共预备党员', '2', 2, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '共青团员', '3', 3, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '民主党派', '4', 4, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '群众', '5', 5, 0, 'default', '', '', '1', NOW(), '1', NOW(), false);
+
+-- 婚姻状况字典
+INSERT INTO system_dict_type(name, type, status, remark, creator, create_time, updater, update_time, deleted, deleted_time)
+VALUES ('婚姻状况', 'hrm_marital_status', 0, '员工婚姻状况', '1', NOW(), '1', NOW(), false, NULL);
+
+SET @dict_type_id = 'hrm_marital_status';
+
+INSERT INTO system_dict_data(dict_type, label, value, sort, status, color_type, css_class, remark, creator, create_time, updater, update_time, deleted) VALUES
+(@dict_type_id, '未婚', '1', 1, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '已婚', '2', 2, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '离异', '3', 3, 0, 'default', '', '', '1', NOW(), '1', NOW(), false),
+(@dict_type_id, '丧偶', '4', 4, 0, 'default', '', '', '1', NOW(), '1', NOW(), false);
+
