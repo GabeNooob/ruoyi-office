@@ -359,11 +359,6 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
 
         // 创建员工档案（包含明细信息）
         Long employeeId = employeeService.createEmployeeArchive(employeeSaveReqVO);
-        
-        // 删除入职申请单明细表中的数据（因为已经创建了员工档案，明细信息已转移到员工档案明细表）
-        entryBillWorkExperienceMapper.deleteByEntryBillId(entryBillId);
-        entryBillEducationMapper.deleteByEntryBillId(entryBillId);
-        entryBillFamilyMapper.deleteByEntryBillId(entryBillId);
 
         // 更新入职申请单的employeeId
         EmployeeEntryBillDO updateObj = new EmployeeEntryBillDO();

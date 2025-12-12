@@ -56,4 +56,4 @@ public class OaFeignNotificationController extends AbstractFlowNotificationContr
     public CommonResult<Boolean> processStatusChange(@RequestBody BpmProcessInstanceStatusMessage message) {
         return doHandleProcessStatusChange(message);
     }
-}
+} 
