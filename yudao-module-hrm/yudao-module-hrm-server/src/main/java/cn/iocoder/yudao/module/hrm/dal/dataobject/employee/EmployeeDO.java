@@ -64,6 +64,14 @@ public class EmployeeDO extends BaseDO {
      * 民族
      */
     private String nation;
+    /**
+     * 政治面貌
+     */
+    private String politicalStatus;
+    /**
+     * 婚姻状况
+     */
+    private String maritalStatus;
 
     /**
      * 职称

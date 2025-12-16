@@ -51,6 +51,12 @@ public class EmployeeEntryBillSaveReqVO {
     @Schema(description = "民族", example = "汉族")
     private String nation;
 
+    @Schema(description = "政治面貌", example = "中共党员")
+    private String politicalStatus;
+
+    @Schema(description = "婚姻状况", example = "已婚")
+    private String maritalStatus;
+
     @Schema(description = "籍贯", example = "北京市海淀区")
     private String nativePlace;
 

@@ -17,6 +17,8 @@ CREATE TABLE `hrm_employee_entry_bill` (
     `mobile` varchar(20) NOT NULL COMMENT '手机号',
     `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
     `nation` varchar(50) DEFAULT NULL COMMENT '民族',
+    `political_status` varchar(50) DEFAULT NULL COMMENT '政治面貌',
+    `marital_status` varchar(50) DEFAULT NULL COMMENT '婚姻状况',
     `native_place` varchar(200) DEFAULT NULL COMMENT '籍贯',
     `household_address` varchar(500) DEFAULT NULL COMMENT '户籍所在地',
     `current_address` varchar(500) DEFAULT NULL COMMENT '现居住地址',

@@ -4,8 +4,11 @@ import cn.iocoder.yudao.framework.common.enums.SystemEnum;
 import cn.iocoder.yudao.framework.common.util.bill.BillCodeUtils;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils;
+import cn.iocoder.yudao.framework.tenant.core.context.TenantContextHolder;
+import cn.iocoder.yudao.framework.tenant.core.util.TenantUtils;
 import cn.iocoder.yudao.module.bpm.api.task.BpmProcessInstanceApi;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
+import cn.iocoder.yudao.module.bpm.enums.BpmProcessVariableConstants;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
 import cn.iocoder.yudao.module.bpm.util.BpmProcessVariableUtils;
 import cn.iocoder.yudao.module.hrm.enums.HrmBillTypeEnum;
@@ -17,6 +20,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+
 import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.*;
 import cn.iocoder.yudao.module.hrm.dal.dataobject.employee.*;
 import cn.iocoder.yudao.module.hrm.dal.dataobject.employee.EmployeeDO;
@@ -32,7 +37,6 @@ import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionU
 import static cn.iocoder.yudao.module.hrm.enums.ErrorCodeConstants.EMPLOYEE_ENTRY_BILL_ID_CARD_EXISTS;
 import static cn.iocoder.yudao.module.hrm.enums.ErrorCodeConstants.EMPLOYEE_ENTRY_BILL_MOBILE_EXISTS;
 import static cn.iocoder.yudao.module.hrm.enums.ErrorCodeConstants.EMPLOYEE_ENTRY_BILL_NOT_EXISTS;
-import static cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum.RUNNING;
 import static cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum.APPROVE;
 
 /**
@@ -126,6 +130,7 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
 
         // 智能提交 BPM 流程（如果流程实例不存在则创建，存在则审批发起人任务）
         Map<String, Object> processInstanceVariables = BpmProcessVariableUtils.buildBillVariables(saveReqVO);
+        processInstanceVariables.put(BpmProcessVariableConstants.CAUSE, entryBill.getName()+"入职申请");
         String processInstanceId = processInstanceApi.submitProcessInstance(Long.valueOf(saveReqVO.getCreator()),
                 new BpmProcessInstanceCreateReqDTO().setProcessDefinitionKey(HrmBillTypeEnum.HRM_EMPLOYEE_ENTRY_BILL.getProcessDefinitionKey())
                         .setVariables(processInstanceVariables).setBusinessKey(String.valueOf(entryBill.getId()))
@@ -312,6 +317,11 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
             log.warn("[createEmployeeFromEntryBill] 员工档案已创建，entryBillId: {}, employeeId: {}", entryBillId, entryBillRespVO.getEmployeeId());
             return;
         }
+        AtomicReference<EmployeeEntryBillDO> entryBill = new AtomicReference<>(new EmployeeEntryBillDO());
+        // 查询入职申请单头信息（包含租户等）
+        TenantUtils.executeIgnore(()->{
+            entryBill.set(employeeEntryBillMapper.selectById(entryBillId));
+        });
 
         // 构建员工档案保存VO
         EmployeeSaveReqVO employeeSaveReqVO = new EmployeeSaveReqVO();
@@ -329,7 +339,9 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
         employeeSaveReqVO.setEmergencyContact(entryBillRespVO.getEmergencyContact());
         employeeSaveReqVO.setEmergencyPhone(entryBillRespVO.getEmergencyPhone());
         employeeSaveReqVO.setAvatar(entryBillRespVO.getAvatar());
-        
+        employeeSaveReqVO.setPoliticalStatus(entryBillRespVO.getPoliticalStatus());
+        employeeSaveReqVO.setMaritalStatus(entryBillRespVO.getMaritalStatus());
+
         // 工作信息
         employeeSaveReqVO.setEntryDate(entryBillRespVO.getEntryDate());
         employeeSaveReqVO.setDeptId(entryBillRespVO.getEmpDeptId());
@@ -343,12 +355,11 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
         employeeSaveReqVO.setRemark(entryBillRespVO.getRemark());
 
         // 计算转正日期（如果试用期不为空）
-        EmployeeEntryBillDO entryBill = employeeEntryBillMapper.selectById(entryBillId);
-        if (entryBill != null) {
-            if (entryBill.getProbationPeriod() != null && entryBill.getEntryDate() != null) {
-                employeeSaveReqVO.setFormalDate(entryBill.getEntryDate().plusMonths(entryBill.getProbationPeriod()));
-            } else if (entryBill.getExpectedFormalDate() != null) {
-                employeeSaveReqVO.setFormalDate(entryBill.getExpectedFormalDate());
+        if (entryBill.get() != null) {
+            if (entryBill.get().getProbationPeriod() != null && entryBill.get().getEntryDate() != null) {
+                employeeSaveReqVO.setFormalDate(entryBill.get().getEntryDate().plusMonths(entryBill.get().getProbationPeriod()));
+            } else if (entryBill.get().getExpectedFormalDate() != null) {
+                employeeSaveReqVO.setFormalDate(entryBill.get().getExpectedFormalDate());
             }
         }
 
@@ -358,15 +369,22 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
         employeeSaveReqVO.setFamilyList(entryBillRespVO.getFamilyList());
 
         // 创建员工档案（包含明细信息）
-        Long employeeId = employeeService.createEmployeeArchive(employeeSaveReqVO);
+        TenantUtils.execute(entryBill.get().getTenantId(), () -> {
+//            TenantContextHolder.setTenantId(entryBill.get().getTenantId());
 
-        // 更新入职申请单的employeeId
-        EmployeeEntryBillDO updateObj = new EmployeeEntryBillDO();
-        updateObj.setId(entryBillId);
-        updateObj.setEmployeeId(employeeId);
-        employeeEntryBillMapper.updateById(updateObj);
+            Long employeeId = employeeService.createEmployeeArchive(employeeSaveReqVO);
 
-        log.info("[createEmployeeFromEntryBill] 从入职申请单创建员工档案成功，entryBillId: {}, employeeId: {}", entryBillId, employeeId);
+            // 更新入职申请单的employeeId
+            EmployeeEntryBillDO updateObj = new EmployeeEntryBillDO();
+            updateObj.setId(entryBillId);
+            updateObj.setEmployeeId(employeeId);
+            employeeEntryBillMapper.updateById(updateObj);
+            log.info("[createEmployeeFromEntryBill] 从入职申请单创建员工档案成功，entryBillId: {}, employeeId: {}", entryBillId, employeeId);
+
+        });
+
+
+
     }
 
     /**

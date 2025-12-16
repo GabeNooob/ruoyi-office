@@ -45,6 +45,11 @@ public class EmployeeEntryBillDO extends BaseDO {
      */
     private Integer processStatus;
 
+    /**
+     * 多租户编号
+     */
+    private Long tenantId;
+
     // ========== 员工基本信息 ==========
     /**
      * 姓名
@@ -85,6 +90,14 @@ public class EmployeeEntryBillDO extends BaseDO {
      * 籍贯
      */
     private String nativePlace;
+    /**
+     * 政治面貌
+     */
+    private String politicalStatus;
+    /**
+     * 婚姻状况
+     */
+    private String maritalStatus;
 
     /**
      * 户籍所在地

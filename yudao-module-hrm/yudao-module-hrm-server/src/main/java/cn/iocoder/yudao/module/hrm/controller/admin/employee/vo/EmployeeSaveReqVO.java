@@ -65,6 +65,12 @@ public class EmployeeSaveReqVO {
     @Schema(description = "邮箱", example = "zhangsan@example.com")
     private String email;
 
+    @Schema(description = "政治面貌", example = "中共党员")
+    private String politicalStatus;
+
+    @Schema(description = "婚姻状况", example = "已婚")
+    private String maritalStatus;
+
     @Schema(description = "户籍所在地", example = "北京市海淀区中关村大街1号")
     private String householdAddress;
 

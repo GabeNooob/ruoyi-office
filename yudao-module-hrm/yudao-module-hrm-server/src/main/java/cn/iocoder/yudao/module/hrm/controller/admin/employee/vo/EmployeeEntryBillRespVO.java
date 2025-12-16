@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.hrm.controller.admin.employee.vo;
 
 import cn.iocoder.yudao.common.server.attachment.controller.vo.AttachmentRespVO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import java.time.LocalDate;
@@ -8,7 +9,11 @@ import java.time.LocalDateTime;
 import java.math.BigDecimal;
 import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
 import cn.idev.excel.annotation.ExcelProperty;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.List;
+
+import static cn.iocoder.yudao.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY;
 
 @Schema(description = "管理后台 - 员工入职申请单 Response VO")
 @Data
@@ -42,6 +47,7 @@ public class EmployeeEntryBillRespVO {
 
     @Schema(description = "出生日期", example = "2000-01-01")
     @ExcelProperty("出生日期")
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
     private LocalDate birthday;
 
     @Schema(description = "身份证号码", example = "110101199001011234")
@@ -59,6 +65,14 @@ public class EmployeeEntryBillRespVO {
     @Schema(description = "民族", example = "汉族")
     @ExcelProperty("民族")
     private String nation;
+
+    @Schema(description = "政治面貌", example = "中共党员")
+    @ExcelProperty("政治面貌")
+    private String politicalStatus;
+
+    @Schema(description = "婚姻状况", example = "已婚")
+    @ExcelProperty("婚姻状况")
+    private String maritalStatus;
 
     @Schema(description = "籍贯", example = "北京市海淀区")
     @ExcelProperty("籍贯")
@@ -87,6 +101,7 @@ public class EmployeeEntryBillRespVO {
     // ========== 入职相关信息（员工所属的组织信息） ==========
     @Schema(description = "入职日期", requiredMode = Schema.RequiredMode.REQUIRED, example = "2023-01-01")
     @ExcelProperty("入职日期")
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
     private LocalDate entryDate;
 
     @Schema(description = "试用期（月数）", example = "3")
@@ -95,6 +110,7 @@ public class EmployeeEntryBillRespVO {
 
     @Schema(description = "预计转正日期", example = "2023-04-01")
     @ExcelProperty("预计转正日期")
+    @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
     private LocalDate expectedFormalDate;
 
     @Schema(description = "员工所属部门ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")

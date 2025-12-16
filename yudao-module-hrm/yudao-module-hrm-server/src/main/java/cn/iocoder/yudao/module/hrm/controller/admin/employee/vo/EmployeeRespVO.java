@@ -64,6 +64,14 @@ public class EmployeeRespVO {
     @ExcelProperty("籍贯")
     private String nativePlace;
 
+    @Schema(description = "政治面貌", example = "中共党员")
+    @ExcelProperty("政治面貌")
+    private String politicalStatus;
+
+    @Schema(description = "婚姻状况", example = "已婚")
+    @ExcelProperty("婚姻状况")
+    private String maritalStatus;
+
     @Schema(description = "身高(cm)", example = "175")
     @ExcelProperty("身高(cm)")
     private BigDecimal height;
