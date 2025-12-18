@@ -161,6 +161,11 @@ public class EmployeeEntryBillDO extends BaseDO {
     private String empCompanyName;
 
     /**
+     * 职位
+     */
+    private String jobPost;
+
+    /**
      * 职务
      */
     private String jobPosition;

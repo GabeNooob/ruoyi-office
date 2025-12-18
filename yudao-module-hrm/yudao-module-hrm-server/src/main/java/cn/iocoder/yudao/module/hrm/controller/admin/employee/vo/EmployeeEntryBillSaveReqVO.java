@@ -99,6 +99,9 @@ public class EmployeeEntryBillSaveReqVO {
     @Schema(description = "员工所属公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
     private String empCompanyName;
 
+    @Schema(description = "职位", example = "产品经理")
+    private String jobPost;
+
     @Schema(description = "职务", example = "部门经理")
     private String jobPosition;
 

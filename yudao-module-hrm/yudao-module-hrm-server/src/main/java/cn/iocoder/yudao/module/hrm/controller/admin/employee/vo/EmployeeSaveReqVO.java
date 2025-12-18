@@ -92,6 +92,9 @@ public class EmployeeSaveReqVO {
     @Schema(description = "工资卡账户", example = "6222021234567890123")
     private String bankAccount;
 
+    @Schema(description = "职位", example = "产品经理")
+    private String jobPost;
+
     @Schema(description = "职务", example = "部门经理")
     private String jobPosition;
 

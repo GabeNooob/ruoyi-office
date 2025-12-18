@@ -346,6 +346,7 @@ public class EmployeeEntryBillServiceImpl implements EmployeeEntryBillService, F
         employeeSaveReqVO.setEntryDate(entryBillRespVO.getEntryDate());
         employeeSaveReqVO.setDeptId(entryBillRespVO.getEmpDeptId());
         employeeSaveReqVO.setCompanyName(entryBillRespVO.getEmpCompanyName());
+        employeeSaveReqVO.setJobPost(entryBillRespVO.getJobPost());
         employeeSaveReqVO.setJobPosition(entryBillRespVO.getJobPosition());
         employeeSaveReqVO.setJobTitle(entryBillRespVO.getJobTitle());
         employeeSaveReqVO.setEmployeeStatus(entryBillRespVO.getEmployeeStatus());

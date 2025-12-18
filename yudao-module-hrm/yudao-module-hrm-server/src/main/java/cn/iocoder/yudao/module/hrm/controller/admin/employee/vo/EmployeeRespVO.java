@@ -120,6 +120,10 @@ public class EmployeeRespVO {
     @ExcelProperty("工资卡账户")
     private String bankAccount;
 
+    @Schema(description = "职位", example = "产品经理")
+    @ExcelProperty("职位")
+    private String jobPost;
+
     @Schema(description = "职务", example = "部门经理")
     @ExcelProperty("职务")
     private String jobPosition;

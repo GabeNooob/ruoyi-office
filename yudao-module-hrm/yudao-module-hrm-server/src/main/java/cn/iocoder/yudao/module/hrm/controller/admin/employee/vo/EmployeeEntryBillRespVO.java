@@ -129,6 +129,10 @@ public class EmployeeEntryBillRespVO {
     @ExcelProperty("员工所属公司名称")
     private String empCompanyName;
 
+    @Schema(description = "职位", example = "产品经理")
+    @ExcelProperty("职位")
+    private String jobPost;
+
     @Schema(description = "职务", example = "部门经理")
     @ExcelProperty("职务")
     private String jobPosition;
