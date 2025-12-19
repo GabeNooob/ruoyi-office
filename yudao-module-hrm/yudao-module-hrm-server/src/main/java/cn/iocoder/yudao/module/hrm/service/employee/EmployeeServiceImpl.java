@@ -214,24 +214,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public PageResult<EmployeeRespVO> getEmployeeArchivePage(EmployeePageReqVO pageReqVO) {
         PageResult<EmployeeDO> pageResult = employeeArchiveMapper.selectPage(pageReqVO);
-        PageResult<EmployeeRespVO> respPageResult = BeanUtils.toBean(pageResult, EmployeeRespVO.class);
+        return buildEmployeeRespPage(pageResult);
+    }
 
-        // 批量获取部门名称
-        List<Long> deptIds = respPageResult.getList().stream()
-                .map(EmployeeRespVO::getDeptId)
-                .filter(deptId -> deptId != null)
-                .distinct()
-                .collect(Collectors.toList());
-        if (CollUtil.isNotEmpty(deptIds)) {
-            Map<Long, DeptRespDTO> deptMap = deptApi.getDeptMap(deptIds);
-            respPageResult.getList().forEach(respVO -> {
-                if (respVO.getDeptId() != null && deptMap.containsKey(respVO.getDeptId())) {
-                    respVO.setDeptName(deptMap.get(respVO.getDeptId()).getName());
-                }
-            });
-        }
-
-        return respPageResult;
+    @Override
+    public PageResult<EmployeeRespVO> getEmployeeArchiveSelectablePage(EmployeeSelectPageReqVO pageReqVO) {
+        PageResult<EmployeeDO> pageResult = employeeArchiveMapper.selectPageExcludeFormal(pageReqVO);
+        return buildEmployeeRespPage(pageResult);
     }
 
     /**
@@ -277,6 +266,30 @@ public class EmployeeServiceImpl implements EmployeeService {
             item.setEmployeeId(employeeId);
             employeeFamilyMapper.insert(item);
         });
+    }
+
+    /**
+     * 构建带部门名称的分页结果
+     */
+    private PageResult<EmployeeRespVO> buildEmployeeRespPage(PageResult<EmployeeDO> pageResult) {
+        PageResult<EmployeeRespVO> respPageResult = BeanUtils.toBean(pageResult, EmployeeRespVO.class);
+
+        // 批量获取部门名称
+        List<Long> deptIds = respPageResult.getList().stream()
+                .map(EmployeeRespVO::getDeptId)
+                .filter(deptId -> deptId != null)
+                .distinct()
+                .collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(deptIds)) {
+            Map<Long, DeptRespDTO> deptMap = deptApi.getDeptMap(deptIds);
+            respPageResult.getList().forEach(respVO -> {
+                if (respVO.getDeptId() != null && deptMap.containsKey(respVO.getDeptId())) {
+                    respVO.setDeptName(deptMap.get(respVO.getDeptId()).getName());
+                }
+            });
+        }
+
+        return respPageResult;
     }
 
     @Override

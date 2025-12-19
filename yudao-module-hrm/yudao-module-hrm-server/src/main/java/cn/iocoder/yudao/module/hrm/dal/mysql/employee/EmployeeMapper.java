@@ -4,6 +4,7 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.framework.mybatis.core.mapper.BaseMapperX;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.EmployeePageReqVO;
+import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.EmployeeSelectPageReqVO;
 import cn.iocoder.yudao.module.hrm.dal.dataobject.employee.EmployeeDO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -24,6 +25,26 @@ public interface EmployeeMapper extends BaseMapperX<EmployeeDO> {
                 .betweenIfPresent(EmployeeDO::getEntryDate, reqVO.getEntryDate())
                 .betweenIfPresent(EmployeeDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(EmployeeDO::getId));
+    }
+
+    /**
+     * 选择弹窗分页（可通过 excludeEmployeeStatusList 动态排除部分状态）
+     */
+    default PageResult<EmployeeDO> selectPageExcludeFormal(EmployeeSelectPageReqVO reqVO) {
+        LambdaQueryWrapperX<EmployeeDO> wrapper = new LambdaQueryWrapperX<EmployeeDO>()
+                .likeIfPresent(EmployeeDO::getEmployeeNo, reqVO.getEmployeeNo())
+                .likeIfPresent(EmployeeDO::getName, reqVO.getName())
+                .eqIfPresent(EmployeeDO::getDeptId, reqVO.getDeptId())
+                .eqIfPresent(EmployeeDO::getJobPost, reqVO.getJobPost())
+                .eqIfPresent(EmployeeDO::getJobPosition, reqVO.getJobPosition())
+                .eqIfPresent(EmployeeDO::getEmployeeStatus, reqVO.getEmployeeStatus())
+                .betweenIfPresent(EmployeeDO::getEntryDate, reqVO.getEntryDate())
+                .betweenIfPresent(EmployeeDO::getCreateTime, reqVO.getCreateTime())
+                .orderByDesc(EmployeeDO::getId);
+        if (reqVO.getExcludeEmployeeStatusList() != null && !reqVO.getExcludeEmployeeStatusList().isEmpty()) {
+            wrapper.notIn(EmployeeDO::getEmployeeStatus, reqVO.getExcludeEmployeeStatusList());
+        }
+        return selectPage(reqVO, wrapper);
     }
 
     /**

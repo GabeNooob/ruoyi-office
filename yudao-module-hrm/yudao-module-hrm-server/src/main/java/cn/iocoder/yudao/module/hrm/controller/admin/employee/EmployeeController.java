@@ -82,6 +82,14 @@ public class EmployeeController {
         return success(pageResult);
     }
 
+    @GetMapping("/select-page")
+    @Operation(summary = "员工档案选择分页（过滤正式员工）")
+    @PreAuthorize("@ss.hasPermission('hrm:employee-archive:query')")
+    public CommonResult<PageResult<EmployeeRespVO>> getEmployeeArchiveSelectablePage(@Valid EmployeeSelectPageReqVO pageReqVO) {
+        PageResult<EmployeeRespVO> pageResult = employeeArchiveService.getEmployeeArchiveSelectablePage(pageReqVO);
+        return success(pageResult);
+    }
+
     @GetMapping("/export-excel")
     @Operation(summary = "导出员工档案 Excel")
     @PreAuthorize("@ss.hasPermission('hrm:employee-archive:export')")

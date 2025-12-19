@@ -17,5 +17,8 @@ public interface ErrorCodeConstants {
     ErrorCode EMPLOYEE_ENTRY_BILL_MOBILE_EXISTS = new ErrorCode(1_050_002_002, "手机号已存在，无法重复录入");
     ErrorCode EMPLOYEE_ENTRY_BILL_ID_CARD_EXISTS = new ErrorCode(1_050_002_003, "身份证号已存在，无法重复录入");
 
+    // ========== 员工转正申请单 1-050-003-000 ==========
+    ErrorCode EMPLOYEE_REGULAR_BILL_NOT_EXISTS = new ErrorCode(1_050_003_001, "员工转正申请单不存在");
+
 }
 

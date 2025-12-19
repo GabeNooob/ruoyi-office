@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.hrm.service.employee;
 import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.EmployeePageReqVO;
 import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.EmployeeRespVO;
+import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.EmployeeSelectPageReqVO;
 import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.EmployeeSaveReqVO;
 import jakarta.validation.Valid;
 
@@ -59,6 +60,14 @@ public interface EmployeeService {
      * @return 员工档案分页
      */
     PageResult<EmployeeRespVO> getEmployeeArchivePage(EmployeePageReqVO pageReqVO);
+
+    /**
+     * 获得可选择的员工档案分页（过滤正式员工）
+     *
+     * @param pageReqVO 分页查询
+     * @return 员工档案分页
+     */
+    PageResult<EmployeeRespVO> getEmployeeArchiveSelectablePage(EmployeeSelectPageReqVO pageReqVO);
 
     /**
      * 为员工生成系统用户
