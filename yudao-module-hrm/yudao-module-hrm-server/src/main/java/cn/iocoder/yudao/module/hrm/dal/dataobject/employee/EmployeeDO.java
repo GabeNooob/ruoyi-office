@@ -164,6 +164,16 @@ public class EmployeeDO extends BaseDO {
     private Long deptId;
 
     /**
+     * 所属部门名称
+     */
+    private String deptName;
+
+    /**
+     * 所属公司ID
+     */
+    private Long companyId;
+
+    /**
      * 所属单位
      */
     private String companyName;

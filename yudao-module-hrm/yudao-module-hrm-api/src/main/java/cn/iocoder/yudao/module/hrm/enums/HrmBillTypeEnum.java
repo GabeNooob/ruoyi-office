@@ -16,7 +16,12 @@ public enum HrmBillTypeEnum implements BillTypeEnum {
     /**
      * 员工转正申请单
      */
-    HRM_EMPLOYEE_REGULAR_BILL("202", "员工转正申请单", "hr_employee_regular_bill");
+    HRM_EMPLOYEE_REGULAR_BILL("202", "员工转正申请单", "hr_employee_regular_bill"),
+
+    /**
+     * 人事调动申请单
+     */
+    HRM_EMPLOYEE_TRANSFER_BILL("203", "人事调动申请单", "hr_employee_transfer_bill");
 
     /**
      * 单据类型代码

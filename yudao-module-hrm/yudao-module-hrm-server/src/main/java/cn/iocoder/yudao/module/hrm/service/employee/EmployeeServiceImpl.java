@@ -188,11 +188,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         EmployeeRespVO respVO = BeanUtils.toBean(archive, EmployeeRespVO.class);
 
-        // 获取部门名称
+        // 获取部门名称（如果数据库中没有保存，则通过部门查找）
         if (archive.getDeptId() != null) {
-            CommonResult<DeptRespDTO> dept = deptApi.getDept(archive.getDeptId());
-            if (dept != null && dept.isSuccess() && dept.getData() != null) {
-                respVO.setDeptName(dept.getData().getName());
+            // 如果数据库中没有保存部门名称，则从部门信息中获取
+            if (archive.getDeptName() == null) {
+                CommonResult<DeptRespDTO> dept = deptApi.getDept(archive.getDeptId());
+                if (dept != null && dept.isSuccess() && dept.getData() != null) {
+                    respVO.setDeptName(dept.getData().getName());
+                }
+            }
+            
+            // 如果数据库中没有保存公司ID，则通过部门向上查找公司
+            if (archive.getCompanyId() == null) {
+                Long companyId = findCompanyIdByDeptId(archive.getDeptId());
+                if (companyId != null) {
+                    respVO.setCompanyId(companyId);
+                }
             }
         }
 
@@ -370,6 +381,45 @@ public class EmployeeServiceImpl implements EmployeeService {
         userUpdateReqDTO.setRemark(employee.getRemark()); // 备注
 
         adminUserApi.updateUser(userUpdateReqDTO);
+    }
+
+    /**
+     * 通过部门ID查找公司ID
+     * 从当前部门开始，向上查找第一个组织类型为1（公司）的部门
+     *
+     * @param deptId 部门ID
+     * @return 公司ID，如果找不到则返回null
+     */
+    private Long findCompanyIdByDeptId(Long deptId) {
+        if (deptId == null) {
+            return null;
+        }
+
+        // 最多查找100层，避免死循环
+        for (int i = 0; i < 100; i++) {
+            CommonResult<DeptRespDTO> deptResult = deptApi.getDept(deptId);
+            if (deptResult == null || !deptResult.isSuccess() || deptResult.getData() == null) {
+                break;
+            }
+
+            DeptRespDTO dept = deptResult.getData();
+            
+            // 如果当前部门就是公司（orgType为"1"），返回其ID
+            if ("1".equals(dept.getOrgType())) {
+                return dept.getId();
+            }
+
+            // 如果父部门ID为空或为0，说明已经到根节点，停止查找
+            if (dept.getParentId() == null || dept.getParentId() == 0) {
+                break;
+            }
+
+            // 继续向上查找父部门
+            deptId = dept.getParentId();
+        }
+
+        // 没有找到公司类型的部门
+        return null;
     }
 
 }

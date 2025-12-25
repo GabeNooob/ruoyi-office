@@ -105,6 +105,12 @@ public class EmployeeSaveReqVO {
     @Schema(description = "所属部门", example = "1")
     private Long deptId;
 
+    @Schema(description = "所属部门名称", example = "研发部")
+    private String deptName;
+
+    @Schema(description = "所属公司ID", example = "1")
+    private Long companyId;
+
     @Schema(description = "所属单位", example = "北京创星科技发展有限公司")
     private String companyName;
 

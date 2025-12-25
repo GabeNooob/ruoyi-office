@@ -141,6 +141,10 @@ public class EmployeeRespVO {
     @ExcelProperty("所属部门")
     private String deptName;
 
+    @Schema(description = "所属公司ID", example = "1")
+    @ExcelProperty("所属公司ID")
+    private Long companyId;
+
     @Schema(description = "所属单位", example = "北京创星科技发展有限公司")
     @ExcelProperty("所属单位")
     private String companyName;
