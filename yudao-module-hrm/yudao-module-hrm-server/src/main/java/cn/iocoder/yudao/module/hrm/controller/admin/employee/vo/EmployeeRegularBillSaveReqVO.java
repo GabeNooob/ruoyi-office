@@ -29,33 +29,27 @@ public class EmployeeRegularBillSaveReqVO {
 
     // ========== 员工信息 ==========
     @Schema(description = "关联的员工档案ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "员工档案ID不能为空")
     private Long employeeId;
 
     @Schema(description = "员工工号", example = "E001")
     private String employeeNo;
 
     @Schema(description = "姓名", requiredMode = Schema.RequiredMode.REQUIRED, example = "张三")
-    @NotEmpty(message = "姓名不能为空")
     private String name;
 
     @Schema(description = "性别（1:男 2:女）", example = "1")
     private Integer sex;
 
     @Schema(description = "员工所属部门ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "员工所属部门ID不能为空")
     private Long empDeptId;
 
     @Schema(description = "员工所属部门名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "技术部")
-    @NotEmpty(message = "员工所属部门名称不能为空")
     private String empDeptName;
 
     @Schema(description = "员工所属公司ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "员工所属公司ID不能为空")
     private Long empCompanyId;
 
     @Schema(description = "员工所属公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
-    @NotEmpty(message = "员工所属公司名称不能为空")
     private String empCompanyName;
 
     @Schema(description = "职位", example = "产品经理")
@@ -65,7 +59,6 @@ public class EmployeeRegularBillSaveReqVO {
     private String jobPosition;
 
     @Schema(description = "当前人员状态（1:正式 2:试用期 3:实习生 4:兼职 5:零时工）", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotNull(message = "人员状态不能为空")
     private Integer employeeStatus;
 
     @Schema(description = "入职日期", example = "2023-01-01")
@@ -105,7 +98,6 @@ public class EmployeeRegularBillSaveReqVO {
 
     @Schema(description = "创建者姓名", example = "芋艿")
     private String creatorName;
-
     @Schema(description = "备注", example = "试用期表现优秀")
     private String remark;
 
