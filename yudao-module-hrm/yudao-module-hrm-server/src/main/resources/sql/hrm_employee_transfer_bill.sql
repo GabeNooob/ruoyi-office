@@ -38,6 +38,7 @@ CREATE TABLE `hrm_employee_transfer_bill` (
     `new_company_name` varchar(100) DEFAULT NULL COMMENT '变更为公司名称',
     `new_dept_id` bigint DEFAULT NULL COMMENT '变更为部门ID',
     `new_dept_name` varchar(100) DEFAULT NULL COMMENT '变更为部门名称',
+    `effective_immediately` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否立即生效（1是 0否）',
     `effective_date` date DEFAULT NULL COMMENT '生效日期',
     
     -- 制单人信息（单据必须的信息）
@@ -69,6 +70,7 @@ CREATE TABLE `hrm_employee_transfer_bill` (
     KEY `idx_create_time` (`create_time`),
     KEY `idx_creator` (`creator`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='人事调动申请单';
+
 
 
 

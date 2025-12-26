@@ -90,7 +90,15 @@ public interface EmployeeTransferBillService {
      */
     PageResult<EmployeeTransferBillDO> getEmployeeTransferBillPage(EmployeeTransferBillPageReqVO pageReqVO);
 
+    /**
+     * 从调动申请单更新员工档案
+     *
+     * @param transferBillId 调动申请单ID
+     */
+    void updateEmployeeFromTransferBill(Long transferBillId);
+
 }
+
 
 
 

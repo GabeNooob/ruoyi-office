@@ -177,6 +177,11 @@ public class EmployeeTransferBillDO extends BaseDO {
     private String newDeptName;
 
     /**
+     * 是否立即生效
+     */
+    private Boolean effectiveImmediately;
+
+    /**
      * 生效日期
      */
     private LocalDate effectiveDate;
@@ -213,6 +218,7 @@ public class EmployeeTransferBillDO extends BaseDO {
     private String remark;
 
 }
+
 
 
 

@@ -17,6 +17,7 @@ import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.*;
@@ -65,9 +66,7 @@ public class EmployeeTransferBillServiceImpl implements EmployeeTransferBillServ
         if(StringUtils.isBlank(saveReqVO.getBillCode())){
             saveReqVO.setBillCode(BillCodeUtils.generateBillCode(SystemEnum.HRM, HrmBillTypeEnum.HRM_EMPLOYEE_TRANSFER_BILL));
         }
-
-        // 校验员工档案存在
-        validateEmployeeExists(saveReqVO.getEmployeeId());
+        
 
         // 插入或更新
         EmployeeTransferBillDO transferBill = BeanUtils.toBean(saveReqVO, EmployeeTransferBillDO.class);
@@ -159,10 +158,12 @@ public class EmployeeTransferBillServiceImpl implements EmployeeTransferBillServ
         employeeTransferBillMapper.deleteByIds(ids);
     }
 
-    private void validateEmployeeTransferBillExists(Long id) {
-        if (employeeTransferBillMapper.selectById(id) == null) {
+    private EmployeeTransferBillDO validateEmployeeTransferBillExists(Long id) {
+        EmployeeTransferBillDO bill = employeeTransferBillMapper.selectById(id);
+        if (bill == null) {
             throw exception(EMPLOYEE_TRANSFER_BILL_NOT_EXISTS);
         }
+        return bill;
     }
 
     private void validateEmployeeExists(Long employeeId) {
@@ -223,18 +224,20 @@ public class EmployeeTransferBillServiceImpl implements EmployeeTransferBillServ
         log.info("[updateProcessStatus] 更新人事调动申请单流程状态，id: {}, status: {}", id, status);
 
         // 校验人事调动申请单存在
-        validateEmployeeTransferBillExists(id);
+        EmployeeTransferBillDO bill = validateEmployeeTransferBillExists(id);
 
         // 更新流程状态
         EmployeeTransferBillDO updateObj = new EmployeeTransferBillDO();
         updateObj.setId(id);
         updateObj.setProcessStatus(status);
-        
-        // 如果审批通过，更新员工档案
+
+        // 如果审批通过，根据是否立即生效更新员工档案
         if (APPROVE.getStatus().equals(status)) {
-            updateEmployeeFromTransferBill(id);
+            if (Boolean.TRUE.equals(bill.getEffectiveImmediately())) {
+                updateEmployeeFromTransferBill(id);
+            }
         }
-        
+
         employeeTransferBillMapper.updateById(updateObj);
 
         log.info("[updateProcessStatus] 人事调动申请单流程状态更新成功，id: {}, status: {}", id, status);
@@ -245,7 +248,8 @@ public class EmployeeTransferBillServiceImpl implements EmployeeTransferBillServ
      *
      * @param transferBillId 调动申请单ID
      */
-    private void updateEmployeeFromTransferBill(Long transferBillId) {
+    @Override
+    public void updateEmployeeFromTransferBill(Long transferBillId) {
         // 获取调动申请单信息
         EmployeeTransferBillRespVO transferBillRespVO = getEmployeeTransferBillInfo(transferBillId);
         if (transferBillRespVO == null) {
@@ -292,6 +296,7 @@ public class EmployeeTransferBillServiceImpl implements EmployeeTransferBillServ
     }
 
 }
+
 
 
 

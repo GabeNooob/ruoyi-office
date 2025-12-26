@@ -107,6 +107,9 @@ public class EmployeeTransferBillSaveReqVO {
     @Schema(description = "变更为部门名称", example = "产品部")
     private String newDeptName;
 
+    @Schema(description = "是否立即生效", example = "false")
+    private Boolean effectiveImmediately;
+
     @Schema(description = "生效日期", example = "2024-01-01")
     @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
     private LocalDate effectiveDate;
@@ -141,6 +144,7 @@ public class EmployeeTransferBillSaveReqVO {
     private List<AttachmentSaveReqVO> attachments;
 
 }
+
 
 
 

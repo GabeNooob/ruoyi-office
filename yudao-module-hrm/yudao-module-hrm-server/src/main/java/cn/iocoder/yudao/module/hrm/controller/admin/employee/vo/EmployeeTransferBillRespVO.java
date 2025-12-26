@@ -140,6 +140,10 @@ public class EmployeeTransferBillRespVO {
     @ExcelProperty("变更为部门名称")
     private String newDeptName;
 
+    @Schema(description = "是否立即生效", example = "false")
+    @ExcelProperty("是否立即生效")
+    private Boolean effectiveImmediately;
+
     @Schema(description = "生效日期", example = "2024-01-01")
     @ExcelProperty("生效日期")
     @JsonFormat(pattern = FORMAT_YEAR_MONTH_DAY)
@@ -182,6 +186,7 @@ public class EmployeeTransferBillRespVO {
     private List<AttachmentRespVO> attachments;
 
 }
+
 
 
 
