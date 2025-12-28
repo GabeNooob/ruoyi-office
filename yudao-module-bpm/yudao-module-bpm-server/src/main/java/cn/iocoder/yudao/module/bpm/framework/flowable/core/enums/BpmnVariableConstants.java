@@ -118,4 +118,5 @@ public class BpmnVariableConstants {
      */
     public static final String TASK_SIGN_PIC_URL = "TASK_SIGN_PIC_URL";
 
+    public static CharSequence PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_PREFIX;
 }
