@@ -2,9 +2,9 @@ package cn.iocoder.yudao.module.bpm.service.task;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.*;
 import cn.iocoder.yudao.module.bpm.controller.admin.task.vo.task.BpmTaskApproveReqVO;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,7 @@ import cn.iocoder.yudao.framework.common.util.date.DateUtils;
 import cn.iocoder.yudao.framework.common.util.json.JsonUtils;
 import cn.iocoder.yudao.framework.common.util.object.ObjectUtils;
 import cn.iocoder.yudao.framework.common.util.object.PageUtils;
+import cn.iocoder.yudao.framework.datapermission.core.annotation.DataPermission;
 import cn.iocoder.yudao.module.bpm.api.task.dto.BpmProcessInstanceCreateReqDTO;
 import cn.iocoder.yudao.module.bpm.controller.admin.definition.vo.model.BpmModelMetaInfoVO;
 import cn.iocoder.yudao.module.bpm.controller.admin.definition.vo.model.simple.BpmSimpleModelNodeVO;
@@ -77,6 +78,7 @@ import static cn.iocoder.yudao.module.bpm.controller.admin.task.vo.instance.BpmA
 import static cn.iocoder.yudao.module.bpm.enums.ErrorCodeConstants.*;
 import static cn.iocoder.yudao.module.bpm.enums.task.BpmnModelConstants.START_USER_NODE_ID;
 import static cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_PREFIX;
+import static cn.iocoder.yudao.module.bpm.framework.flowable.core.enums.BpmnModelConstants.START_USER_NODE_ID;
 import static cn.iocoder.yudao.module.bpm.framework.flowable.core.util.BpmnModelUtils.parseNodeType;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -130,7 +132,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
 
     @Resource
     private BpmProcessIdRedisDAO processIdRedisDAO;
-    
+
     @Resource
     private BpmNotificationManager notificationManager;
 
@@ -238,11 +240,8 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
         // 3.2 获取由于退回操作，需要预测的节点。从流程变量中获取，回退操作会设置这些变量
         Set<String> needSimulateTaskDefKeysByReturn = new HashSet<>();
         if (StrUtil.isNotEmpty(reqVO.getProcessInstanceId())) {
-            Map<String, Object> variables = runtimeService.getVariables(reqVO.getProcessInstanceId());
-            Map<String, Object> simulateTaskVariables = MapUtil.filter(variables,
-                    item -> item.getKey().startsWith(PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_PREFIX));
-            simulateTaskVariables.forEach((key, value) ->
-                    needSimulateTaskDefKeysByReturn.add(StrUtil.removePrefix(key, PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_PREFIX)));
+            Object needSimulateTaskIds = runtimeService.getVariable(reqVO.getProcessInstanceId(), BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_TASK_IDS);
+            needSimulateTaskDefKeysByReturn.addAll(Convert.toSet(String.class, needSimulateTaskIds));
         }
         // 移除运行中的节点，运行中的节点无需预测
         if (CollUtil.isNotEmpty(runActivityNodes)) {
@@ -784,6 +783,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public String createProcessInstance(Long userId, @Valid BpmProcessInstanceCreateReqVO createReqVO) {
         // 获得流程定义
         ProcessDefinition definition = processDefinitionService
@@ -794,6 +794,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
     }
 
     @Override
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public String createProcessInstance(Long userId, @Valid BpmProcessInstanceCreateReqDTO createReqDTO) {
         return FlowableUtils.executeAuthenticatedUserId(userId, () -> {
             // 获得流程定义
@@ -812,42 +813,42 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
             // 1. 根据businessKey查找现有的流程实例
             ProcessInstance existingInstance = findActiveProcessInstanceByBusinessKey(
                     createReqDTO.getProcessDefinitionKey(), createReqDTO.getBusinessKey());
-            
+
             if (existingInstance != null) {
                 // 2. 如果流程实例存在，查找发起人的待办任务并审批
-                log.info("[submitProcessInstance] 找到现有流程实例，processInstanceId: {}, businessKey: {}", 
+                log.info("[submitProcessInstance] 找到现有流程实例，processInstanceId: {}, businessKey: {}",
                         existingInstance.getId(), createReqDTO.getBusinessKey());
-                
+
                 // 2.1 查找发起人的待办任务
                 Task startUserTask = findStartUserTask(userId, existingInstance.getId());
                 if (startUserTask != null) {
-                    log.info("[submitProcessInstance] 找到发起人待办任务，taskId: {}, taskName: {}", 
+                    log.info("[submitProcessInstance] 找到发起人待办任务，taskId: {}, taskName: {}",
                             startUserTask.getId(), startUserTask.getName());
-                    
+
                     // 2.2 更新流程变量（如果有新的变量）
                     if (createReqDTO.getVariables() != null && !createReqDTO.getVariables().isEmpty()) {
                         updateProcessInstanceVariables(existingInstance.getId(), createReqDTO.getVariables());
                     }
                     // 更新单据状态
                     updateProcessInstanceRunning(existingInstance);
-                    
+
                     // 2.3 审批发起人任务
                     BpmTaskApproveReqVO approveReqVO = new BpmTaskApproveReqVO()
                             .setId(startUserTask.getId())
                             .setReason("重新提交申请");
                     taskService.approveTask(userId, approveReqVO);
-                    
+
                     return existingInstance.getId();
                 } else {
-                    log.warn("[submitProcessInstance] 未找到发起人待办任务，processInstanceId: {}, userId: {}", 
+                    log.warn("[submitProcessInstance] 未找到发起人待办任务，processInstanceId: {}, userId: {}",
                             existingInstance.getId(), userId);
                     throw exception(TASK_NOT_EXISTS);
                 }
             } else {
                 // 3. 如果流程实例不存在，创建新的流程实例
-                log.info("[submitProcessInstance] 未找到现有流程实例，创建新流程，businessKey: {}", 
+                log.info("[submitProcessInstance] 未找到现有流程实例，创建新流程，businessKey: {}",
                         createReqDTO.getBusinessKey());
-                
+
                 ProcessDefinition definition = processDefinitionService
                         .getActiveProcessDefinition(createReqDTO.getProcessDefinitionKey());
                 return createProcessInstance0(userId, definition, createReqDTO.getVariables(),
@@ -868,18 +869,18 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
         if (StrUtil.isBlank(businessKey)) {
             return null;
         }
-        
+
         try {
             List<ProcessInstance> instances = runtimeService.createProcessInstanceQuery()
                     .processDefinitionKey(processDefinitionKey)
                     .processInstanceBusinessKey(businessKey)
                     .active()
                     .list();
-            
+
             // 返回最新的流程实例（如果有多个的话）
             return CollUtil.isNotEmpty(instances) ? instances.get(0) : null;
         } catch (Exception e) {
-            log.error("[findActiveProcessInstanceByBusinessKey] 查询流程实例失败，processDefinitionKey: {}, businessKey: {}", 
+            log.error("[findActiveProcessInstanceByBusinessKey] 查询流程实例失败，processDefinitionKey: {}, businessKey: {}",
                     processDefinitionKey, businessKey, e);
             return null;
         }
@@ -905,12 +906,12 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
                     .active()
                     .orderByTaskCreateTime().asc()
                     .list();
-            
+
             if (CollUtil.isNotEmpty(userTasks)) {
                 log.debug("[findStartUserTask] 找到用户直接分配的待办任务，userId: {}, taskCount: {}", userId, userTasks.size());
                 return userTasks.get(0); // 返回最早创建的任务
             }
-            
+
             // 2. 如果没有直接分配的任务，查找开始节点的任务（适用于撤回后重新提交的场景）
             List<Task> startUserTasks = taskService0.createTaskQuery()
                     .processInstanceId(processInstanceId)
@@ -918,7 +919,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
                     .active()
                     .orderByTaskCreateTime().asc()
                     .list();
-            
+
             if (CollUtil.isNotEmpty(startUserTasks)) {
                 // 验证任务是否属于该用户（发起人）
                 ProcessInstance processInstance = getProcessInstance(processInstanceId);
@@ -927,7 +928,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
                     return startUserTasks.get(0);
                 }
             }
-            
+
             // 3. 查找用户候选的任务（适用于候选人组的场景）
             List<Task> candidateTasks = taskService0.createTaskQuery()
                     .processInstanceId(processInstanceId)
@@ -935,17 +936,17 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
                     .active()
                     .orderByTaskCreateTime().asc()
                     .list();
-            
+
             if (CollUtil.isNotEmpty(candidateTasks)) {
                 log.debug("[findStartUserTask] 找到用户候选任务，userId: {}, taskCount: {}", userId, candidateTasks.size());
                 return candidateTasks.get(0);
             }
-            
+
             log.debug("[findStartUserTask] 未找到用户相关的待办任务，userId: {}, processInstanceId: {}", userId, processInstanceId);
             return null;
-            
+
         } catch (Exception e) {
-            log.error("[findStartUserTask] 查找发起人待办任务失败，userId: {}, processInstanceId: {}", 
+            log.error("[findStartUserTask] 查找发起人待办任务失败，userId: {}, processInstanceId: {}",
                     userId, processInstanceId, e);
             return null;
         }
@@ -1013,7 +1014,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
     /**
      * 根据BusinessKey删除历史流程实例
      * 当重新提交相同单据时，删除之前的历史流程实例，避免重复显示
-     * 
+     *
      * @param businessKey 业务键（通常是单据ID）
      */
     private void deleteHistoricalProcessInstancesByBusinessKey(String businessKey) {
@@ -1023,32 +1024,32 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
                     .processInstanceTenantId(FlowableUtils.getTenantId())
                     .processInstanceBusinessKey(businessKey)
                     .list();
-            
+
             if (CollUtil.isEmpty(historicalInstances)) {
                 log.debug("[deleteHistoricalProcessInstancesByBusinessKey] 未找到BusinessKey为 {} 的历史流程实例", businessKey);
                 return;
             }
-            
+
             int deletedCount = 0;
             for (HistoricProcessInstance historicalInstance : historicalInstances) {
                 try {
                     // 删除历史流程实例
                     historyService.deleteHistoricProcessInstance(historicalInstance.getId());
                     deletedCount++;
-                    
-                    log.debug("[deleteHistoricalProcessInstancesByBusinessKey] 删除历史流程实例: {}, BusinessKey: {}", 
+
+                    log.debug("[deleteHistoricalProcessInstancesByBusinessKey] 删除历史流程实例: {}, BusinessKey: {}",
                              historicalInstance.getId(), businessKey);
                 } catch (Exception e) {
-                    log.warn("[deleteHistoricalProcessInstancesByBusinessKey] 删除历史流程实例失败: {}, BusinessKey: {}, 错误: {}", 
+                    log.warn("[deleteHistoricalProcessInstancesByBusinessKey] 删除历史流程实例失败: {}, BusinessKey: {}, 错误: {}",
                             historicalInstance.getId(), businessKey, e.getMessage());
                 }
             }
-            
-            log.info("[deleteHistoricalProcessInstancesByBusinessKey] 成功删除 {} 个历史流程实例，BusinessKey: {}", 
+
+            log.info("[deleteHistoricalProcessInstancesByBusinessKey] 成功删除 {} 个历史流程实例，BusinessKey: {}",
                     deletedCount, businessKey);
-            
+
         } catch (Exception e) {
-            log.error("[deleteHistoricalProcessInstancesByBusinessKey] 删除历史流程实例失败，BusinessKey: {}, 错误: {}", 
+            log.error("[deleteHistoricalProcessInstancesByBusinessKey] 删除历史流程实例失败，BusinessKey: {}, 错误: {}",
                      businessKey, e.getMessage(), e);
             // 不抛出异常，避免影响新流程实例的创建
         }
@@ -1104,6 +1105,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
     }
 
     @Override
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public void cancelProcessInstanceByStartUser(Long userId, @Valid BpmProcessInstanceCancelReqVO cancelReqVO) {
         // 1.1 校验流程实例存在
         ProcessInstance instance = getProcessInstance(cancelReqVO.getId());
@@ -1133,6 +1135,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
     }
 
     @Override
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public void cancelProcessInstanceByAdmin(Long userId, BpmProcessInstanceCancelReqVO cancelReqVO) {
         // 1.1 校验流程实例存在
         ProcessInstance instance = getProcessInstance(cancelReqVO.getId());

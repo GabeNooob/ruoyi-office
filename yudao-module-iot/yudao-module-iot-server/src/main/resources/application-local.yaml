@@ -75,7 +75,7 @@ spring:
           username: root
           password: 123456
 #        tdengine: # IoT 数据库（需要 IoT 物联网再开启噢！）
-#          url: jdbc:TAOS-RS://127.0.0.1:6041/ruoyi_vue_pro
+#          url: jdbc:TAOS-WS://127.0.0.1:6041/ruoyi_vue_pro
 #          driver-class-name: com.taosdata.jdbc.rs.RestfulDriver
 #          username: root
 #          password: taosdata
@@ -140,6 +140,8 @@ spring:
       client:
         instance:
           service-host-type: IP # 注册实例时，优先使用 IP [IP, HOST_NAME, CANONICAL_HOST_NAME]
+        username: admin
+        password: admin
 
 # 日志文件配置
 logging:

@@ -135,7 +135,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
             taskQuery.taskCreatedAfter(DateUtils.of(pageVO.getCreateTime()[0]));
             taskQuery.taskCreatedBefore(DateUtils.of(pageVO.getCreateTime()[1]));
         }
-        
+
         // ========== 流程变量/业务搜索条件 ==========
         // billType 语义为“单据类型”，即流程定义 key
         if (StrUtil.isNotBlank(pageVO.getBillType())) {
@@ -169,7 +169,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         if (pageVO.getDeptId() != null) {
             taskQuery.processVariableValueEquals(BpmProcessVariableConstants.DEPT_ID, pageVO.getDeptId());
         }
-        
+
         long count = taskQuery.count();
         if (count == 0) {
             return PageResult.empty();
@@ -279,7 +279,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
             taskQuery.taskCreatedAfter(DateUtils.of(pageVO.getCreateTime()[0]));
             taskQuery.taskCreatedBefore(DateUtils.of(pageVO.getCreateTime()[1]));
         }
-        
+
         // ========== 流程变量/业务搜索条件 ==========
         // billType 语义为"单据类型"，即流程定义 key
         if (StrUtil.isNotBlank(pageVO.getBillType())) {
@@ -309,7 +309,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         if (pageVO.getDeptId() != null) {
             taskQuery.processVariableValueEquals(BpmProcessVariableConstants.DEPT_ID, pageVO.getDeptId());
         }
-        
+
         // 执行查询
         long count = taskQuery.count();
         if (count == 0) {
@@ -444,6 +444,11 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         }
         // 2.2 过滤：只有串行可到达的节点，才可以退回。类似非串行、子流程无法退回
         previousUserList.removeIf(userTask -> !BpmnModelUtils.isSequentialReachable(source, userTask, null));
+
+        // 2.3 过滤：只能退回到已经处理过的节点（排除审批未经过的节点）。相关 issue：https://github.com/YunaiV/ruoyi-vue-pro/issues/982
+        List<HistoricTaskInstance> finishedTasks = getFinishedTaskListByProcessInstanceIdWithoutCancel(task.getProcessInstanceId());
+        Set<String> finishedTaskDefinitionKeys = convertSet(finishedTasks, HistoricTaskInstance::getTaskDefinitionKey);
+        previousUserList.removeIf(userTask -> !finishedTaskDefinitionKeys.contains(userTask.getId()));
         return previousUserList;
     }
 
@@ -612,6 +617,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public void approveTask(Long userId, @Valid BpmTaskApproveReqVO reqVO) {
         // 1.1 校验任务存在
         Task task = validateTask(userId, reqVO.getId());
@@ -671,11 +677,13 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                 bpmnModel, reqVO.getNextAssignees(), instance);
         runtimeService.setVariables(task.getProcessInstanceId(), variables);
 
-        // 5. 移除辅助预测的流程变量，这些变量在回退操作中设置
-        // todo @jason：可以直接 + 拼接哈
-        String simulateVariableName = StrUtil.concat(false,
-                BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_PREFIX, task.getTaskDefinitionKey());
-        runtimeService.removeVariable(task.getProcessInstanceId(), simulateVariableName);
+        // 5. 如果当前节点 Id 存在于需要预测的流程节点中，从中移除。 流程变量在回退操作中设置
+        Object needSimulateTaskIds = runtimeService.getVariable(task.getProcessInstanceId(), BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_TASK_IDS);
+        Set<String> needSimulateTaskIdsByReturn = Convert.toSet(String.class, needSimulateTaskIds);
+        if (needSimulateTaskIdsByReturn.contains(task.getTaskDefinitionKey())) {
+            needSimulateTaskIdsByReturn.remove(task.getTaskDefinitionKey());
+            runtimeService.setVariable(task.getProcessInstanceId(), BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_TASK_IDS, needSimulateTaskIdsByReturn);
+        }
 
         // 6. 调用 BPM complete 去完成任务
         taskService.complete(task.getId(), variables, true);
@@ -857,6 +865,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public void rejectTask(Long userId, @Valid BpmTaskRejectReqVO reqVO) {
         // 1.1 校验任务存在
         Task task = validateTask(userId, reqVO.getId());
@@ -898,7 +907,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         // 3.2 情况二： 标记流程为不通过并结束流程
         processInstanceService.updateProcessInstanceReject(instance, reqVO.getReason()); // 标记不通过
         moveTaskToEnd(task.getProcessInstanceId(), BpmCommentTypeEnum.REJECT.formatComment(reqVO.getReason())); // 结束流程
-        
+
         // 4. 发送任务审批拒绝事件通知
         notificationManager.sendTaskEventNotification(instance, task, BpmEventTypeEnum.TASK_REJECTED, 2, reqVO.getReason());
     }
@@ -927,6 +936,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public void returnTask(Long userId, BpmTaskReturnReqVO reqVO) {
         // 1.1 当前任务 task
         Task task = validateTask(userId, reqVO.getId());
@@ -986,15 +996,11 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         List<UserTask> returnUserTaskList = BpmnModelUtils.iteratorFindChildUserTasks(targetElement, runTaskKeyList, null, null);
         List<String> returnTaskKeyList = convertList(returnUserTaskList, UserTask::getId);
 
-        List<String> runExecutionIds = new ArrayList<>();
         // 2. 给当前要被退回的 task 数组，设置退回意见
         taskList.forEach(task -> {
             // 需要排除掉，不需要设置退回意见的任务
             if (!returnTaskKeyList.contains(task.getTaskDefinitionKey())) {
                 return;
-            }
-            if (task.getExecutionId() != null) {
-                runExecutionIds.add(task.getExecutionId());
             }
 
             // 判断是否分配给自己任务，因为会签任务，一个节点会有多个任务
@@ -1010,24 +1016,21 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         });
 
         // 3. 构建需要预测的任务流程变量
-        // TODO @jason：【驳回预测相关】是不是搞成一个变量，里面是 set 更简洁一点呀？
         Set<String> needSimulateTaskDefinitionKeys = getNeedSimulateTaskDefinitionKeys(bpmnModel, currentTask, targetElement);
-        Map<String, Object> needSimulateVariables = convertMap(needSimulateTaskDefinitionKeys,
-                key -> StrUtil.concat(false, BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_PREFIX, key), item -> Boolean.TRUE);
-
 
         // 4. 执行驳回
-        // 使用 moveExecutionsToSingleActivityId 替换 moveActivityIdsToSingleActivityId 原因：
-        // 当多实例任务回退的时候有问题。相关 issue: https://github.com/flowable/flowable-engine/issues/3944
+        // ① 使用 moveExecutionsToSingleActivityId 替换 moveActivityIdsToSingleActivityId。原因：当多实例任务回退的时候有问题。
+        //    相关 issue: https://github.com/flowable/flowable-engine/issues/3944
+        // ② flowable 7.2.0 版本后，继续使用 moveActivityIdsToSingleActivityId 方法。原因：flowable 7.2.0 版本修复了该问题。
+        //    相关 issue：https://github.com/YunaiV/ruoyi-vue-pro/issues/1018
         runtimeService.createChangeActivityStateBuilder()
                 .processInstanceId(currentTask.getProcessInstanceId())
-                .moveExecutionsToSingleActivityId(runExecutionIds, reqVO.getTargetTaskDefinitionKey())
-                // 设置需要预测的任务流程变量，用于辅助预测
-                .processVariables(needSimulateVariables)
-                 // 设置流程变量（local）节点退回标记, 用于退回到节点，不执行 BpmUserTaskAssignStartUserHandlerTypeEnum 策略，导致自动通过
+                .moveActivityIdsToSingleActivityId(returnTaskKeyList, reqVO.getTargetTaskDefinitionKey())
+                // 设置需要预测的任务 ids 的流程变量，用于辅助预测
+                .processVariable(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_NEED_SIMULATE_TASK_IDS, needSimulateTaskDefinitionKeys)
+                // 设置流程变量（local）节点退回标记, 用于退回到节点，不执行 BpmUserTaskAssignStartUserHandlerTypeEnum 策略，导致自动通过
                 .localVariable(reqVO.getTargetTaskDefinitionKey(),
-                        String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, reqVO.getTargetTaskDefinitionKey()),
-                        Boolean.TRUE)
+                        String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, reqVO.getTargetTaskDefinitionKey()), Boolean.TRUE)
                 .changeState();
     }
 
@@ -1151,9 +1154,9 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                             Boolean.TRUE)
                     .changeState();
 
-            log.info("[withdrawToStartEventByReturnLogic] 使用退回逻辑成功撤回到开始节点: processInstanceId={}, startEventId={}, returnFlagKey={}, simulateVariables={}", 
+            log.info("[withdrawToStartEventByReturnLogic] 使用退回逻辑成功撤回到开始节点: processInstanceId={}, startEventId={}, returnFlagKey={}, simulateVariables={}",
                     processInstanceId, startEvent.getId(), String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, START_USER_NODE_ID), needSimulateVariables.keySet());
-            
+
             // 6. 发送任务撤回事件通知（针对所有被撤回的任务）
             taskList.forEach(task -> {
                 notificationManager.sendTaskEventNotification(instance, task, BpmEventTypeEnum.TASK_WITHDRAWN, 5, reason);
@@ -1235,7 +1238,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
         // 4. 添加开始节点的任务定义键（如果存在）
         taskDefinitionKeys.add(START_USER_NODE_ID);
 
-        log.debug("[getNeedSimulateTaskDefinitionKeysForWithdraw] 撤回预测任务键: processInstanceId={}, taskDefinitionKeys={}", 
+        log.debug("[getNeedSimulateTaskDefinitionKeysForWithdraw] 撤回预测任务键: processInstanceId={}, taskDefinitionKeys={}",
                 currentTask.getProcessInstanceId(), taskDefinitionKeys);
 
         return taskDefinitionKeys;
@@ -1243,6 +1246,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public void delegateTask(Long userId, BpmTaskDelegateReqVO reqVO) {
         String taskId = reqVO.getId();
         // 1.1 校验任务
@@ -1272,6 +1276,8 @@ public class BpmTaskServiceImpl implements BpmTaskService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public void transferTask(Long userId, BpmTaskTransferReqVO reqVO) {
         String taskId = reqVO.getId();
         // 1.1 校验任务
@@ -1302,6 +1308,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public void moveTaskToEnd(String processInstanceId, String reason) {
         List<Task> taskList = getRunningTaskListByProcessInstanceId(processInstanceId, null, null);
         if (CollUtil.isEmpty(taskList)) {
@@ -1340,6 +1347,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public void createSignTask(Long userId, BpmTaskSignCreateReqVO reqVO) {
         // 1. 获取和校验任务
         TaskEntityImpl taskEntity = validateTaskCanCreateSign(userId, reqVO);
@@ -1456,6 +1464,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     @SuppressWarnings("DataFlowIssue")
     public void deleteSignTask(Long userId, BpmTaskSignDeleteReqVO reqVO) {
         // 1.1 校验 task 可以被减签
@@ -1495,6 +1504,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DataPermission(enable = false) // 关闭数据权限，避免查询不到用户数据。相关案例：https://gitee.com/zhijiantianya/yudao-cloud/issues/ID1UYA
     public void withdrawTask(Long userId, String taskId) {
         // 1.1 查询本人已办任务
         HistoricTaskInstance taskInstance = historyService.createHistoricTaskInstanceQuery()
@@ -1593,9 +1603,9 @@ public class BpmTaskServiceImpl implements BpmTaskService {
             long historicTaskCount = historyService.createHistoricTaskInstanceQuery()
                     .processInstanceId(processInstance.getId())
                     .count();
-            
+
             log.debug("[determineTaskCreatedEventType] 流程实例 {} 的历史任务数量: {}", processInstance.getId(), historicTaskCount);
-            
+
             // 如果历史任务数量大于1，说明不是首次创建，而是重新进入开始节点
             if (historicTaskCount > 1) {
                 log.info("[determineTaskCreatedEventType] 重新进入开始节点，processInstanceId: {}", processInstance.getId());
@@ -1752,7 +1762,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                     return;
                 }
 
-                // 自动去重，通过自动审批的方式 TODO @芋艿 驳回的情况得考虑一下；@lesan：驳回后，又自动审批么？
+                // 自动去重，通过自动审批的方式
                 BpmProcessDefinitionInfoDO processDefinitionInfo = bpmProcessDefinitionService.getProcessDefinitionInfo(task.getProcessDefinitionId());
                 if (processDefinitionInfo == null) {
                     log.error("[processTaskAssigned][taskId({}) 没有找到流程定义({})]", task.getId(), task.getProcessDefinitionId());
@@ -1797,7 +1807,7 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                 // 判断是否为退回或者驳回：如果是退回或者驳回不走这个策略（使用 local variable）
                 String returnFlagKey = String.format(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_RETURN_FLAG, task.getTaskDefinitionKey());
                 Boolean returnTaskFlag = runtimeService.getVariableLocal(task.getExecutionId(), returnFlagKey, Boolean.class);
-                log.debug("[processTaskAssigned] 检查RETURN_FLAG: taskId={}, taskDefinitionKey={}, returnFlagKey={}, returnTaskFlag={}", 
+                log.debug("[processTaskAssigned] 检查RETURN_FLAG: taskId={}, taskDefinitionKey={}, returnFlagKey={}, returnTaskFlag={}",
                         task.getId(), task.getTaskDefinitionKey(), returnFlagKey, returnTaskFlag);
                 Boolean skipStartUserNodeFlag = Convert.toBool(runtimeService.getVariable(processInstance.getProcessInstanceId(),
                         BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_SKIP_START_USER_NODE, String.class));
