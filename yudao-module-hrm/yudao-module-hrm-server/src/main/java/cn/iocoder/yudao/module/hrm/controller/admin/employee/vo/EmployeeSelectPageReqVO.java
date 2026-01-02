@@ -43,6 +43,9 @@ public class EmployeeSelectPageReqVO extends PageParam {
     @Schema(description = "人员状态（可选，精确筛选某个状态）", example = "2")
     private Integer employeeStatus;
 
+    @Schema(description = "需要包含的人员状态集合（优先级高于excludeEmployeeStatusList），例如 [2, 3, 5]", example = "[2,3,5]")
+    private List<Integer> includeEmployeeStatusList;
+
     @Schema(description = "需要排除的人员状态集合，例如 [1, 3]", example = "[1,3]")
     private List<Integer> excludeEmployeeStatusList;
 

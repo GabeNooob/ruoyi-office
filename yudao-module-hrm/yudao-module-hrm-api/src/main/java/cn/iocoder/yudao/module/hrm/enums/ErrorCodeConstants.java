@@ -23,5 +23,8 @@ public interface ErrorCodeConstants {
     // ========== 人事调动申请单 1-050-004-000 ==========
     ErrorCode EMPLOYEE_TRANSFER_BILL_NOT_EXISTS = new ErrorCode(1_050_004_001, "人事调动申请单不存在");
 
+    // ========== 员工离职申请单 1-050-005-000 ==========
+    ErrorCode EMPLOYEE_RESIGNATION_BILL_NOT_EXISTS = new ErrorCode(1_050_005_001, "员工离职申请单不存在");
+
 }
 

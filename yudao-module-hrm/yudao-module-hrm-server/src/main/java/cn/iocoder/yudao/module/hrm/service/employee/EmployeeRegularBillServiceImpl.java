@@ -10,6 +10,7 @@ import cn.iocoder.yudao.module.bpm.enums.BpmProcessVariableConstants;
 import cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum;
 import cn.iocoder.yudao.module.bpm.util.BpmProcessVariableUtils;
 import cn.iocoder.yudao.module.hrm.enums.HrmBillTypeEnum;
+import cn.iocoder.yudao.module.hrm.enums.EmployeeStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -264,7 +265,7 @@ public class EmployeeRegularBillServiceImpl implements EmployeeRegularBillServic
         // 更新员工档案：状态改为正式，更新转正日期
         EmployeeDO updateEmployee = new EmployeeDO();
         updateEmployee.setId(employee.getId());
-        updateEmployee.setEmployeeStatus(1); // 1:正式
+        updateEmployee.setEmployeeStatus(EmployeeStatusEnum.FORMAL.getStatus());
         
         // 转正日期：优先使用申请单上的转正日期，如果没有则使用预计转正日期
         LocalDate formalDate = regularBillRespVO.getFormalDate();
