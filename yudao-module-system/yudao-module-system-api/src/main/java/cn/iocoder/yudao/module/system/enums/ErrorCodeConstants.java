@@ -168,4 +168,17 @@ public interface ErrorCodeConstants {
     // ========== 站内信发送 1-002-028-000 ==========
     ErrorCode NOTIFY_SEND_TEMPLATE_PARAM_MISS = new ErrorCode(1_002_028_000, "模板参数({})缺失");
 
+    // ========== 首页管理 1-002-030-000 ==========
+    ErrorCode HOME_PAGE_NOT_EXISTS = new ErrorCode(1_002_030_000, "当前首页不存在");
+    ErrorCode HOME_PAGE_CODE_DUPLICATE = new ErrorCode(1_002_030_001, "已经存在该编码的首页");
+    ErrorCode HOME_PAGE_HAS_USER_USING = new ErrorCode(1_002_030_002, "无法删除，该首页还有用户正在使用");
+    ErrorCode HOME_PAGE_DEFAULT_CAN_NOT_DELETE = new ErrorCode(1_002_030_003, "无法删除，该首页是默认首页");
+
+    // ========== 首页组件管理 1-002-031-000 ==========
+    ErrorCode HOME_COMPONENT_NOT_EXISTS = new ErrorCode(1_002_031_000, "当前组件不存在");
+    ErrorCode HOME_COMPONENT_CODE_DUPLICATE = new ErrorCode(1_002_031_001, "已经存在该编码的组件");
+    ErrorCode HOME_COMPONENT_CATEGORY_NOT_EXISTS = new ErrorCode(1_002_031_002, "组件分类不存在");
+    ErrorCode HOME_COMPONENT_CONFIG_SCHEMA_INVALID = new ErrorCode(1_002_031_003, "配置Schema格式不正确");
+    ErrorCode HOME_COMPONENT_IN_USE = new ErrorCode(1_002_031_004, "无法删除，该组件正在被使用");
+
 }
