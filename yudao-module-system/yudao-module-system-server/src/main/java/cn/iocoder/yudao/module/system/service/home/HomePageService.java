@@ -66,7 +66,7 @@ public interface HomePageService {
      *
      * @param id 首页编号
      */
-    void setDefaultHomePage(Long id);
+    void setMyHomePage(Long id);
 
     /**
      * 获取用户启用的首页（如果用户未配置，返回默认首页）

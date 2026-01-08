@@ -51,6 +51,8 @@ public class HomePageController {
     @Operation(summary = "更新首页")
     @PreAuthorize("@ss.hasPermission('system:home:update')")
     public CommonResult<Boolean> updateHomePage(@Valid @RequestBody HomePageSaveReqVO updateReqVO) {
+        // 如果是 default_workspace，需要管理员权限（通过权限注解控制）
+        // 其他首页：在 Service 层检查是否是创建者
         homePageService.updateHomePage(updateReqVO);
         return success(true);
     }
@@ -77,8 +79,24 @@ public class HomePageController {
     @Operation(summary = "获得首页分页")
     @PreAuthorize("@ss.hasPermission('system:home:query')")
     public CommonResult<PageResult<HomePageRespVO>> getHomePagePage(@Valid HomePagePageReqVO pageReqVO) {
+        // 查询当前用户首页
+        Long userId = SecurityFrameworkUtils.getLoginUserId();
+        HomePageDO userHomePage = homePageService.getUserHomePage(userId);
+        Long usingPageId = userHomePage != null ? userHomePage.getId() : null;
+
+        // 查询分页列表
         PageResult<HomePageDO> pageResult = homePageService.getHomePagePage(pageReqVO);
-        return success(BeanUtils.toBean(pageResult, HomePageRespVO.class));
+        PageResult<HomePageRespVO> voResult = BeanUtils.toBean(pageResult, HomePageRespVO.class);
+
+        // 标记当前用户正在使用的首页
+        if (usingPageId != null && voResult.getList() != null) {
+            voResult.getList().forEach(vo -> {
+                if (usingPageId.equals(vo.getId())) {
+                    vo.setUseStatus("使用中");
+                }
+            });
+        }
+        return success(voResult);
     }
 
     @GetMapping("/simple-list")
@@ -105,12 +123,11 @@ public class HomePageController {
         return success(true);
     }
 
-    @PutMapping("/set-default")
-    @Operation(summary = "设置默认首页")
+    @PutMapping("/set-my-home")
+    @Operation(summary = "设置为我的首页")
     @Parameter(name = "id", description = "首页编号", required = true, example = "1024")
-    @PreAuthorize("@ss.hasPermission('system:home:update')")
-    public CommonResult<Boolean> setDefaultHomePage(@RequestParam("id") Long id) {
-        homePageService.setDefaultHomePage(id);
+    public CommonResult<Boolean> setMyHomePage(@RequestParam("id") Long id) {
+        homePageService.setMyHomePage(id);
         return success(true);
     }
 
@@ -118,6 +135,9 @@ public class HomePageController {
     @Operation(summary = "保存首页布局")
     @PreAuthorize("@ss.hasPermission('system:home:update')")
     public CommonResult<Boolean> saveHomePageLayout(@Valid @RequestBody HomePageLayoutSaveReqVO saveReqVO) {
+        // 权限检查：
+        // 1. 如果是 default_workspace，需要管理员权限（通过 @PreAuthorize 注解控制）
+        // 2. 其他首页：在 Service 层检查是否是创建者
         homePageService.saveHomePageLayout(saveReqVO);
         return success(true);
     }
