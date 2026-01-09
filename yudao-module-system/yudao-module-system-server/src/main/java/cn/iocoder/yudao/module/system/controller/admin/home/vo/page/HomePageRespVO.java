@@ -33,6 +33,12 @@ public class HomePageRespVO {
     @Schema(description = "排序", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer sort;
 
+    @Schema(description = "创建者", example = "1")
+    private String creator;
+
+    @Schema(description = "使用状态：当前用户在用则为“使用中”，否则为空", example = "使用中")
+    private String useStatus;
+
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime createTime;
 

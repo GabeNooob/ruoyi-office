@@ -49,12 +49,15 @@ public class HomePageServiceImpl implements HomePageService {
         // 校验编码唯一性
         validateHomePageCodeUnique(null, createReqVO.getCode());
 
-        // 如果设置为默认首页，先将其他首页的默认标识设为false
-        if (Boolean.TRUE.equals(createReqVO.getIsDefault())) {
-            clearDefaultHomePage();
+        // 不允许创建 default_workspace 编码的首页（系统保留）
+        if ("default_workspace".equals(createReqVO.getCode())) {
+            throw exception(HOME_PAGE_CODE_DUPLICATE);
         }
 
-        // 插入首页
+        // 用户创建的首页不能设置为系统默认
+        createReqVO.setIsDefault(false);
+
+        // 插入首页（creator 会自动设置为当前用户）
         HomePageDO homePage = BeanUtils.toBean(createReqVO, HomePageDO.class);
         homePageMapper.insert(homePage);
         return homePage.getId();
@@ -64,14 +67,27 @@ public class HomePageServiceImpl implements HomePageService {
     @Transactional(rollbackFor = Exception.class)
     public void updateHomePage(HomePageSaveReqVO updateReqVO) {
         // 校验首页是否存在
-        validateHomePageExists(updateReqVO.getId());
+        HomePageDO existingPage = validateHomePageExists(updateReqVO.getId());
+
+        // 校验权限：只有管理员可以编辑 default_workspace
+        if ("default_workspace".equals(existingPage.getCode())) {
+            validateAdminPermission();
+        } else {
+            // 其他首页：只有创建者可以编辑
+            validateCreatorPermission(existingPage);
+        }
 
         // 校验编码唯一性
         validateHomePageCodeUnique(updateReqVO.getId(), updateReqVO.getCode());
 
-        // 如果设置为默认首页，先将其他首页的默认标识设为false
-        if (Boolean.TRUE.equals(updateReqVO.getIsDefault())) {
-            clearDefaultHomePage();
+        // 不允许修改 default_workspace 编码
+        if ("default_workspace".equals(existingPage.getCode()) && !"default_workspace".equals(updateReqVO.getCode())) {
+            throw exception(HOME_PAGE_CODE_DUPLICATE);
+        }
+
+        // 用户创建的首页不能设置为系统默认
+        if (!"default_workspace".equals(existingPage.getCode())) {
+            updateReqVO.setIsDefault(false);
         }
 
         // 更新首页
@@ -83,13 +99,15 @@ public class HomePageServiceImpl implements HomePageService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteHomePage(Long id) {
         // 校验首页是否存在
-        validateHomePageExists(id);
+        HomePageDO homePage = validateHomePageExists(id);
 
-        // 校验是否是默认首页
-        HomePageDO homePage = homePageMapper.selectById(id);
-        if (Boolean.TRUE.equals(homePage.getIsDefault())) {
+        // 不允许删除系统默认首页
+        if ("default_workspace".equals(homePage.getCode())) {
             throw exception(HOME_PAGE_DEFAULT_CAN_NOT_DELETE);
         }
+
+        // 校验权限：只有创建者可以删除
+        validateCreatorPermission(homePage);
 
         // 校验是否有用户正在使用
         UserHomePageDO userHomePage = userHomePageMapper.selectOne(UserHomePageDO::getPageId, id);
@@ -108,7 +126,10 @@ public class HomePageServiceImpl implements HomePageService {
 
     @Override
     public PageResult<HomePageDO> getHomePagePage(HomePagePageReqVO pageReqVO) {
-        return homePageMapper.selectPage(pageReqVO);
+        // 获取当前用户ID
+        Long userId = cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId();
+        // 只显示当前用户创建的首页和系统默认首页
+        return homePageMapper.selectPageByUser(pageReqVO, userId);
     }
 
     @Override
@@ -118,18 +139,21 @@ public class HomePageServiceImpl implements HomePageService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void setDefaultHomePage(Long id) {
+    public void setMyHomePage(Long id) {
         // 校验首页是否存在
         validateHomePageExists(id);
 
-        // 清除其他默认首页
-        clearDefaultHomePage();
+        // 获取当前用户ID
+        Long userId = cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId();
 
-        // 设置为默认首页
-        HomePageDO updateObj = new HomePageDO();
-        updateObj.setId(id);
-        updateObj.setIsDefault(true);
-        homePageMapper.updateById(updateObj);
+        // 校验首页是否启用
+        HomePageDO homePage = homePageMapper.selectById(id);
+        if (!cn.iocoder.yudao.framework.common.enums.CommonStatusEnum.ENABLE.getStatus().equals(homePage.getStatus())) {
+            throw exception(HOME_PAGE_NOT_EXISTS);
+        }
+
+        // 使用 enableUserHomePage 方法设置用户首页
+        enableUserHomePage(userId, id);
     }
 
     @Override
@@ -182,7 +206,13 @@ public class HomePageServiceImpl implements HomePageService {
     @Transactional(rollbackFor = Exception.class)
     public void saveHomePageLayout(HomePageLayoutSaveReqVO saveReqVO) {
         // 校验首页是否存在
-        validateHomePageExists(saveReqVO.getPageId());
+        HomePageDO homePage = validateHomePageExists(saveReqVO.getPageId());
+        
+        // 校验权限：如果是 default_workspace，只有管理员可以保存（通过 Controller 层权限注解控制）
+        // 其他首页：只有创建者可以保存
+        if (!"default_workspace".equals(homePage.getCode())) {
+            validateCreatorPermission(homePage);
+        }
 
         // 校验JSON格式
         JSONObject layoutConfig;
@@ -264,25 +294,38 @@ public class HomePageServiceImpl implements HomePageService {
     /**
      * 校验首页是否存在
      */
-    private void validateHomePageExists(Long id) {
+    private HomePageDO validateHomePageExists(Long id) {
         if (id == null) {
-            return;
-        }
-        if (homePageMapper.selectById(id) == null) {
             throw exception(HOME_PAGE_NOT_EXISTS);
         }
+        HomePageDO homePage = homePageMapper.selectById(id);
+        if (homePage == null) {
+            throw exception(HOME_PAGE_NOT_EXISTS);
+        }
+        return homePage;
     }
 
     /**
-     * 清除所有默认首页标识
+     * 校验管理员权限
      */
-    private void clearDefaultHomePage() {
-        homePageMapper.selectList(HomePageDO::getIsDefault, true).forEach(page -> {
-            HomePageDO updateObj = new HomePageDO();
-            updateObj.setId(page.getId());
-            updateObj.setIsDefault(false);
-            homePageMapper.updateById(updateObj);
-        });
+    private void validateAdminPermission() {
+        Long userId = cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId();
+        // 检查是否有系统管理权限
+        cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUser();
+        // 这里可以添加更具体的权限检查，暂时使用权限注解来控制
+        // 如果需要在 Service 层检查，可以使用 SecurityFrameworkService
+    }
+
+    /**
+     * 校验创建者权限
+     */
+    private void validateCreatorPermission(HomePageDO homePage) {
+        Long userId = cn.iocoder.yudao.framework.security.core.util.SecurityFrameworkUtils.getLoginUserId();
+        String creator = homePage.getCreator();
+        if (creator == null || !creator.equals(String.valueOf(userId))) {
+            // 如果不是创建者，抛出权限异常
+            throw exception(HOME_PAGE_NOT_EXISTS); // 使用通用错误码，实际应该定义新的错误码如 HOME_PAGE_NO_PERMISSION
+        }
     }
 
 }

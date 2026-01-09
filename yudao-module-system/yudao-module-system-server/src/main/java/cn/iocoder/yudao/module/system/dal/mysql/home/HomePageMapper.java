@@ -28,7 +28,23 @@ public interface HomePageMapper extends BaseMapperX<HomePageDO> {
     }
 
     default HomePageDO selectDefaultPage() {
-        return selectOne(HomePageDO::getIsDefault, true);
+        return selectOne(HomePageDO::getCode, "default_workspace");
+    }
+
+    /**
+     * 查询用户可见的首页列表（包括用户创建的首页和系统默认首页）
+     */
+    default PageResult<HomePageDO> selectPageByUser(HomePagePageReqVO reqVO, Long userId) {
+        return selectPage(reqVO, new LambdaQueryWrapperX<HomePageDO>()
+                .likeIfPresent(HomePageDO::getName, reqVO.getName())
+                .eqIfPresent(HomePageDO::getCode, reqVO.getCode())
+                .eqIfPresent(HomePageDO::getStatus, reqVO.getStatus())
+                .and(wrapper -> wrapper
+                        .eq(HomePageDO::getCode, "default_workspace")  // 系统默认首页
+                        .or()
+                        .eq(HomePageDO::getCreator, String.valueOf(userId))  // 用户创建的首页
+                )
+                .orderByDesc(HomePageDO::getId));
     }
 
 }
