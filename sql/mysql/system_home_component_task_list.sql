@@ -51,86 +51,6 @@ VALUES
   '{
     "properties": [
       {
-        "key": "title",
-        "type": "string",
-        "label": "标题文本",
-        "default": "我的任务",
-        "required": false
-      },
-      {
-        "key": "showTitle",
-        "type": "boolean",
-        "label": "显示标题",
-        "default": true,
-        "required": false
-      },
-      {
-        "key": "floatingTitle",
-        "type": "boolean",
-        "label": "浮动标题",
-        "default": false,
-        "required": false
-      },
-      {
-        "key": "titleFontSize",
-        "type": "number",
-        "label": "标题文字大小(px)",
-        "default": 18,
-        "min": 12,
-        "max": 32,
-        "required": false
-      },
-      {
-        "key": "titleBold",
-        "type": "boolean",
-        "label": "标题文字加粗",
-        "default": true,
-        "required": false
-      },
-      {
-        "key": "titleColor",
-        "type": "string",
-        "label": "标题文字颜色",
-        "default": "#1F2937",
-        "required": false
-      },
-      {
-        "key": "titleMarginTop",
-        "type": "number",
-        "label": "标题上边距(px)",
-        "default": 0,
-        "min": 0,
-        "max": 100,
-        "required": false
-      },
-      {
-        "key": "titleMarginRight",
-        "type": "number",
-        "label": "标题右边距(px)",
-        "default": 0,
-        "min": 0,
-        "max": 100,
-        "required": false
-      },
-      {
-        "key": "titleMarginBottom",
-        "type": "number",
-        "label": "标题下边距(px)",
-        "default": 16,
-        "min": 0,
-        "max": 100,
-        "required": false
-      },
-      {
-        "key": "titleMarginLeft",
-        "type": "number",
-        "label": "标题左边距(px)",
-        "default": 0,
-        "min": 0,
-        "max": 100,
-        "required": false
-      },
-      {
         "key": "paddingTop",
         "type": "number",
         "label": "内边距-上(px)",
@@ -201,6 +121,15 @@ VALUES
         "min": 0,
         "max": 100,
         "required": false
+      },
+      {
+        "key": "maxRecordNum",
+        "type": "number",
+        "label": "显示任务最大值",
+        "default": 10,
+        "min": 5,
+        "max": 50,
+        "required": false
       }
     ]
   }',                                                           -- config_schema: 组件配置Schema（JSON格式）
@@ -247,20 +176,14 @@ WHERE code = 'workbench_task_list' AND deleted = 0;
 
 -- 组件配置项说明（config_schema中的properties）：
 -- 
--- 标题相关：
---   - title: 标题文本，默认"我的任务"
---   - showTitle: 是否显示标题，默认true
---   - floatingTitle: 是否浮动标题（绝对定位，不占空间），默认false
---   - titleFontSize: 标题字体大小，默认18px，范围12-32px
---   - titleBold: 标题是否加粗，默认true
---   - titleColor: 标题颜色，默认"#1F2937"（深灰色）
---   - titleMarginTop/Right/Bottom/Left: 标题四个方向的外边距，默认下边距16px
---
 -- 内边距（组件内部内容与边框的距离）：
 --   - paddingTop/Right/Bottom/Left: 四个方向的内边距，默认均为16px
 --
 -- 外边距（组件与其他组件之间的距离）：
 --   - marginTop/Right/Bottom/Left: 四个方向的外边距，默认均为0px
+--
+-- 数据展示：
+--   - maxRecordNum: 显示任务最大值，默认10，范围5-50（控制每个Tab显示的任务条数）
 --
 -- 推荐配置：
 -- 1. 全屏展示：width=24, height=8-10
