@@ -2,7 +2,6 @@ package cn.iocoder.yudao.module.system.dal.dataobject.notice;
 
 import cn.iocoder.yudao.framework.common.enums.CommonStatusEnum;
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
-import cn.iocoder.yudao.module.system.enums.notice.NoticeTypeEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -30,7 +29,7 @@ public class NoticeDO extends BaseDO {
     /**
      * 公告类型
      *
-     * 枚举 {@link NoticeTypeEnum}
+     * 字典类型：system_notice_type（通知公告、公司动态、行业咨询、规章制度等）
      */
     private Integer type;
     /**
@@ -43,5 +42,9 @@ public class NoticeDO extends BaseDO {
      * 枚举 {@link CommonStatusEnum}
      */
     private Integer status;
+    /**
+     * 是否重要通知
+     */
+    private Boolean isImportant;
 
 }

@@ -65,6 +65,7 @@ public class NoticeServiceImpl implements NoticeService {
         return noticeMapper.selectById(id);
     }
 
+
     @VisibleForTesting
     public void validateNoticeExists(Long id) {
         if (id == null) {

@@ -19,7 +19,7 @@ public class NoticeSaveReqVO {
     @Size(max = 50, message = "公告标题不能超过50个字符")
     private String title;
 
-    @Schema(description = "公告类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "小博主")
+    @Schema(description = "公告类型，字典类型：system_notice_type（通知公告、公司动态、行业咨询、规章制度等）", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @NotNull(message = "公告类型不能为空")
     private Integer type;
 
@@ -28,5 +28,8 @@ public class NoticeSaveReqVO {
 
     @Schema(description = "状态，参见 CommonStatusEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer status;
+
+    @Schema(description = "是否重要通知", example = "true")
+    private Boolean isImportant;
 
 }
