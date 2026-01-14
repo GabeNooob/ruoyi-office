@@ -181,4 +181,8 @@ public interface ErrorCodeConstants {
     ErrorCode HOME_COMPONENT_CONFIG_SCHEMA_INVALID = new ErrorCode(1_002_031_003, "配置Schema格式不正确");
     ErrorCode HOME_COMPONENT_IN_USE = new ErrorCode(1_002_031_004, "无法删除，该组件正在被使用");
 
+    // ========== 应用中心 1-002-032-000 ==========
+    ErrorCode HOME_APP_USER_NOT_EXISTS = new ErrorCode(1_002_032_000, "当前应用不存在");
+    ErrorCode HOME_APP_USER_EXISTS = new ErrorCode(1_002_032_001, "该应用已存在，无法重复添加");
+
 }
