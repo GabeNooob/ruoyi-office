@@ -77,6 +77,11 @@ public interface ErrorCodeConstants {
     // ========== 通知公告 1-002-008-000 ==========
     ErrorCode NOTICE_NOT_FOUND = new ErrorCode(1_002_008_001, "当前通知公告不存在");
 
+    // ========== 日程管理 1-002-009-000 ==========
+    ErrorCode SCHEDULE_NOT_FOUND = new ErrorCode(1_002_009_001, "当前日程不存在");
+    ErrorCode SCHEDULE_NOT_EDITABLE = new ErrorCode(1_002_009_002, "该日程不可编辑，只有创建人才能编辑");
+    ErrorCode SCHEDULE_NOT_DELETABLE = new ErrorCode(1_002_009_003, "该日程不可删除，只有创建人且非推送的日程才能删除");
+
     // ========== 短信渠道 1-002-011-000 ==========
     ErrorCode SMS_CHANNEL_NOT_EXISTS = new ErrorCode(1_002_011_000, "短信渠道不存在");
     ErrorCode SMS_CHANNEL_DISABLE = new ErrorCode(1_002_011_001, "短信渠道不处于开启状态，不允许选择");
