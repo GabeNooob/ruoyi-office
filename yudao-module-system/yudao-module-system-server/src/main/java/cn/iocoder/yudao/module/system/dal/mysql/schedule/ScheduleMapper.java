@@ -69,7 +69,7 @@ public interface ScheduleMapper extends BaseMapperX<ScheduleDO> {
     @Select("SELECT DISTINCT schedule_date " +
             "FROM system_schedule s " +
             "WHERE s.schedule_date BETWEEN #{startDate} AND #{endDate} " +
-            "AND s.status = 1 " +
+            "AND s.status = 0 " +
             "AND s.deleted = 0 " +
             "AND s.tenant_id = #{tenantId} " +
             "AND (s.creator_id = #{userId} " +

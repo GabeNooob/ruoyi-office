@@ -65,9 +65,9 @@ public interface ScheduleService {
      *
      * @param startDate 开始日期
      * @param endDate 结束日期
-     * @return 日期列表
+     * @return 日期列表（格式：yyyy-MM-dd）
      */
-    List<LocalDate> getScheduleDates(LocalDate startDate, LocalDate endDate);
+    List<String> getScheduleDates(LocalDate startDate, LocalDate endDate);
 
     /**
      * 获取我的日程分页（包括自己创建的和接收的）

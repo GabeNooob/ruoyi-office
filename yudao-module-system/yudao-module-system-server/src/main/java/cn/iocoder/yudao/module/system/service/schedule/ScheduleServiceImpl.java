@@ -17,8 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static cn.iocoder.yudao.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.system.enums.ErrorCodeConstants.*;
@@ -115,10 +118,15 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<LocalDate> getScheduleDates(LocalDate startDate, LocalDate endDate) {
+    public List<String> getScheduleDates(LocalDate startDate, LocalDate endDate) {
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         Long tenantId = TenantContextHolder.getTenantId();
-        return scheduleMapper.selectScheduleDates(startDate, endDate, userId, tenantId);
+        List<LocalDate> dates = scheduleMapper.selectScheduleDates(startDate, endDate, userId, tenantId);
+        // 转换为 yyyy-MM-dd 格式的字符串
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT_YEAR_MONTH_DAY);
+        return dates.stream()
+                .map(date -> date.format(formatter))
+                .collect(Collectors.toList());
     }
 
     @Override

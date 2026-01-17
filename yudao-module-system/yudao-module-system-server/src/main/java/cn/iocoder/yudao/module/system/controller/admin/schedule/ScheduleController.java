@@ -97,9 +97,9 @@ public class ScheduleController {
     @Parameter(name = "startDate", description = "开始日期", required = true, example = "2026-01-01")
     @Parameter(name = "endDate", description = "结束日期", required = true, example = "2026-01-31")
     @PreAuthorize("@ss.hasPermission('system:schedule:query')")
-    public CommonResult<List<LocalDate>> getScheduleDates(@RequestParam("startDate") LocalDate startDate,
-                                                           @RequestParam("endDate") LocalDate endDate) {
-        List<LocalDate> dates = scheduleService.getScheduleDates(startDate, endDate);
+    public CommonResult<List<String>> getScheduleDates(@RequestParam("startDate") LocalDate startDate,
+                                                         @RequestParam("endDate") LocalDate endDate) {
+        List<String> dates = scheduleService.getScheduleDates(startDate, endDate);
         return success(dates);
     }
 
