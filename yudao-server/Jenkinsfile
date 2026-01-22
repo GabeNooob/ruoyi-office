@@ -75,10 +75,12 @@ pipeline {
     }
 
     // 构建触发器
-    triggers {
-        // 可配置 webhook 触发
-        // githubPush()
-    }
+    // 如果需要自动触发，可以取消注释以下配置：
+    // triggers {
+    //     githubPush()  // GitHub webhook 触发
+    //     // 或使用 cron 定时触发
+    //     // cron('H 2 * * *')  // 每天凌晨2点构建
+    // }
 
     stages {
         /**
