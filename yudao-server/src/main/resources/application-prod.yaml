@@ -57,12 +57,12 @@ spring:
           # 数据库连接配置 - 请通过环境变量覆盖
           url: ${MYSQL_URL:jdbc:mysql://192.168.30.130:3306/ruoyi-office?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true}
           username: ${MYSQL_USERNAME:root}
-          password: ${MYSQL_PASSWORD:YourStrongPassword123!}
+          password: ${MYSQL_PASSWORD:Admin$123!!}
         slave:
           lazy: true
           url: ${MYSQL_SLAVE_URL:jdbc:mysql://192.168.30.130:3306/ruoyi-office?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true}
           username: ${MYSQL_SLAVE_USERNAME:root}
-          password: ${MYSQL_SLAVE_PASSWORD:YourStrongPassword123!}
+          password: ${MYSQL_SLAVE_PASSWORD:Admin$123!!}
 
   # Redis 配置
   data:
