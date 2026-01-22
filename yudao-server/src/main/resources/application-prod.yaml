@@ -177,6 +177,8 @@ yudao:
     transfer-notify-url: ${PAY_TRANSFER_NOTIFY_URL:}
   demo: false  # 生产环境关闭演示模式
   tencent-lbs-key: ${TENCENT_LBS_KEY:}
+  access-log: # 访问日志的配置项
+    enable: false  # 生产环境默认关闭访问日志，如需开启请确保 Feign 客户端配置正确
 
 # 第三方登录配置
 justauth:
