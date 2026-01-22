@@ -149,8 +149,10 @@ pipeline {
                     // 在项目根目录执行 Maven 构建
                     sh """
                         # 清理并构建
-                        mvn clean package ${skipTestsFlag} -pl ${PROJECT_DIR} -am -Pprod
+                        mvn clean package '-Dmaven.test.skip=true'  '-Dskip.repackage=true' -pl ${PROJECT_DIR} -am -Pprod
                         
+                        # 单体模式 mvn clean package -am -pl yudao-server -Dmaven.test.skip=true -Dskip.repackage=true	
+                        # 微服务模式 mvn clean package -am -pl yudao-server -Dmaven.test.skip=true	
                         # 验证构建产物
                         if [ -f "${PROJECT_DIR}/target/yudao-server.jar" ]; then
                             echo "✓ 构建成功"

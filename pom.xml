@@ -51,7 +51,33 @@
         <spring.boot.version>3.5.9</spring.boot.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 单体/微服务打包控制：true=单体模式（子模块跳过repackage），false=微服务模式 -->
+        <skip.repackage>false</skip.repackage>
     </properties>
+
+    <!-- 环境配置 -->
+    <profiles>
+        <!-- boot 单体运行环境 -->
+        <profile>
+            <id>boot</id>
+            <properties>
+                <profile.name>boot</profile.name>
+                <skip.repackage>true</skip.repackage>
+            </properties>
+        </profile>
+
+        <!-- cloud 微服务运行环境（默认） -->
+        <profile>
+            <id>cloud</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <profile.name>cloud</profile.name>
+                <skip.repackage>false</skip.repackage>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencyManagement>
         <dependencies>
