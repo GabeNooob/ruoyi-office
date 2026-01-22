@@ -144,11 +144,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
                 <executions>
                     <execution>
-                        <gwmsls>
-                            <gwmsl>repackage</gwmsl> <!-- 将引入的 jar 打入其中 -->
-                        </gwmsls>
+                        <goals>
+                            <goal>repackage</goal> <!-- 将引入的 jar 打入其中 -->
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
