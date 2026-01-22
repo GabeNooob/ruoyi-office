@@ -15,6 +15,11 @@ spring:
     exclude:
       - org.springframework.ai.vectorstore.qdrant.autoconfigure.QdrantVectorStoreAutoConfiguration
       - org.springframework.ai.vectorstore.milvus.autoconfigure.MilvusVectorStoreAutoConfiguration
+  
+  main:
+    # 允许 Bean 覆盖，让 @Primary 的本地实现能够覆盖 Feign 客户端创建的代理
+    # 这在单体应用模式下是必需的，因为 Feign 客户端和本地实现会同时存在
+    allow-bean-definition-overriding: true
 
   # 数据源配置项
   datasource:
