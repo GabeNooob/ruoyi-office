@@ -179,6 +179,9 @@ yudao:
   tencent-lbs-key: ${TENCENT_LBS_KEY:}
   access-log: # 访问日志的配置项
     enable: false  # 生产环境默认关闭访问日志，如需开启请确保 Feign 客户端配置正确
+  security: # 安全相关配置
+    mock-enable: false  # 生产环境关闭 mock 模式
+    mock-secret: ${YUDAO_SECURITY_MOCK_SECRET:test}  # mock 模式的密钥（生产环境建议通过环境变量配置）
 
 # 第三方登录配置
 justauth:
