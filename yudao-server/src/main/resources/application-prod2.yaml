@@ -55,19 +55,19 @@ spring:
       datasource:
         master:
           # 数据库连接配置 - 请通过环境变量覆盖
-          url: ${MYSQL_URL:jdbc:mysql://182.92.106.252:13306/ruoyi-office?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true}
+          url: ${MYSQL_URL:jdbc:mysql://127.0.0.1:13306/ruoyi-office?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true}
           username: ${MYSQL_USERNAME:root}
           password: ${MYSQL_PASSWORD:Admin$123!}
         slave:
           lazy: true
-          url: ${MYSQL_SLAVE_URL:jdbc:mysql://182.92.106.252:13306/ruoyi-office?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true}
+          url: ${MYSQL_SLAVE_URL:jdbc:mysql://127.0.0.1:13306/ruoyi-office?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true}
           username: ${MYSQL_SLAVE_USERNAME:root}
           password: ${MYSQL_SLAVE_PASSWORD:Admin$123!}
 
   # Redis 配置
   data:
     redis:
-      host: ${REDIS_HOST:182.92.106.252}
+      host: ${REDIS_HOST:127.0.0.1}
       port: ${REDIS_PORT:16379}
       database: ${REDIS_DATABASE:0}
       password: ${REDIS_PASSWORD:Admin$123!}  # 如果 Redis 设置了密码，请配置
