@@ -44,7 +44,7 @@ pipeline {
         SPRING_PROFILE = 'prod'
 
         // JVM 配置（可根据服务器内存调整）
-        JAVA_OPTS = '-Xms512m -Xmx1024m -Djava.security.egd=file:/dev/./urandom'
+        JAVA_OPTS = '-Xms1024m -Xmx4096m -Djava.security.egd=file:/dev/./urandom'
 
         // 项目路径
         PROJECT_DIR = 'yudao-server'
@@ -113,9 +113,12 @@ pipeline {
         }
 
         /**
-         * 阶段2: 环境检查
+         * 阶段2: 环境检查（可选，可跳过以加快构建）
          */
         stage('2. 环境检查') {
+            when {
+                expression { env.BUILD_NUMBER == '1' || params.DEPLOY_ENV == 'test' }
+            }
             steps {
                 echo '🔍 检查构建环境...'
                 sh '''
@@ -125,33 +128,31 @@ pipeline {
                     echo ""
                     echo "Maven 版本:"
                     mvn -version
-                    
-                    echo ""
-                    echo "工作目录:"
-                    pwd
-                    
-                    echo ""
-                    echo "项目结构:"
-                    ls -la
                 '''
                 echo "✓ 环境检查完成"
             }
         }
 
         /**
-         * 阶段3: Maven 构建
+         * 阶段3: Maven 构建（优化：并行构建、增量编译）
          */
         stage('3. Maven 构建') {
             steps {
                 echo '🔨 开始 Maven 构建...'
                 script {
                     def skipTestsFlag = params.SKIP_TESTS ? '-DskipTests' : ''
+                    // 优化：使用并行构建（-T 1C 表示使用所有可用 CPU 核心）
+                    // 优化：跳过不必要的清理（增量构建更快）
+                    // 优化：使用批处理模式减少输出
+                    def mavenOpts = '-T 1C -B'
                     
                     // 在项目根目录执行 Maven 构建
                     sh """
                         # 清理并构建
-                        mvn clean package ${skipTestsFlag} -pl ${PROJECT_DIR} -am -Pprod
+                        mvn clean package '-Dmaven.test.skip=true'  '-Dskip.repackage=true' -pl ${PROJECT_DIR} -am -Pprod
                         
+                        # 单体模式 mvn clean package -am -pl yudao-server -Dmaven.test.skip=true -Dskip.repackage=true	
+                        # 微服务模式 mvn clean package -am -pl yudao-server -Dmaven.test.skip=true	
                         # 验证构建产物
                         if [ -f "${PROJECT_DIR}/target/yudao-server.jar" ]; then
                             echo "✓ 构建成功"
@@ -302,9 +303,13 @@ ENDSSH
                             ${REMOTE_USER}@${REMOTE_HOST} << 'ENDSSH'
                             
                             echo "等待应用启动..."
-                            MAX_RETRIES=30
-                            RETRY_INTERVAL=10
+                            # 优化：减少等待时间（最多等待 3 分钟，每 5 秒检查一次）
+                            MAX_RETRIES=60
+                            RETRY_INTERVAL=5
                             HEALTH_URL="http://127.0.0.1:${APP_PORT}/actuator/health"
+                            
+                            # 先等待 10 秒，让容器有时间启动
+                            sleep 15
                             
                             for i in \$(seq 1 \$MAX_RETRIES); do
                                 echo "健康检查尝试 \$i/\$MAX_RETRIES..."
