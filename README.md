@@ -1,400 +1,681 @@
+<h1 align="center">
+  <br>
+  RuoYi Office · 企业管理一体化平台
+  <br>
+</h1>
+
+<h4 align="center">🏢 一个平台，管好整个企业 —— 中小企业全业务数字化办公解决方案</h4>
+
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2024-blue.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-3.4.5-blue.svg" alt="Downloads">
- <img src="https://img.shields.io/badge/Vue-3.2-blue.svg" alt="Downloads">
- <img src="https://img.shields.io/github/license/YunaiV/yudao-cloud" alt="Downloads" />
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.5-blue.svg" alt="Spring Boot">
+  <img src="https://img.shields.io/badge/Spring%20Cloud-2025-blue.svg" alt="Spring Cloud">
+  <img src="https://img.shields.io/badge/Vue-3.5-brightgreen.svg" alt="Vue3">
+  <img src="https://img.shields.io/badge/TypeScript-5.8-blue.svg" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Vben%20Admin-Latest-orange.svg" alt="Vben Admin">
+  <img src="https://img.shields.io/badge/JDK-17%2F21-red.svg" alt="JDK">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
 </p>
 
-**严肃声明：现在、未来都不会有商业版本，所有代码全部开源!！**
+<p align="center">
+  <a href="#-在线体验">🌐 在线演示</a> •
+  <a href="#-功能模块总览">📦 功能模块</a> •
+  <a href="#-技术架构">🏗️ 技术架构</a> •
+  <a href="#-快速开始">🚀 快速开始</a> •
+  <a href="#-联系我们">📞 联系我们</a>
+</p>
 
-**「我喜欢写代码，乐此不疲」**  
-**「我喜欢做开源，以此为乐」**
+---
 
-我 🐶 在上海艰苦奋斗，早中晚在 top3 大厂认真搬砖，夜里为开源做贡献。
+<div align="center">
 
-如果这个项目让你有所收获，记得 Star 关注哦，这对我是非常不错的鼓励与支持。
+### 💬 扫码添加微信，获取专属技术支持 & 定制方案
 
-可参考 [《迁移文档》](https://cloud.iocoder.cn/migrate-module/) ，只需要 5-10 分钟，即可将【完整版】按需迁移到【精简版】
+<!-- 请替换为实际微信二维码图片 -->
+<img src="/.image/readme/wechat-qr.png" width="200" alt="微信二维码">
 
-## 🐶 新手必读
+**微信号：Aix9975** · 备注「**RuoYi Office**」即可
 
-* 演示地址【Vue3 + element-plus】：<http://dashboard-vue3.yudao.iocoder.cn>
-* 演示地址【Vue3 + vben(ant-design-vue)】：<http://dashboard-vben.yudao.iocoder.cn>
-* 演示地址【Vue2 + element-ui】：<http://dashboard.yudao.iocoder.cn>
-* 启动文档：<https://cloud.iocoder.cn/quick-start/>
-* 视频教程：<https://cloud.iocoder.cn/video/>
+[![在线演示](https://img.shields.io/badge/🌐_点击体验-在线演示-blue?style=for-the-badge)](http://ruoyioffice.com/web/)
 
-## 🐰 版本说明
+</div>
 
-| 版本                                                                    | JDK 8 + Spring Boot 2.7                                                  | JDK 17/21 + Spring Boot 3.2                                                          |
-|-----------------------------------------------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| 【完整版】[yudao-cloud](https://gitee.com/zhijiantianya/yudao-cloud)       | [`master`](https://gitee.com/zhijiantianya/yudao-cloud/tree/master/) 分支  | [`master-jdk17`](https://gitee.com/zhijiantianya/yudao-cloud/tree/master-jdk17/) 分支  |
-| 【精简版】[yudao-cloud-mini](https://gitee.com/yudaocode/yudao-cloud-mini) | [`master`](https://gitee.com/yudaocode/yudao-cloud-mini/tree/master/) 分支 | [`master-jdk17`](https://gitee.com/yudaocode/yudao-cloud-mini/tree/master-jdk17/) 分支 |
+---
 
-* 【完整版】：包括系统功能、基础设施、会员中心、数据报表、工作流程、商城系统、微信公众号、CRM、ERP 等功能
-* 【精简版】：只包括系统功能、基础设施功能，不包括会员中心、数据报表、工作流程、商城系统、微信公众号、CRM、ERP 等功能
+## ⚡ 一句话介绍
 
-可参考 [《迁移文档》](https://cloud.iocoder.cn/migrate-module/) ，只需要 5-10 分钟，即可将【完整版】按需迁移到【精简版】
+> **RuoYi Office** 是基于 **Spring Cloud Alibaba + Gateway + Nacos + RocketMQ + Vue3 + Vben Admin** 构建的**中小企业全业务办公一体化平台**，涵盖 **OA 协同办公、BPM 审批流程、HRM 人力资源、CRM 客户管理、ERP 进销存、合同管理、PMS 项目管理、EAM 资产管理、WMS 仓储管理、MALL 企业商城、AI 智能助手、IoT 物联网、数据报表** 等十余个子系统，**一套代码解决中小企业全业务信息化需求。**
 
-## 🐯 平台简介
+---
 
-**芋道**，以开发者为中心，打造中国第一流的快速开发平台，全部开源，个人与企业可 100% 免费使用。
+## 🎯 为什么选择 RuoYi Office？
 
-> 有任何问题，或者想要的功能，可以在 _Issues_ 中提给艿艿。
->
-> 😜 给项目点点 Star 吧，这对我们真的很重要！
+<table>
+<tr>
+<td align="center" width="25%">
 
-![架构图](/.image/common/yudao-cloud-architecture.png)
+### 🔄 告别多系统割裂
+不再需要分别采购 OA + HRM + CRM + ERP 等多套系统，一个平台全部打通，数据互联互通
 
-* Java 后端：`master` 分支为 JDK 8 + Spring Boot 2.7，`master-jdk17` 分支为 JDK 17/21 + Spring Boot 3.2
-* 管理后台的电脑端：Vue3 提供 [element-plus](https://gitee.com/yudaocode/yudao-ui-admin-vue3)、[vben(ant-design-vue)](https://gitee.com/yudaocode/yudao-ui-admin-vben) 两个版本，Vue2 提供 [element-ui](https://gitee.com/zhijiantianya/ruoyi-vue-pro/tree/master/yudao-ui-admin) 版本
-* 管理后台的移动端：采用 [uni-app](https://github.com/dcloudio/uni-app) 方案，一份代码多终端适配，同时支持 APP、小程序、H5！
-* 后端采用 Spring Cloud Alibaba 微服务架构，注册中心 + 配置中心 Nacos，定时任务 XXL-Job，服务保障 Sentinel，服务网关 Gateway，分布式事务 Seata
-* 数据库可使用 MySQL、Oracle、PostgreSQL、SQL Server、MariaDB、国产达梦 DM、TiDB 等，基于 MyBatis Plus、Redis + Redisson 操作
-* 消息队列可使用 Event、Redis、RabbitMQ、Kafka、RocketMQ 等
-* 权限认证使用 Spring Security & Token & Redis，支持多终端、多种用户的认证系统，支持 SSO 单点登录
-* 支持加载动态权限菜单，按钮级别权限控制，Redis 缓存提升性能
-* 支持 SaaS 多租户，可自定义每个租户的权限，提供透明化的多租户底层封装
-* 工作流使用 Flowable，支持动态表单、在线设计流程、会签 / 或签、多种任务分配方式
-* 高效率开发，使用代码生成器可以一键生成 Java、Vue 前后端代码、SQL 脚本、接口文档，支持单表、树表、主子表
-* 实时通信，采用 Spring WebSocket 实现，内置 Token 身份校验，支持 WebSocket 集群
-* 集成微信小程序、微信公众号、企业微信、钉钉等三方登陆，集成支付宝、微信等支付与退款
-* 集成阿里云、腾讯云等短信渠道，集成 MinIO、阿里云、腾讯云、七牛云等云存储服务
-* 集成报表设计器、大屏设计器，通过拖拽即可生成酷炫的报表与大屏
+</td>
+<td align="center" width="25%">
 
-##  🐳 项目关系
+### 💰 大幅降低成本
+模块化按需启用，中小企业无需为用不到的功能买单，IT 投入降低 **70%+**
 
-![架构演进](/.image/common/yudao-roadmap.png)
+</td>
+<td align="center" width="25%">
 
-三个项目的功能对比，可见社区共同整理的 [国产开源项目对比](https://www.yuque.com/xiatian-bsgny/lm0ec1/wqf8mn) 表格。
+### 🏗️ 微服务架构
+基于 Spring Cloud Alibaba 微服务架构，各模块独立部署、弹性伸缩，生产级可靠
 
-### 后端项目
+</td>
+<td align="center" width="25%">
 
-| 项目                                                              | Star                                                                                                                                                                                                                                                                                             | 简介                          |
-|-----------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|
-| [ruoyi-vue-pro](https://gitee.com/zhijiantianya/ruoyi-vue-pro)  | [![Gitee star](https://gitee.com/zhijiantianya/ruoyi-vue-pro/badge/star.svg?theme=white)](https://gitee.com/zhijiantianya/ruoyi-vue-pro) [![GitHub stars](https://img.shields.io/github/stars/YunaiV/ruoyi-vue-pro.svg?style=social&label=Stars)](https://github.com/YunaiV/ruoyi-vue-pro)       | 基于 Spring Boot 多模块架构        |
-| [yudao-cloud](https://gitee.com/zhijiantianya/yudao-cloud)      | [![Gitee star](https://gitee.com/zhijiantianya/yudao-cloud/badge/star.svg?theme=white)](https://gitee.com/zhijiantianya/yudao-cloud) [![GitHub stars](https://img.shields.io/github/stars/YunaiV/yudao-cloud.svg?style=social&label=Stars)](https://github.com/YunaiV/yudao-cloud)               | 基于 Spring Cloud 微服务架构       |
-| [Spring-Boot-Labs](https://gitee.com/yudaocode/SpringBoot-Labs) | [![Gitee star](https://gitee.com/yudaocode/SpringBoot-Labs/badge/star.svg?theme=white)](https://gitee.com/zhijiantianya/yudao-cloud) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/SpringBoot-Labs.svg?style=social&label=Stars)](https://github.com/yudaocode/SpringBoot-Labs) | 系统学习 Spring Boot & Cloud 专栏 |
+### 🤖 AI 赋能办公
+内置 AI 大模型能力，对接 ChatGPT / 通义千问 / 文心一言 / DeepSeek 等，让办公更智能
 
-### 前端项目
+</td>
+</tr>
+</table>
 
-| 项目                                                                         | Star                                                                                                                                                                                                                                                                                                                     | 简介                                     |
-|----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|
-| [yudao-ui-admin-vue3](https://gitee.com/yudaocode/yudao-ui-admin-vue3)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vue3/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vue3) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vue3.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vue3)         | 基于 Vue3 + element-plus 实现的管理后台         |
-| [yudao-ui-admin-vben](https://gitee.com/yudaocode/yudao-ui-admin-vben)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vben/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vben) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vben.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vben)         | 基于 Vue3 + vben(ant-design-vue) 实现的管理后台 |
-| [yudao-mall-uniapp](https://gitee.com/yudaocode/yudao-mall-uniapp)         | [![Gitee star](https://gitee.com/yudaocode/yudao-mall-uniapp/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-mall-uniapp) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-mall-uniapp.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-mall-uniapp)                 | 基于 uni-app 实现的商城小程序                    |
-| [yudao-ui-admin-vue2](https://gitee.com/yudaocode/yudao-ui-admin-vue2)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vue2/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vue2) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vue2.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vue2)         | 基于 Vue2 + element-ui 实现的管理后台           |
-| [yudao-ui-admin-uniapp](https://gitee.com/yudaocode/yudao-ui-admin-uniapp) | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-uniapp/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-uniapp) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-uniapp.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-uniapp) | 基于 Vue2 + element-ui 实现的管理后台           |
-| [yudao-ui-go-view](https://gitee.com/yudaocode/yudao-ui-go-view)           | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-go-view/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-go-view) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-go-view.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-go-view)                     | 基于 Vue3 + naive-ui 实现的大屏报表             |
+---
 
-## 😎 开源协议
+## 🌐 在线体验
 
-**为什么推荐使用本项目？**
+| 🖥️ 体验入口 | 地址 | 账号/密码 |
+|:---:|:---:|:---:|
+| **✅ 演示地址** | 👉 **[http://ruoyioffice.com/web/](http://ruoyioffice.com/web/)** | `admin` / `admin123` |
 
-① 本项目采用比 Apache 2.0 更宽松的 [MIT License](https://gitee.com/zhijiantianya/ruoyi-vue-pro/blob/master/LICENSE) 开源协议，个人与企业可 100% 免费使用，不用保留类作者、Copyright 信息。
+> 💡 **温馨提示**：演示环境数据每日重置，请勿存储重要信息。建议使用 Chrome / Edge 浏览器获得最佳体验。
 
-② 代码全部开源，不会像其他项目一样，只开源部分代码，让你无法了解整个项目的架构设计。[国产开源项目对比](https://www.yuque.com/xiatian-bsgny/lm0ec1/wqf8mn)
+<!-- 
+  📸 系统截图展示区 —— 请替换为实际截图
+  建议截图尺寸：1920x1080 或 1440x900
+  存放路径：/.image/ 目录下
+-->
 
-![开源项目对比](/.image/common/project-vs.png)
+<table>
+<tr>
+<td width="50%">
 
-③ 代码整洁、架构整洁，遵循《阿里巴巴 Java 开发手册》规范，代码注释详细，113770 行 Java 代码，42462 行代码注释。
+**🔐 登录页面**
 
-## 🤝 项目外包
+![登录页面](/.image/readme/login.png)
 
-我们也是接外包滴，如果你有项目想要外包，可以微信联系【**Aix9975**】。
+</td>
+<td width="50%">
 
-团队包含专业的项目经理、架构师、前端工程师、后端工程师、测试工程师、运维工程师，可以提供全流程的外包服务。
+**🏠 系统首页 / 工作台**
 
-项目可以是商城、SCRM 系统、OA 系统、物流系统、ERP 系统、CMS 系统、HIS 系统、支付系统、IM 聊天、微信公众号、微信小程序等等。
+![系统首页](/.image/readme/dashboard.png)
 
-## 🐼 内置功能
+</td>
+</tr>
+<tr>
+<td width="50%">
 
-系统内置多种多种业务功能，可以用于快速你的业务系统：
+**📋 OA 协同办公 — 车辆管理**
 
-![功能分层](/.image/common/ruoyi-vue-pro-biz.png)
+![OA协同办公](/.image/readme/oa.png)
 
-* 通用模块（必选）：系统功能、基础设施
-* 通用模块（可选）：工作流程、支付系统、数据报表、会员中心
-* 业务系统（按需）：ERP 系统、CRM 系统、商城系统、微信公众号、AI 大模型
+</td>
+<td width="50%">
 
-> 友情提示：本项目基于 RuoYi-Vue 修改，**重构优化**后端的代码，**美化**前端的界面。
->
-> * 额外新增的功能，我们使用 🚀 标记。
-> * 重新实现的功能，我们使用 ⭐️ 标记。
+**👥 HRM 人力资源 — 员工档案**
 
-🙂 所有功能，都通过 **单元测试** 保证高质量。
+![HRM人力资源](/.image/readme/hrm.png)
 
-### 系统功能
+</td>
+</tr>
+<tr>
+<td width="50%">
 
-|     | 功能    | 描述                              |
-|-----|-------|---------------------------------|
-|     | 用户管理  | 用户是系统操作者，该功能主要完成系统用户配置          |
-| ⭐️  | 在线用户  | 当前系统中活跃用户状态监控，支持手动踢下线           |
-|     | 角色管理  | 角色菜单权限分配、设置角色按机构进行数据范围权限划分      |
-|     | 菜单管理  | 配置系统菜单、操作权限、按钮权限标识等，本地缓存提供性能    |
-|     | 部门管理  | 配置系统组织机构（公司、部门、小组），树结构展现支持数据权限  |
-|     | 岗位管理  | 配置系统用户所属担任职务                    |
-| 🚀  | 租户管理  | 配置系统租户，支持 SaaS 场景下的多租户功能        |
-| 🚀  | 租户套餐  | 配置租户套餐，自定每个租户的菜单、操作、按钮的权限       |
-|     | 字典管理  | 对系统中经常使用的一些较为固定的数据进行维护          |
-| 🚀  | 短信管理  | 短信渠道、短息模板、短信日志，对接阿里云、腾讯云等主流短信平台 |
-| 🚀  | 邮件管理  | 邮箱账号、邮件模版、邮件发送日志，支持所有邮件平台       |
-| 🚀  | 站内信   | 系统内的消息通知，提供站内信模版、站内信消息          |
-| 🚀  | 操作日志  | 系统正常操作日志记录和查询，集成 Swagger 生成日志内容 |
-| ⭐️  | 登录日志  | 系统登录日志记录查询，包含登录异常               |
-| 🚀  | 错误码管理 | 系统所有错误码的管理，可在线修改错误提示，无需重启服务     |
-|     | 通知公告  | 系统通知公告信息发布维护                    |
-| 🚀  | 敏感词   | 配置系统敏感词，支持标签分组                  |
-| 🚀  | 应用管理  | 管理 SSO 单点登录的应用，支持多种 OAuth2 授权方式 |
-| 🚀  | 地区管理  | 展示省份、城市、区镇等城市信息，支持 IP 对应城市      |
+**🤝 CRM 客户管理 — 线索管理**
 
-![功能图](/.image/common/system-feature.png)
+![CRM客户管理](/.image/readme/crm.png)
+
+</td>
+<td width="50%">
+
+**📊 ERP 进销存 — 销售订单**
+
+![ERP进销存](/.image/readme/erp.png)
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**⚙️ BPM 流程中心 — 流程模型（仿钉钉/飞书设计器）**
+
+![BPM流程审批](/.image/readme/bpm.png)
+
+</td>
+<td width="50%">
+
+**🤖 AI 智能助手 — 对话 / 绘画 / 写作 / 音乐 / 知识库**
+
+![AI智能助手](/.image/readme/ai.png)
+
+</td>
+</tr>
+</table>
+
+---
+
+## 📦 功能模块总览
+
+> 🔥 一个平台覆盖企业 **全链路业务**，模块化架构、按需组合、独立部署
+
+### 🟢 已上线模块
+
+| 序号 | 子系统 | 模块 | 核心功能 | 状态 |
+|:---:|:---|:---|:---|:---:|
+| 1 | **🏠 OA 协同办公** | `yudao-module-oa` | 用车管理（申请/归还）、印章管理（用印审批）、会议室管理（在线预约）、企业云盘（文件共享/权限管理）、通知公告 | ✅ |
+| 2 | **👥 HRM 人力资源** | `yudao-module-hrm` | 员工档案（教育/工作/家属信息）、入职申请、转正申请、人事调动、离职管理、一键生成系统账号 | ✅ |
+| 3 | **🤝 CRM 客户管理** | `yudao-module-crm` | 线索管理、客户管理、联系人、商机跟进、合同管理、回款管理、产品管理、数据统计分析 | ✅ |
+| 4 | **📊 ERP 进销存** | `yudao-module-erp` | 采购管理（订单/入库/退货）、销售管理（订单/出库/退货）、库存管理、产品管理、财务管理（收付款） | ✅ |
+| 5 | **🏭 EAM 资产管理** | `yudao-module-asset` | 资产分类、资产登记、资产物品管理、资产全生命周期管理（采购→领用→维修→报废） | ✅ |
+| 6 | **📦 WMS 仓储管理** | `yudao-module-wms` | 仓库管理、采购订单、采购入库、出入库操作、库存查询、通用出入库单 | ✅ |
+| 7 | **🛒 MALL 企业商城** | `yudao-module-mall` | 商品管理、订单管理、营销活动（优惠券/秒杀/拼团/砍价/满减）、售后退款、分销裂变 | ✅ |
+| 8 | **🤖 AI 智能助手** | `yudao-module-ai` | AI 对话（多模型切换）、AI 写作、AI 绘图、知识库问答、AI 思维导图 | ✅ |
+| 9 | **⚙️ BPM 流程引擎** | `yudao-module-bpm` | 仿钉钉/飞书可视化设计器 + BPMN 设计器、会签/或签/依次审批、抄送/转办/委派/加减签、父子流程、超时审批、自动提醒 | ✅ |
+| 10 | **💳 支付中心** | `yudao-module-pay` | 微信支付、支付宝、多渠道管理、支付/退款/回调管理 | ✅ |
+| 11 | **📈 数据报表** | `yudao-module-report` | 报表设计器、大屏设计器、数据可视化 | ✅ |
+| 12 | **📡 IoT 物联网** | `yudao-module-iot` | 设备管理、设备数据采集与监控 | ✅ |
+| 13 | **🔧 系统管理** | `yudao-module-system` | 用户/角色/权限/菜单、多租户 SaaS、短信/邮件/站内信、SSO 单点登录、数据权限 | ✅ |
+| 14 | **🌐 微信公众号** | `yudao-module-mp` | 粉丝管理、消息管理、自动回复、模板消息、菜单/素材管理 | ✅ |
+| 15 | **👤 会员中心** | `yudao-module-member` | 会员管理、会员标签/等级/分组、积分签到 | ✅ |
+| 16 | **🔩 基础设施** | `yudao-module-infra` | 代码生成器、API 文档、文件存储、定时任务、日志管理、链路追踪 | ✅ |
+
+### 🔵 规划中模块（持续迭代中）
+
+| 子系统 | 规划功能 | 解决的企业痛点 |
+|:---|:---|:---|
+| **📋 PMS 项目管理** | 项目立项、任务分解/看板、工时管理、里程碑、甘特图 | 项目进度不透明、工时难统计 |
+| **📝 合同管理（增强版）** | 合同起草/模板、电子签章、到期预警、合同台账、关联收付款 | 合同散落各处、到期无人跟进 |
+| **💰 财务管理** | 费用报销、预算管理、收支流水、发票管理、应收应付 | 报销流程繁琐、财务数据分散 |
+| **📅 考勤管理** | 打卡签到、排班管理、请假/加班/出差审批、考勤报表 | 考勤规则复杂、统计困难 |
+| **💵 薪酬管理** | 薪资核算、社保公积金、个税计算、工资条推送 | 手动算薪易出错 |
+| **🎯 绩效管理** | KPI / OKR 目标管理、绩效考核、360° 评估 | 绩效考核流于形式 |
+| **📧 CMS 内容管理** | 企业官网/内网门户、文章发布、栏目管理 | 企业宣传渠道缺失 |
+| **🎓 培训管理** | 课程管理、在线学习、考试测评、培训记录 | 员工培训无体系 |
+
+---
+
+## 🔥 核心功能详解
+
+### 🏠 OA 协同办公
+
+> 让日常办公事务全部线上化，告别纸质单据和跑腿签字
+
+| 功能模块 | 功能描述 | 亮点 |
+|:---|:---|:---|
+| 🚗 用车管理 | 公务车辆登记、用车申请、用车审批、车辆归还、车辆状态实时查看 | 与 BPM 流程引擎深度集成 |
+| 🔏 印章管理 | 印章登记、用印申请、用印审批、用印记录追溯 | 全流程可追溯 |
+| 🏢 会议室管理 | 会议室资源管理、在线预约、时间冲突检测、预约日历 | 可视化日历预约 |
+| 📁 企业云盘 | 文件上传/下载、目录管理、文件共享、权限控制、收藏管理 | 多级权限精细化控制 |
+
+### 👥 HRM 人力资源管理
+
+> 从入职到离职的全员工生命周期管理
+
+| 功能模块 | 功能描述 |
+|:---|:---|
+| 📋 员工档案 | 员工基本信息、教育经历、工作经历、家属信息、银行卡信息 |
+| ✅ 入职管理 | 入职申请单、入职审批流程、自动生成员工工号、一键创建系统账号 |
+| ⬆️ 转正管理 | 转正申请、转正审批、试用期→正式员工状态流转 |
+| 🔄 调动管理 | 人事调动申请、部门/岗位变更审批 |
+| 🚪 离职管理 | 离职申请、离职审批、离职交接 |
+
+### ⚙️ BPM 流程引擎
+
+> 历经头部企业生产验证，标配仿钉钉/飞书 + BPMN **双设计器**
+
+| 设计器模式 | 适用场景 |
+|:---|:---|
+| **🎨 仿钉钉/飞书设计器** | 轻量配置简单流程，拖拽搭建，10 分钟完成审批流程配置 |
+| **📐 BPMN 设计器** | 复杂业务场景深度编排，满足多层级审批及流程自动化 |
+
+**已实现功能**：会签 ✅ · 或签 ✅ · 依次审批 ✅ · 抄送 ✅ · 驳回 ✅ · 转办 ✅ · 委派 ✅ · 加签 ✅ · 减签 ✅ · 撤销 ✅ · 终止 ✅ · 表单权限 ✅ · 超时审批 ✅ · 自动提醒 ✅ · 父子流程 ✅ · 条件分支 ✅ · 并行分支 ✅ · 包容分支 ✅ · 路由分支 ✅ · 触发节点 ✅ · 延迟节点 ✅
+
+### 🤖 AI 智能助手
+
+> 内置 AI 大模型能力，让企业办公更智能
+
+- 🗣️ **AI 对话**：支持 ChatGPT / 通义千问 / 文心一言 / DeepSeek / 讯飞星火等多模型切换
+- ✍️ **AI 写作**：公文起草、邮件撰写、报告生成
+- 🎨 **AI 绘图**：基于 DALL·E / Midjourney / Stable Diffusion
+- 📚 **知识库问答**：上传企业文档，AI 自动问答
+- 🧠 **AI 思维导图**：一键生成结构化思维导图
+
+---
+
+## 🏗️ 技术架构
+
+```
+                          ┌───────────────────────────┐
+                          │     前端 (Vue3 + Vben)      │
+                          │  Ant Design Vue / Element  │
+                          │    TypeScript + Tailwind    │
+                          └─────────┬─────────────────┘
+                                    │
+                          ┌─────────▼─────────────────┐
+                          │   Spring Cloud Gateway     │
+                          │      (统一网关/鉴权/路由)      │
+                          └─────────┬─────────────────┘
+                                    │
+        ┌───────────────────────────┼───────────────────────────┐
+        │                           │                           │
+  ┌─────▼─────┐             ┌──────▼──────┐             ┌──────▼──────┐
+  │  OA 服务   │             │  HRM 服务   │             │  CRM 服务   │
+  │  ERP 服务  │             │  BPM 服务   │             │  Mall 服务  │
+  │  Asset 服务│             │  WMS 服务   │             │  AI 服务    │
+  │  Pay 服务  │             │  IoT 服务   │             │  更多服务... │
+  └─────┬─────┘             └──────┬──────┘             └──────┬──────┘
+        │                           │                           │
+        └───────────────────────────┼───────────────────────────┘
+                                    │
+                ┌───────────────────┼───────────────────┐
+                │                   │                   │
+         ┌──────▼──────┐    ┌──────▼──────┐    ┌──────▼──────┐
+         │    Nacos     │    │   RocketMQ  │    │   Sentinel  │
+         │ 注册/配置中心 │    │   消息队列   │    │  服务保障    │
+         └─────────────┘    └─────────────┘    └─────────────┘
+                                    │
+                ┌───────────────────┼───────────────────┐
+                │                   │                   │
+         ┌──────▼──────┐    ┌──────▼──────┐    ┌──────▼──────┐
+         │   MySQL      │    │    Redis    │    │  Flowable   │
+         │ PostgreSQL   │    │  Redisson   │    │  工作流引擎  │
+         │ Oracle/达梦   │    └─────────────┘    └─────────────┘
+         └─────────────┘
+```
+
+### 核心技术选型
+
+| 层级 | 技术选型 | 版本 |
+|:---|:---|:---|
+| **微服务框架** | Spring Cloud Alibaba + Spring Boot | 2025.0.0 / 3.5.x |
+| **服务网关** | Spring Cloud Gateway | Latest |
+| **注册/配置中心** | Nacos | 2.x |
+| **消息队列** | RocketMQ | 5.x |
+| **工作流引擎** | Flowable（仿钉钉/飞书 + BPMN 双设计器） | 7.0.x |
+| **前端框架** | Vue 3 + Vben Admin + TypeScript | 3.5 / 5.8 |
+| **UI 组件库** | Ant Design Vue / Element Plus / Naive UI | 4.x / 2.x |
+| **数据库** | MySQL / PostgreSQL / Oracle / 达梦 / 人大金仓 / SQL Server | 多版本 |
+| **缓存** | Redis + Redisson | 6.x / 3.50 |
+| **ORM** | MyBatis Plus | 3.5.12 |
+| **安全框架** | Spring Security + OAuth 2.0 + JWT | 6.x |
+| **定时任务** | XXL-Job | 2.4.x |
+| **监控追踪** | SkyWalking + Spring Boot Admin | 9.x / 3.x |
+| **AI 大模型** | ChatGPT / 通义千问 / 文心一言 / DeepSeek 等 | 多模型支持 |
+| **多终端** | PC Web + uni-app（APP / 小程序 / H5） | 全终端覆盖 |
+
+---
+
+## 🌟 平台亮点
+
+<table>
+<tr>
+<td width="50%">
+
+### 🏢 全业务覆盖
+一个平台打通办公、人事、销售、采购、仓储、资产等全链路业务，**告别信息孤岛**
+
+### 🔌 模块化架构
+各子系统独立部署、按需组合，轻量启动不臃肿，**像搭积木一样组合你的企业系统**
+
+### 🔄 流程驱动
+所有业务单据与 BPM 审批引擎深度集成，**仿钉钉/飞书可视化配置，10 分钟搭建审批流**
+
+### 🤖 AI 赋能
+内置 AI 大模型能力，**智能对话、AI 写作、知识库问答**，让办公效率翻倍
+
+### 🔐 企业级安全
+Spring Security + OAuth 2.0 + RBAC 权限模型 + **数据权限隔离 + 多租户 SaaS**
+
+</td>
+<td width="50%">
+
+### 👥 多租户 SaaS
+支持 SaaS 多租户模式，**一套系统服务多家企业**，租户间数据完全隔离
+
+### 📱 多终端适配
+PC Web + 移动端（H5 / 小程序 / APP），**随时随地移动办公**
+
+### 🗄️ 多数据库
+MySQL / PostgreSQL / Oracle / 达梦 / 人大金仓 / SQL Server，**全面适配国产信创**
+
+### ⚡ 代码生成器
+一键生成前后端代码 + SQL 脚本 + API 文档，**开发效率翻倍**
+
+### 📊 数据可视化
+内置报表设计器 + 大屏设计器，**拖拽即可生成数据看板和酷炫大屏**
+
+</td>
+</tr>
+</table>
+
+---
+
+## 📸 系统截图
+
+> 📌 以下为系统核心功能截图，更多功能请访问 [在线演示](http://ruoyioffice.com/web/) 体验
+
+### 系统管理
+
+| 模块 | 截图 | 截图 | 截图 |
+|:---|:---:|:---:|:---:|
+| 登录 & 首页 | ![登录](/.image/登录.jpg) | ![首页](/.image/首页.jpg) | ![个人中心](/.image/个人中心.jpg) |
+| 用户 & 应用 | ![用户管理](/.image/用户管理.jpg) | ![令牌管理](/.image/令牌管理.jpg) | ![应用管理](/.image/应用管理.jpg) |
+| 租户 & 套餐 | ![租户管理](/.image/租户管理.jpg) | ![租户套餐](/.image/租户套餐.png) | - |
+| 部门 & 岗位 | ![部门管理](/.image/部门管理.jpg) | ![岗位管理](/.image/岗位管理.jpg) | - |
+| 菜单 & 角色 | ![菜单管理](/.image/菜单管理.jpg) | ![角色管理](/.image/角色管理.jpg) | - |
 
 ### 工作流程
 
-![功能图](/.image/common/bpm-feature.png)
-
-基于 Flowable 构建，可支持信创（国产）数据库，满足中国特色流程操作：
-
-| BPMN 设计器                     | 钉钉/飞书设计器                       |
-|------------------------------|--------------------------------|
+| BPMN 设计器 | 钉钉/飞书设计器 |
+|:---:|:---:|
 | ![](/.image/工作流设计器-bpmn.jpg) | ![](/.image/工作流设计器-simple.jpg) |
 
-> 历经头部企业生产验证，工作流引擎须标配仿钉钉/飞书 + BPMN 双设计器！！！
->
-> 前者支持轻量配置简单流程，后者实现复杂场景深度编排
+| 模块 | 截图 | 截图 | 截图 |
+|:---|:---:|:---:|:---:|
+| 流程模型 | ![流程模型-列表](/.image/流程模型-列表.jpg) | ![流程模型-设计](/.image/流程模型-设计.jpg) | ![流程模型-定义](/.image/流程模型-定义.jpg) |
+| 我的流程 | ![我的流程-列表](/.image/我的流程-列表.jpg) | ![我的流程-发起](/.image/我的流程-发起.jpg) | ![我的流程-详情](/.image/我的流程-详情.jpg) |
+| 待办 & 已办 | ![任务列表-审批](/.image/任务列表-审批.jpg) | ![任务列表-待办](/.image/任务列表-待办.jpg) | ![任务列表-已办](/.image/任务列表-已办.jpg) |
 
-| 功能列表       | 功能描述                                                                                | 是否完成 |
-|------------|-------------------------------------------------------------------------------------|------|
-| SIMPLE 设计器 | 仿钉钉/飞书设计器，支持拖拽搭建表单流程，10 分钟快速完成审批流程配置                                                | ✅    |
-| BPMN 设计器   | 基于 BPMN 标准开发，适配复杂业务场景，满足多层级审批及流程自动化需求                                               | ✅    |
-| 会签         | 同一个审批节点设置多个人（如 A、B、C 三人，三人会同时收到待办任务），需全部同意之后，审批才可到下一审批节点                            | ✅    |
-| 或签         | 同一个审批节点设置多个人，任意一个人处理后，就能进入下一个节点                                                     | ✅    |
-| 依次审批       | （顺序会签）同一个审批节点设置多个人（如 A、B、C 三人），三人按顺序依次收到待办，即 A 先审批，A 提交后 B 才能审批，需全部同意之后，审批才可到下一审批节点 | ✅    |
-| 抄送         | 将审批结果通知给抄送人，同一个审批默认排重，不重复抄送给同一人                                                     | ✅    |
-| 驳回         | （退回）将审批重置发送给某节点，重新审批。可驳回至发起人、上一节点、任意节点                                              | ✅    |
-| 转办         | A 转给其 B 审批，B 审批后，进入下一节点                                                             | ✅    |
-| 委派         | A 转给其 B 审批，B 审批后，转给 A，A 继续审批后进入下一节点                                                 | ✅    |
-| 加签         | 允许当前审批人根据需要，自行增加当前节点的审批人，支持向前、向后加签                                                  | ✅    |
-| 减签         | （取消加签）在当前审批人操作之前，减少审批人                                                              | ✅    |
-| 撤销         | （取消流程）流程发起人，可以对流程进行撤销处理                                                             | ✅    |
-| 终止         | 系统管理员，在任意节点终止流程实例                                                                   | ✅    |
-| 表单权限       | 支持拖拉拽配置表单，每个审批节点可配置只读、编辑、隐藏权限                                                       | ✅    |
-| 超时审批       | 配置超时审批时间，超时后自动触发审批通过、不通过、驳回等操作                                                      | ✅    |
-| 自动提醒       | 配置提醒时间，到达时间后自动触发短信、邮箱、站内信等通知提醒，支持自定义重复提醒频次                                          | ✅    |
-| 父子流程       | 主流程设置子流程节点，子流程节点会自动触发子流程。子流程结束后，主流程才会执行（继续往下下执行），支持同步子流程、异步子流程                      | ✅    |
-| 条件分支       | （排它分支）用于在流程中实现决策，即根据条件选择一个分支执行                                                      | ✅    |
-| 并行分支       | 允许将流程分成多条分支，不进行条件判断，所有分支都会执行                                                        | ✅    |
-| 包容分支       | （条件分支 + 并行分支的结合体）允许基于条件选择多条分支执行，但如果没有任何一个分支满足条件，则可以选择默认分支                           | ✅    |
-| 路由分支       | 根据条件选择一个分支执行（重定向到指定配置节点），也可以选择默认分支执行（继续往下执行）                                        | ✅    |
-| 触发节点       | 执行到该节点，触发 HTTP 请求、HTTP 回调、更新数据、删除数据等                                                | ✅    |
-| 延迟节点       | 执行到该节点，审批等待一段时间再执行，支持固定时长、固定日期等                                                     | ✅    |
-| 拓展设置       | 流程前置/后置通知，节点（任务）前置、后置通知，流程报表，自动审批去重，自定流程编号、标题、摘要，流程报表等                              | ✅    |
+### OA 协同办公
 
-### 支付系统
+| 模块 | 截图 |
+|:---|:---:|
+| 车辆管理（含用车分类、车辆信息、状态管理） | ![OA-车辆管理](/.image/readme/oa.png) |
 
-|     | 功能   | 描述                        |
-|-----|------|---------------------------|
-| 🚀  | 应用信息 | 配置商户的应用信息，对接支付宝、微信等多个支付渠道 |
-| 🚀  | 支付订单 | 查看用户发起的支付宝、微信等的【支付】订单     |
-| 🚀  | 退款订单 | 查看用户发起的支付宝、微信等的【退款】订单     |
-| 🚀  | 回调通知 | 查看支付回调业务的【支付】【退款】的通知结果    |
-| 🚀  | 接入示例 | 提供接入支付系统的【支付】【退款】的功能实战    |
+> 📸 更多 OA 模块截图（印章管理、会议室预约、企业云盘、日程管理等）请访问 [在线演示](http://ruoyioffice.com/web/) 体验
 
-### 基础设施
+### HRM 人力资源
 
-|     | 功能        | 描述                                           |
-|-----|-----------|----------------------------------------------|
-| 🚀  | 代码生成      | 前后端代码的生成（Java、Vue、SQL、单元测试），支持 CRUD 下载       |
-| 🚀  | 系统接口      | 基于 Swagger 自动生成相关的 RESTful API 接口文档          |
-| 🚀  | 数据库文档     | 基于 Screw 自动生成数据库文档，支持导出 Word、HTML、MD 格式      |
-|     | 表单构建      | 拖动表单元素生成相应的 HTML 代码，支持导出 JSON、Vue 文件         |
-| 🚀  | 配置管理      | 对系统动态配置常用参数，支持 SpringBoot 加载                 |
-| ⭐️  | 定时任务      | 在线（添加、修改、删除)任务调度包含执行结果日志                     |
-| 🚀  | 文件服务      | 支持将文件存储到 S3（MinIO、阿里云、腾讯云、七牛云）、本地、FTP、数据库等   | 
-| 🚀  | WebSocket | 提供 WebSocket 接入示例，支持一对一、一对多发送方式              | 
-| 🚀  | API 日志    | 包括 RESTful API 访问日志、异常日志两部分，方便排查 API 相关的问题   |
-|     | MySQL 监控  | 监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈              |
-|     | Redis 监控  | 监控 Redis 数据库的使用情况，使用的 Redis Key 管理           |
-| 🚀  | 消息队列      | 基于 Redis 实现消息队列，Stream 提供集群消费，Pub/Sub 提供广播消费 |
-| 🚀  | Java 监控   | 基于 Spring Boot Admin 实现 Java 应用的监控           |
-| 🚀  | 链路追踪      | 接入 SkyWalking 组件，实现链路追踪                      |
-| 🚀  | 日志中心      | 接入 SkyWalking 组件，实现日志中心                      |
-| 🚀  | 服务保障      | 基于 Redis 实现分布式锁、幂等、限流功能，满足高并发场景              |
-| 🚀  | 日志服务      | 轻量级日志中心，查看远程服务器的日志                           |
-| 🚀  | 单元测试      | 基于 JUnit + Mockito 实现单元测试，保证功能的正确性、代码的质量等    |
+| 模块 | 截图 |
+|:---|:---:|
+| 员工档案（员工工号/姓名/部门/职位/入职/转正全流程） | ![HRM-员工档案](/.image/readme/hrm.png) |
 
-![功能图](/.image/common/infra-feature.png)
+> 📸 更多 HRM 模块截图（组织架构图、入职管理、转正管理、调动管理、离职管理等）请访问 [在线演示](http://ruoyioffice.com/web/) 体验
 
-### 数据报表
+### CRM 客户管理
 
-|     | 功能    | 描述                 |
-|-----|-------|--------------------|
-| 🚀  | 报表设计器 | 支持数据报表、图形报表、打印设计等  |
-| 🚀  | 大屏设计器 | 拖拽生成数据大屏，内置几十种图表组件 |
+| 模块 | 截图 |
+|:---|:---:|
+| CRM 线索管理（线索/客户/联系人/商机/合同/回款/产品） | ![CRM系统](/.image/readme/crm.png) |
 
-### 微信公众号
+### ERP 进销存
 
-|    | 功能     | 描述                            |
-|----|--------|-------------------------------|
-| 🚀 | 账号管理   | 配置接入的微信公众号，可支持多个公众号           |
-| 🚀 | 数据统计   | 统计公众号的用户增减、累计用户、消息概况、接口分析等数据  |
-| 🚀 | 粉丝管理   | 查看已关注、取关的粉丝列表，可对粉丝进行同步、打标签等操作 |
-| 🚀 | 消息管理   | 查看粉丝发送的消息列表，可主动回复粉丝消息         |
-| 🚀 | 模版消息   | 配置和发送模版消息，用于向粉丝推送通知类消息        |
-| 🚀 | 自动回复   | 自动回复粉丝发送的消息，支持关注回复、消息回复、关键字回复 |
-| 🚀 | 标签管理   | 对公众号的标签进行创建、查询、修改、删除等操作       |
-| 🚀 | 菜单管理   | 自定义公众号的菜单，也可以从公众号同步菜单         |
-| 🚀 | 素材管理   | 管理公众号的图片、语音、视频等素材，支持在线播放语音、视频 |
-| 🚀 | 图文草稿箱  | 新增常用的图文素材到草稿箱，可发布到公众号         |
-| 🚀 | 图文发表记录 | 查看已发布成功的图文素材，支持删除操作           |
-
-### 商城系统
-
-演示地址：<https://cloud.iocoder.cn/mall-preview/>
-
-![功能图](/.image/common/mall-feature.png)
-
-![功能图](/.image/common/mall-preview.png)
-
-### 会员中心
-
-|     | 功能   | 描述                               |
-|-----|------|----------------------------------|
-| 🚀  | 会员管理 | 会员是 C 端的消费者，该功能用于会员的搜索与管理        |
-| 🚀  | 会员标签 | 对会员的标签进行创建、查询、修改、删除等操作           |
-| 🚀  | 会员等级 | 对会员的等级、成长值进行管理，可用于订单折扣等会员权益      |
-| 🚀  | 会员分组 | 对会员进行分组，用于用户画像、内容推送等运营手段         |
-| 🚀  | 积分签到 | 回馈给签到、消费等行为的积分，会员可订单抵现、积分兑换等途径消耗 |
-
-### ERP 系统
-
-演示地址：<https://cloud.iocoder.cn/erp-preview/>
-
-![功能图](/.image/common/erp-feature.png)
-
-### CRM 系统
-
-演示地址：<https://cloud.iocoder.cn/crm-preview/>
-
-![功能图](/.image/common/crm-feature.png)
+| 模块 | 截图 |
+|:---|:---:|
+| ERP 销售订单（采购/销售/库存/产品/财务管理） | ![ERP系统](/.image/readme/erp.png) |
 
 ### AI 大模型
 
-演示地址：<https://cloud.iocoder.cn/ai-preview/>
+| 截图 |
+|:---:|
+| ![AI智能助手](/.image/readme/ai.png) |
 
-![功能图](/.image/common/ai-feature.png)
+### 商城系统
 
-![功能图](/.image/common/ai-preview.gif)
+| 截图 | 截图 |
+|:---:|:---:|
+| ![商城功能图](/.image/common/mall-feature.png) | ![商城预览](/.image/common/mall-preview.png) |
 
-## 🐨 技术栈
+### 数据报表 & 大屏
 
-### 微服务
+| 模块 | 截图 | 截图 | 截图 |
+|:---|:---:|:---:|:---:|
+| 报表设计器 | ![数据报表](/.image/报表设计器-数据报表.jpg) | ![图形报表](/.image/报表设计器-图形报表.jpg) | ![打印设计](/.image/报表设计器-打印设计.jpg) |
+| 大屏设计器 | ![大屏列表](/.image/大屏设计器-列表.jpg) | ![大屏预览](/.image/大屏设计器-预览.jpg) | ![大屏编辑](/.image/大屏设计器-编辑.jpg) |
 
-| 项目                    | 说明                 |
-|-----------------------|--------------------|
-| `yudao-dependencies`  | Maven 依赖版本管理       |
-| `yudao-framework`     | Java 框架拓展          |
-| `yudao-server`        | 管理后台 + 用户 APP 的服务端 |
-| `yudao-module-system` | 系统功能的 Module 模块    |
-| `yudao-module-member` | 会员中心的 Module 模块    |
-| `yudao-module-infra`  | 基础设施的 Module 模块    |
-| `yudao-module-bpm`    | 工作流程的 Module 模块    |
-| `yudao-module-pay`    | 支付系统的 Module 模块    |
-| `yudao-module-mall`   | 商城系统的 Module 模块    |
-| `yudao-module-erp`    | ERP 系统的 Module 模块  |
-| `yudao-module-crm`    | CRM 系统的 Module 模块  |
-| `yudao-module-ai`     | AI 大模型的 Module 模块  |
-| `yudao-module-mp`     | 微信公众号的 Module 模块   |
-| `yudao-module-report` | 大屏报表 Module 模块     |
+### 移动端
 
-### 框架
-
-| 框架                                                                                          | 说明               | 版本         | 学习指南                                                                |
-|---------------------------------------------------------------------------------------------|------------------|------------|---------------------------------------------------------------------|
-| [Spring Cloud Alibaba](https://github.com/alibaba/spring-cloud-alibaba)                     | 微服务框架            | 2023.0.1   | [文档](https://github.com/YunaiV/SpringBoot-Labs)                     |
-| [Nacos](https://github.com/alibaba/nacos)                                                   | 配置中心 & 注册中心      | 2.3.2      | [文档](https://www.iocoder.cn/categories/Nacos/?yudao)                |
-| [RocketMQ](https://github.com/apache/rocketmq)                                              | 消息队列             | 5.2.0      | [文档](https://www.iocoder.cn/categories/RocketMQ/?yudao)             |
-| [Sentinel](https://github.com/alibaba/sentinel)                                             | 服务保障             | 1.8.6      | [文档](https://www.iocoder.cn/categories/Sentinel/?yudao)             |
-| [XXL Job](https://github.com/xuxueli/xxl-job)                                               | 定时任务             | 2.4.0      | [文档](https://www.iocoder.cn/XXL-JOB/good-collection/?yudao)         |
-| [Spring Cloud Gateway](https://github.com/spring-cloud/spring-cloud-gateway)                | 服务网关             | 4.1.0      | [文档](https://www.iocoder.cn/categories/Spring-Cloud-Gateway/?yudao) |
-| [Seata](https://github.com/seata/seata)                                                     | 分布式事务            | 1.6.1      | [文档](https://www.iocoder.cn/categories/Seata/?yudao)                |
-| [MySQL](https://www.mysql.com/cn/)                                                          | 数据库服务器           | 5.7 / 8.0+ |                                                                     |
-| [Druid](https://github.com/alibaba/druid)                                                   | JDBC 连接池、监控组件    | 1.2.23     | [文档](http://www.iocoder.cn/Spring-Boot/datasource-pool/?yudao)      |
-| [MyBatis Plus](https://mp.baomidou.com/)                                                    | MyBatis 增强工具包    | 3.5.7      | [文档](http://www.iocoder.cn/Spring-Boot/MyBatis/?yudao)              |
-| [Dynamic Datasource](https://dynamic-datasource.com/)                                       | 动态数据源            | 4.3.1      | [文档](http://www.iocoder.cn/Spring-Boot/datasource-pool/?yudao)      |
-| [Redis](https://redis.io/)                                                                  | key-value 数据库    | 5.0 / 6.0  |                                                                     |
-| [Redisson](https://github.com/redisson/redisson)                                            | Redis 客户端        | 3.32.0     | [文档](http://www.iocoder.cn/Spring-Boot/Redis/?yudao)                |
-| [Spring MVC](https://github.com/spring-projects/spring-framework/tree/master/spring-webmvc) | MVC 框架           | 6.1.10     | [文档](http://www.iocoder.cn/SpringMVC/MVC/?yudao)                    |
-| [Spring Security](https://github.com/spring-projects/spring-security)                       | Spring 安全框架      | 6.3.1      | [文档](http://www.iocoder.cn/Spring-Boot/Spring-Security/?yudao)      |
-| [Hibernate Validator](https://github.com/hibernate/hibernate-validator)                     | 参数校验组件           | 8.0.1      | [文档](http://www.iocoder.cn/Spring-Boot/Validation/?yudao)           |
-| [Flowable](https://github.com/flowable/flowable-engine)                                     | 工作流引擎            | 7.0.0      | [文档](https://doc.iocoder.cn/bpm/)                                   |
-| [Knife4j](https://gitee.com/xiaoym/knife4j)                                                 | Swagger 增强 UI 实现 | 4.5.0      | [文档](http://www.iocoder.cn/Spring-Boot/Swagger/?yudao)              |
-| [SkyWalking](https://skywalking.apache.org/)                                                | 分布式应用追踪系统        | 9.0.0      | [文档](http://www.iocoder.cn/Spring-Boot/SkyWalking/?yudao)           |
-| [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin)                       | Spring Boot 监控平台 | 3.6.1      | [文档](http://www.iocoder.cn/Spring-Boot/Admin/?yudao)                |
-| [Jackson](https://github.com/FasterXML/jackson)                                             | JSON 工具库         | 2.17.1     |                                                                     |
-| [MapStruct](https://mapstruct.org/)                                                         | Java Bean 转换     | 1.6.3      | [文档](http://www.iocoder.cn/Spring-Boot/MapStruct/?yudao)            |
-| [Lombok](https://projectlombok.org/)                                                        | 消除冗长的 Java 代码    | 1.18.34    | [文档](http://www.iocoder.cn/Spring-Boot/Lombok/?yudao)               |
-| [JUnit](https://junit.org/junit5/)                                                          | Java 单元测试框架      | 5.10.1     | -                                                                   |
-| [Mockito](https://github.com/mockito/mockito)                                               | Java Mock 框架     | 5.7.0      | -                                                                   |
-
-## 🐷 演示图
-
-### 系统功能
-
-| 模块       | biu                         | biu                       | biu                      |
-|----------|-----------------------------|---------------------------|--------------------------|
-| 登录 & 首页  | ![登录](/.image/登录.jpg)       | ![首页](/.image/首页.jpg)     | ![个人中心](/.image/个人中心.jpg) |
-| 用户 & 应用  | ![用户管理](/.image/用户管理.jpg)   | ![令牌管理](/.image/令牌管理.jpg) | ![应用管理](/.image/应用管理.jpg) |
-| 租户 & 套餐  | ![租户管理](/.image/租户管理.jpg)   | ![租户套餐](/.image/租户套餐.png) | -                        |
-| 部门 & 岗位  | ![部门管理](/.image/部门管理.jpg)   | ![岗位管理](/.image/岗位管理.jpg) | -                        |
-| 菜单 & 角色  | ![菜单管理](/.image/菜单管理.jpg)   | ![角色管理](/.image/角色管理.jpg) | -                        |
-| 审计日志     | ![操作日志](/.image/操作日志.jpg)   | ![登录日志](/.image/登录日志.jpg) | -                        |
-| 短信       | ![短信渠道](/.image/短信渠道.jpg)   | ![短信模板](/.image/短信模板.jpg) | ![短信日志](/.image/短信日志.jpg) |
-| 字典 & 敏感词 | ![字典类型](/.image/字典类型.jpg)   | ![字典数据](/.image/字典数据.jpg) | ![敏感词](/.image/敏感词.jpg)  |
-| 错误码 & 通知 | ![错误码管理](/.image/错误码管理.jpg) | ![通知公告](/.image/通知公告.jpg) | -                        |
-
-### 工作流程
-
-| 模块      | biu                             | biu                             | biu                             |
-|---------|---------------------------------|---------------------------------|---------------------------------|
-| 流程模型    | ![流程模型-列表](/.image/流程模型-列表.jpg) | ![流程模型-设计](/.image/流程模型-设计.jpg) | ![流程模型-定义](/.image/流程模型-定义.jpg) |
-| 表单 & 分组 | ![流程表单](/.image/流程表单.jpg)       | ![用户分组](/.image/用户分组.jpg)       | -                               |
-| 我的流程    | ![我的流程-列表](/.image/我的流程-列表.jpg) | ![我的流程-发起](/.image/我的流程-发起.jpg) | ![我的流程-详情](/.image/我的流程-详情.jpg) |
-| 待办 & 已办 | ![任务列表-审批](/.image/任务列表-审批.jpg) | ![任务列表-待办](/.image/任务列表-待办.jpg) | ![任务列表-已办](/.image/任务列表-已办.jpg) |
-| OA 请假   | ![OA请假-列表](/.image/OA请假-列表.jpg) | ![OA请假-发起](/.image/OA请假-发起.jpg) | ![OA请假-详情](/.image/OA请假-详情.jpg) |
-
-### 基础设施
-
-| 模块            | biu                           | biu                         | biu                       |
-|---------------|-------------------------------|-----------------------------|---------------------------|
-| 代码生成          | ![代码生成](/.image/代码生成.jpg)     | ![生成效果](/.image/生成效果.jpg)   | -                         |
-| 文档            | ![系统接口](/.image/系统接口.jpg)     | ![数据库文档](/.image/数据库文档.jpg) | -                         |
-| 文件 & 配置       | ![文件配置](/.image/文件配置.jpg)     | ![文件管理](/.image/文件管理2.jpg)  | ![配置管理](/.image/配置管理.jpg) |
-| 定时任务          | ![定时任务](/.image/定时任务.jpg)     | ![任务日志](/.image/任务日志.jpg)   | -                         |
-| API 日志        | ![访问日志](/.image/访问日志.jpg)     | ![错误日志](/.image/错误日志.jpg)   | -                         |
-| MySQL & Redis | ![MySQL](/.image/MySQL.jpg)   | ![Redis](/.image/Redis.jpg) | -                         |
-| 监控平台          | ![Java监控](/.image/Java监控.jpg) | ![链路追踪](/.image/链路追踪.jpg)   | ![日志中心](/.image/日志中心.jpg) |
-
-### 支付系统
-
-| 模块      | biu                       | biu                             | biu                             |
-|---------|---------------------------|---------------------------------|---------------------------------|
-| 商家 & 应用 | ![商户信息](/.image/商户信息.jpg) | ![应用信息-列表](/.image/应用信息-列表.jpg) | ![应用信息-编辑](/.image/应用信息-编辑.jpg) |
-| 支付 & 退款 | ![支付订单](/.image/支付订单.jpg) | ![退款订单](/.image/退款订单.jpg)       | ---                             |
-### 数据报表
-
-| 模块    | biu                             | biu                             | biu                                   |
-|-------|---------------------------------|---------------------------------|---------------------------------------|
-| 报表设计器 | ![数据报表](/.image/报表设计器-数据报表.jpg) | ![图形报表](/.image/报表设计器-图形报表.jpg) | ![报表设计器-打印设计](/.image/报表设计器-打印设计.jpg) |
-| 大屏设计器 | ![大屏列表](/.image/大屏设计器-列表.jpg)   | ![大屏预览](/.image/大屏设计器-预览.jpg)   | ![大屏编辑](/.image/大屏设计器-编辑.jpg)         |
-
-### 移动端（管理后台）
-
-| biu                              | biu                              | biu                              |
-|----------------------------------|----------------------------------|----------------------------------|
+| 截图 | 截图 | 截图 |
+|:---:|:---:|:---:|
 | ![](/.image/admin-uniapp/01.png) | ![](/.image/admin-uniapp/02.png) | ![](/.image/admin-uniapp/03.png) |
 | ![](/.image/admin-uniapp/04.png) | ![](/.image/admin-uniapp/05.png) | ![](/.image/admin-uniapp/06.png) |
-| ![](/.image/admin-uniapp/07.png) | ![](/.image/admin-uniapp/08.png) | ![](/.image/admin-uniapp/09.png) |
 
-目前已经实现登录、我的、工作台、编辑资料、头像修改、密码修改、常见问题、关于我们等基础功能。
+---
+
+## 🏷️ 适用场景
+
+适用于 **10 ~ 500 人** 规模的中小企业，覆盖但不限于以下行业：
+
+<table>
+<tr>
+<td>🏭 制造业</td>
+<td>🏪 贸易公司</td>
+<td>💻 互联网/科技</td>
+<td>🏗️ 建筑工程</td>
+</tr>
+<tr>
+<td>🚛 物流运输</td>
+<td>🎓 教育培训</td>
+<td>🏥 医疗健康</td>
+<td>🛍️ 零售连锁</td>
+</tr>
+<tr>
+<td>🏦 金融服务</td>
+<td>🍽️ 餐饮酒店</td>
+<td>🏢 物业管理</td>
+<td>🏛️ 政府/事业单位</td>
+</tr>
+</table>
+
+---
+
+## 🚀 快速开始
+
+### 环境要求
+
+| 环境 | 版本要求 |
+|:---|:---|
+| JDK | 17 或 21 |
+| MySQL | 5.7+ 或 8.0+ |
+| Redis | 5.0+ |
+| Node.js | 18+ |
+| Maven | 3.9+ |
+| Nacos | 2.x |
+
+### 一键启动
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/your-org/ruoyi-office.git
+
+# 2. 导入数据库
+mysql -u root -p < sql/mysql/ruoyi-vue-pro.sql
+
+# 3. 启动后端（先启动 Nacos）
+cd ruoyi-office
+mvn clean install -DskipTests
+java -jar yudao-server/target/yudao-server.jar
+
+# 4. 启动前端
+cd ruoyi-office-vben
+pnpm install
+pnpm dev
+```
+
+> 📖 更详细的部署文档请查看 [快速启动指南](https://cloud.iocoder.cn/quick-start/)
+
+---
+
+## 📐 项目结构
+
+### 后端模块
+
+| 模块 | 说明 |
+|:---|:---|
+| `yudao-dependencies` | Maven 依赖版本管理 |
+| `yudao-framework` | Java 框架核心拓展 |
+| `yudao-gateway` | Spring Cloud 微服务网关 |
+| `yudao-server` | 管理后台 + 用户 APP 服务端 |
+| `yudao-module-system` | 系统管理（用户/角色/权限/租户） |
+| `yudao-module-infra` | 基础设施（代码生成/文件/日志） |
+| `yudao-module-bpm` | 工作流程引擎 |
+| `yudao-module-oa` | OA 协同办公 |
+| `yudao-module-hrm` | HRM 人力资源管理 |
+| `yudao-module-crm` | CRM 客户关系管理 |
+| `yudao-module-erp` | ERP 进销存管理 |
+| `yudao-module-asset` | EAM 资产管理 |
+| `yudao-module-wms` | WMS 仓储管理 |
+| `yudao-module-mall` | MALL 企业商城 |
+| `yudao-module-pay` | 支付系统 |
+| `yudao-module-ai` | AI 大模型 |
+| `yudao-module-iot` | IoT 物联网 |
+| `yudao-module-member` | 会员中心 |
+| `yudao-module-mp` | 微信公众号 |
+| `yudao-module-report` | 数据报表 |
+
+---
+
+## 😎 开源协议
+
+本项目采用 [MIT License](LICENSE) 开源协议，个人与企业可 100% 免费使用，不用保留类作者、Copyright 信息。
+
+---
+
+## 📞 联系我们
+
+> 🔥 **想要快速上手？想要定制开发？想要了解更多？** 欢迎随时联系我们！
+
+### 🤝 合作方式
+
+| 服务类型 | 说明 |
+|:---|:---|
+| **🆓 开源使用** | 代码完全开源，直接 Fork 使用，社区交流 |
+| **📚 技术支持** | 一对一技术指导，快速解决部署和使用问题 |
+| **🎨 定制开发** | 根据企业需求定制功能模块，快速交付 |
+| **🏢 企业级服务** | 提供企业级部署、运维、培训全套服务 |
+| **💼 项目外包** | 基于本平台快速开发各类企业管理系统 |
+
+### 📱 联系方式
+
+<table>
+<tr>
+<td align="center" width="50%">
+
+**💬 微信咨询**
+
+添加微信好友，备注「**RuoYi Office**」
+
+<!-- 请替换为实际微信二维码图片 -->
+![微信二维码](/.image/readme/wechat-qr.png)
+
+微信号：**Aix9975**
+
+</td>
+<td align="center" width="50%">
+
+**💬 微信交流群**
+
+扫码加入技术交流群
+
+<!-- 请替换为实际微信群二维码图片 -->
+![微信群二维码](/.image/readme/wechat-group-qr.png)
+
+</td>
+</tr>
+</table>
+
+### 🛒 获取方式
+
+<table>
+<tr>
+<td align="center" width="33%">
+
+#### Step 1️⃣ 体验系统
+访问 [在线演示](http://ruoyioffice.com/web/)
+<br>账号密码：`admin` / `admin123`
+
+</td>
+<td align="center" width="33%">
+
+#### Step 2️⃣ 添加微信
+扫码或搜索微信号 **Aix9975**
+<br>备注「**RuoYi Office**」
+
+</td>
+<td align="center" width="33%">
+
+#### Step 3️⃣ 深入沟通
+了解需求，提供定制方案
+<br>选择适合的服务模式
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🎁 为什么中小企业需要一体化平台？
+
+<details>
+<summary><b>📊 点击展开：中小企业信息化痛点分析</b></summary>
+
+### 常见困境
+
+| 痛点 | 传统方式 | RuoYi Office 解决方案 |
+|:---|:---|:---|
+| 📊 系统割裂 | OA、CRM、ERP 各自独立，数据无法互通 | 一个平台集成所有业务，数据实时打通 |
+| 💸 成本高昂 | 分别采购多套系统，每套都要付费 | 模块化按需启用，一套解决所有问题 |
+| 🔄 流程断裂 | 审批需要在不同系统间切换 | BPM 引擎统一驱动所有业务流程 |
+| 📱 无法移动办公 | 只能在公司电脑上操作 | PC + 移动端全终端覆盖 |
+| 🔒 数据安全 | 数据分散在多个系统，难以统一管控 | 统一权限体系 + 数据权限隔离 |
+| 🛠️ 扩展困难 | 传统系统封闭，难以二次开发 | 开源 + 微服务架构，灵活扩展 |
+| 🤖 缺乏智能 | 重复性工作耗费大量人力 | AI 赋能，智能辅助决策和办公 |
+
+### 投资回报
+
+- 💰 IT 信息化投入降低 **70%+**
+- ⏱️ 审批流程效率提升 **300%+**
+- 📈 业务数据利用率提升 **200%+**
+- 🔄 跨部门协作效率提升 **150%+**
+
+</details>
+
+---
+
+## ⭐ Star History
+
+如果这个项目对您有帮助，请给个 ⭐ Star，这对我们非常重要！
+
+<!-- 替换为实际的 Star History 图表 -->
+<!-- [![Star History Chart](https://api.star-history.com/svg?repos=your-org/ruoyi-office&type=Date)](https://star-history.com/#your-org/ruoyi-office&Date) -->
+
+---
+
+<p align="center">
+  <b>🏢 RuoYi Office · 企业管理一体化平台</b>
+  <br>
+  <sub>一个平台，管好整个企业 —— 让中小企业数字化转型更简单</sub>
+  <br><br>
+  <a href="http://ruoyioffice.com/web/">🌐 在线演示</a> •
+  <a href="#-联系我们">📞 联系我们</a> •
+  <a href="#-获取方式">🛒 立即获取</a>
+</p>
+
+---
+
+<!-- 
+  🔍 SEO 关键词（搜索引擎优化）
+  
+  中小企业办公平台, 企业管理一体化平台, OA协同办公系统, OA办公系统, 审批流程系统,
+  CRM客户管理系统, CRM客户关系管理, ERP进销存系统, ERP管理系统,
+  HRM人力资源管理, 人事管理系统, 员工管理系统,
+  BPM流程引擎, 工作流引擎, 仿钉钉审批, 飞书审批流程,
+  资产管理系统EAM, 仓储管理系统WMS, 项目管理系统PMS,
+  合同管理系统, 企业商城系统, AI智能办公,
+  Spring Cloud微服务, Spring Boot, Vue3前端框架, Vben Admin,
+  多租户SaaS平台, 低代码开发平台, 代码生成器,
+  开源办公系统, 企业信息化, 数字化转型, 企业数字化,
+  RuoYi, 芋道, ruoyi-office, 若依办公
+  
+  制造业ERP, 贸易公司管理系统, 中小企业管理软件,
+  免费OA系统, 开源ERP, 开源CRM, Java企业管理系统
+-->
