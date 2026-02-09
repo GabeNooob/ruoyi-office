@@ -33,7 +33,7 @@
 <!-- 请替换为实际微信二维码图片 -->
 <img src="/.image/readme/wechat-qr.png" width="200" alt="微信二维码">
 
-**微信号：Aix9975** · 备注「**RuoYi Office**」即可
+**微信号：17156169080** · 备注「**RuoYi Office**」即可
 
 [![在线演示](https://img.shields.io/badge/🌐_点击体验-在线演示-blue?style=for-the-badge)](http://ruoyioffice.com/web/)
 
@@ -460,7 +460,7 @@ java -jar yudao-server/target/yudao-server.jar
 # 4. 启动前端
 cd ruoyi-office-vben
 pnpm install
-pnpm dev
+npm run dev:antd
 ```
 
 > 📖 更详细的部署文档请查看 [快速启动指南](https://cloud.iocoder.cn/quick-start/)
@@ -527,9 +527,9 @@ pnpm dev
 添加微信好友，备注「**RuoYi Office**」
 
 <!-- 请替换为实际微信二维码图片 -->
-![微信二维码](/.image/readme/wechat-qr.png)
+![微信二维码](/.image/readme/wechat.jpg)
 
-微信号：**Aix9975**
+微信号：**17156169080**
 
 </td>
 <td align="center" width="50%">
@@ -559,7 +559,7 @@ pnpm dev
 <td align="center" width="33%">
 
 #### Step 2️⃣ 添加微信
-扫码或搜索微信号 **Aix9975**
+扫码或搜索微信号 **17156169080**
 <br>备注「**RuoYi Office**」
 
 </td>
