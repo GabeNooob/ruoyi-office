@@ -31,7 +31,7 @@
 ### 💬 扫码添加微信，获取专属技术支持 & 定制方案
 
 <!-- 请替换为实际微信二维码图片 -->
-<img src="/.image/readme/wechat-qr.png" width="200" alt="微信二维码">
+<img src="/.image/readme/wechat.jpg" width="200" alt="微信二维码">
 
 **微信号：17156169080** · 备注「**RuoYi Office**」即可
 
