@@ -14,7 +14,7 @@ import java.util.Map;
  * 支持流程实例事件和任务事件的统一通知
  * 支持 ApplicationEvent、MQ、Feign 等多种通知方式
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Data
 @Builder

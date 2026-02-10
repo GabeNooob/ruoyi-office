@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * BPM 流程实例状态变化的 Redis Stream 消息
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

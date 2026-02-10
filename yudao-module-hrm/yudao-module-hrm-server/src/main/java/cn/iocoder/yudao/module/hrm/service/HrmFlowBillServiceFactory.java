@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * HRM 流程表单服务工厂
  *
- * @author 芋道
+ * @author 宇擎
  */
 @Component
 public class HrmFlowBillServiceFactory extends FlowBillServiceFactory<HrmBillTypeEnum> {

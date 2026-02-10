@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * 项目的启动类
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @SpringBootApplication
 public class OaServerApplication {

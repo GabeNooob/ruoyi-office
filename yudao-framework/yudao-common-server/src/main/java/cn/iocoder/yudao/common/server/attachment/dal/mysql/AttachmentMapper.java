@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 通用附件信息 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface AttachmentMapper extends BaseMapperX<AttachmentDO> {

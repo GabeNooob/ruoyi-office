@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 用户首页关联 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface UserHomePageMapper extends BaseMapperX<UserHomePageDO> {

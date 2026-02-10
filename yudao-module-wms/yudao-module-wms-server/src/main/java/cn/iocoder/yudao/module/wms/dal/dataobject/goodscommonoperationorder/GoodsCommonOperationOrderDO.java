@@ -14,7 +14,7 @@ import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 /**
  * 领用、退库、归还、借用、调拨主 DO
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @TableName("wms_goods_common_operation_order")
 @KeySequence("wms_goods_common_operation_order_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -141,4 +141,4 @@ public class GoodsCommonOperationOrderDO extends BaseDO {
     private String remark;
 
 
-}
+}

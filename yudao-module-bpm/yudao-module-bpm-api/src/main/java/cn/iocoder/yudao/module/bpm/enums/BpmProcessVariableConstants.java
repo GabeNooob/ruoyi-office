@@ -5,7 +5,7 @@ package cn.iocoder.yudao.module.bpm.enums;
  * 
  * 定义流程中通用的变量名称，用于在待办列表中显示关键业务信息
  * 
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface BpmProcessVariableConstants {
 

@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class NoticePageReqVO extends PageParam {
 
-    @Schema(description = "通知公告名称，模糊匹配", example = "芋道")
+    @Schema(description = "通知公告名称，模糊匹配", example = "宇擎")
     private String title;
 
     @Schema(description = "公告类型，字典类型：system_notice_type", example = "1")

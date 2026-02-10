@@ -39,7 +39,7 @@ import static cn.iocoder.yudao.framework.common.util.json.JsonUtils.toJsonString
 /**
  * 权限 Service 实现类
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Service
 @Slf4j

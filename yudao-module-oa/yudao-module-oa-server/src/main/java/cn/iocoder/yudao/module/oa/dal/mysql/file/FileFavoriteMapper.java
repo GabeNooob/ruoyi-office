@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * 企业云盘-收藏文件 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface FileFavoriteMapper extends BaseMapperX<FileFavoriteDO> {

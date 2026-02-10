@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 采购订单明细 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface PurchaseOrderDetailMapper extends BaseMapperX<PurchaseOrderDetailDO> {

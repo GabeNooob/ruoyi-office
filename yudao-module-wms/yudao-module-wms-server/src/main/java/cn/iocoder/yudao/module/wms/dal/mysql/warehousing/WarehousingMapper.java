@@ -12,7 +12,7 @@ import cn.iocoder.yudao.module.wms.controller.admin.warehousing.vo.*;
 /**
  * 仓库信息 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface WarehousingMapper extends BaseMapperX<WarehousingDO> {

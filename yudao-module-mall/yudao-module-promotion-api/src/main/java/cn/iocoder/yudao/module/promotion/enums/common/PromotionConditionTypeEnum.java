@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * 营销的条件类型枚举
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @AllArgsConstructor
 @Getter

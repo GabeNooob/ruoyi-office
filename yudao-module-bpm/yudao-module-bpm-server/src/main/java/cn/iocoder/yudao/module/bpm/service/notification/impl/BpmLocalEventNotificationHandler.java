@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * 本地事件通知处理器
  * 适用于单体架构或同一JVM内的服务通信
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 @Component

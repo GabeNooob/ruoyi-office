@@ -38,7 +38,7 @@ import static cn.iocoder.yudao.framework.common.util.collection.CollectionUtils.
 /**
  * IoT 设备【属性】数据 Service 实现类
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Service
 @Slf4j

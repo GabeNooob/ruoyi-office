@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  * 订阅消息总线的设备下行消息，并通过 WebSocket 发送到设备
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 public class IotMqttWsDownstreamSubscriber implements IotMessageSubscriber<IotDeviceMessage> {

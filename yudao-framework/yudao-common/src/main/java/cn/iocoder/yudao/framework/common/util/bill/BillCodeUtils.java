@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * 生成格式：系统代码+前缀+"-"+日期+流水号
  * 示例：OA001-2025061400001
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Component
 public class BillCodeUtils {

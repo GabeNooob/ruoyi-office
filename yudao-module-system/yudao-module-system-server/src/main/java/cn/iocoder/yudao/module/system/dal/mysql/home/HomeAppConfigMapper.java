@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 系统级应用配置 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface HomeAppConfigMapper extends BaseMapperX<HomeAppConfigDO> {

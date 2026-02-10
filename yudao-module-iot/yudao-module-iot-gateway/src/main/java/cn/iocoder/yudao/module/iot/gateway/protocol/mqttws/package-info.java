@@ -9,7 +9,7 @@
  * - QoS 0/1/2 消息质量保证
  * - 双向消息通信（上行/下行）
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 package cn.iocoder.yudao.module.iot.gateway.protocol.mqttws;
 

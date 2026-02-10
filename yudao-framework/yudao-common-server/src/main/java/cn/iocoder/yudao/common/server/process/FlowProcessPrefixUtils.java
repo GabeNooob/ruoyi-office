@@ -9,7 +9,7 @@ import cn.iocoder.yudao.framework.common.enums.SystemEnum;
  * <p>统一使用 {@link SystemEnum#getCode()} 的前两位（大小写不敏感）作为流程前缀，
  * 通过前缀判断流程是否属于当前业务模块。</p>
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public final class FlowProcessPrefixUtils {
 

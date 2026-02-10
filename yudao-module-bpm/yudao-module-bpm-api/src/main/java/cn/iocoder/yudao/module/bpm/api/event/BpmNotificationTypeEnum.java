@@ -6,7 +6,7 @@ import lombok.Getter;
 /**
  * BPM 流程通知方式枚举
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Getter
 @AllArgsConstructor

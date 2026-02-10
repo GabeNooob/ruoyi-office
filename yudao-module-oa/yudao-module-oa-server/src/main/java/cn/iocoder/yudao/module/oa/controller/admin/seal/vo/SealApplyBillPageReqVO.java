@@ -45,7 +45,7 @@ public class SealApplyBillPageReqVO extends PageParam {
     @Schema(description = "公司ID", example = "1")
     private Long companyId;
 
-    @Schema(description = "公司名称", example = "芋道科技")
+    @Schema(description = "公司名称", example = "宇擎科技")
     private String companyName;
 
     @Schema(description = "部门ID", example = "1")

@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
  * BPM 流程实例信息
  * 包含流程实例相关的所有字段
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Data
 @Builder

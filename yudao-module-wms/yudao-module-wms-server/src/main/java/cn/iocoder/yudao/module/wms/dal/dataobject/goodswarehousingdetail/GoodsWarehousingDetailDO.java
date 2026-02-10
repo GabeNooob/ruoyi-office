@@ -14,7 +14,7 @@ import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
 /**
  * 采购入库、领用、退库、归还、借用、调拨明细 DO
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @TableName("wms_goods_warehousing_detail")
 @KeySequence("wms_goods_warehousing_detail_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -233,4 +233,4 @@ public class GoodsWarehousingDetailDO extends BaseDO {
     private String remark;
 
 
-}
+}

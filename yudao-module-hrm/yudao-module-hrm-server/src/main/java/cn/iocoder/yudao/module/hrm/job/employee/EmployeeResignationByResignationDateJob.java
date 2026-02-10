@@ -19,7 +19,7 @@ import static cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum.APPROVE;
  * 员工离职申请单定时任务：处理已审批通过且到达离职日期的离职申请
  * 每天 01:00 执行一次
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Component
 @Slf4j

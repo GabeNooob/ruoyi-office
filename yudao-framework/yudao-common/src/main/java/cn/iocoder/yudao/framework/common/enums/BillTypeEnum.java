@@ -3,7 +3,7 @@ package cn.iocoder.yudao.framework.common.enums;
 /**
  * 单据类型枚举
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface BillTypeEnum {
 

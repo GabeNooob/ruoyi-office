@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * Feign 通知处理器
  * 适用于实时性要求高的同步调用场景
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 @Component

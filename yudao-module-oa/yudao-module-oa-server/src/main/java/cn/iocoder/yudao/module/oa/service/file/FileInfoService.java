@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * 企业云盘-文件信息 Service 接口
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface FileInfoService {
 

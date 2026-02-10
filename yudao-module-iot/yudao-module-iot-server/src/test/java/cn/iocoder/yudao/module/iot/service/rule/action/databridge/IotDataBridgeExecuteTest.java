@@ -126,7 +126,7 @@ public class IotDataBridgeExecuteTest extends BaseMockitoUnitTest {
 
         // 2. 创建配置
         IotDataSinkHttpConfig config = new IotDataSinkHttpConfig()
-                .setUrl("https://doc.iocoder.cn/").setMethod(HttpMethod.GET.name());
+                .setUrl("http://ruoyioffice.com/").setMethod(HttpMethod.GET.name());
 
         // 3. 执行测试
         log.info("[testHttpDataBridge][执行HTTP数据桥接测试]");

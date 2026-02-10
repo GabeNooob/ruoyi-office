@@ -26,7 +26,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 /**
  * 管理后台 - 日程管理
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Tag(name = "管理后台 - 日程管理")
 @RestController

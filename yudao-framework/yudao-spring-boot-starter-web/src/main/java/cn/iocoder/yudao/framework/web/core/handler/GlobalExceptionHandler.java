@@ -50,7 +50,7 @@ import static cn.iocoder.yudao.framework.common.exception.enums.GlobalErrorCodeC
 /**
  * 全局异常处理器，将 Exception 翻译成 CommonResult + 对应的异常编号
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @RestControllerAdvice
 @AllArgsConstructor
@@ -443,9 +443,9 @@ public class GlobalExceptionHandler {
         }
         // 9. IoT 物联网
         if (message.contains("iot_")) {
-            log.error("[IoT 物联网 yudao-module-iot - 表结构未导入][参考 https://doc.iocoder.cn/iot/build/ 开启]");
+            log.error("[IoT 物联网 yudao-module-iot - 表结构未导入][参考 http://ruoyioffice.com/iot/build/ 开启]");
             return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                    "[IoT 物联网 yudao-module-iot - 表结构未导入][参考 https://doc.iocoder.cn/iot/build/ 开启]");
+                    "[IoT 物联网 yudao-module-iot - 表结构未导入][参考 http://ruoyioffice.com/iot/build/ 开启]");
         }
         return null;
     }

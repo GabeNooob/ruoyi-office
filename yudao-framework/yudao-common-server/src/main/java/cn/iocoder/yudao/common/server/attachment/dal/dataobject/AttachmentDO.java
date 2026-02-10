@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * 通用附件信息 DO
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @TableName("common_attachment")
 @KeySequence("common_attachment_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。

@@ -22,7 +22,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
  * </ul>
  *
  * @param <T> 单据类型枚举
- * @author 芋道
+ * @author 宇擎
  */
 @Slf4j
 public abstract class AbstractFlowNotificationController<T extends BillTypeEnum> {

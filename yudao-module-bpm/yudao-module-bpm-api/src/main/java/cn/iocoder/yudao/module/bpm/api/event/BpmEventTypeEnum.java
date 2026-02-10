@@ -7,7 +7,7 @@ import lombok.Getter;
  * BPM 事件类型枚举
  * 用于区分流程实例事件和任务事件
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Getter
 @AllArgsConstructor

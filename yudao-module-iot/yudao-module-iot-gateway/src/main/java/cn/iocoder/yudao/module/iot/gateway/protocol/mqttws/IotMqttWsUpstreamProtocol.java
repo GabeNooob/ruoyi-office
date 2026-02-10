@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * - 设备认证与连接管理
  * - QoS 0/1/2 消息质量保证
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 public class IotMqttWsUpstreamProtocol {

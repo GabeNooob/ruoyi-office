@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * - PINGREQ：心跳请求
  * - DISCONNECT：设备断开连接
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 public class IotMqttWsUpstreamHandler {

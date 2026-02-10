@@ -110,7 +110,7 @@ public class SealApplyBillSaveReqVO {
     @NotNull(message = "公司ID不能为空")
     private Long companyId;
 
-    @Schema(description = "公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @Schema(description = "公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎科技")
     @NotEmpty(message = "公司名称不能为空")
     private String companyName;
 

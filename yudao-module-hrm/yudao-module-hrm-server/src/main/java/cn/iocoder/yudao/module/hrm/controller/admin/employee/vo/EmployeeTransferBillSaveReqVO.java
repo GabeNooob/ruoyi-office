@@ -52,7 +52,7 @@ public class EmployeeTransferBillSaveReqVO {
     @Schema(description = "员工所属公司ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long empCompanyId;
 
-    @Schema(description = "员工所属公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @Schema(description = "员工所属公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎科技")
     private String empCompanyName;
 
     @Schema(description = "职位", example = "产品经理")
@@ -86,7 +86,7 @@ public class EmployeeTransferBillSaveReqVO {
     @Schema(description = "原公司ID", example = "1")
     private Long originalCompanyId;
 
-    @Schema(description = "原公司名称", example = "芋道科技")
+    @Schema(description = "原公司名称", example = "宇擎科技")
     private String originalCompanyName;
 
     @Schema(description = "原部门ID", example = "1")
@@ -98,7 +98,7 @@ public class EmployeeTransferBillSaveReqVO {
     @Schema(description = "变更为公司ID", example = "2")
     private Long newCompanyId;
 
-    @Schema(description = "变更为公司名称", example = "芋道科技（上海）")
+    @Schema(description = "变更为公司名称", example = "宇擎科技（上海）")
     private String newCompanyName;
 
     @Schema(description = "变更为部门ID", example = "2")
@@ -127,7 +127,7 @@ public class EmployeeTransferBillSaveReqVO {
     @NotNull(message = "制单人公司ID不能为空")
     private Long companyId;
 
-    @Schema(description = "制单人公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @Schema(description = "制单人公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎科技")
     @NotEmpty(message = "制单人公司名称不能为空")
     private String companyName;
 

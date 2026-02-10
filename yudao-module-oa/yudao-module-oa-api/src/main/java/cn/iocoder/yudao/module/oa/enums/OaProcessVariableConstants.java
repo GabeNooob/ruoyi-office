@@ -5,7 +5,7 @@ package cn.iocoder.yudao.module.oa.enums;
  * 
  * 定义OA模块中各种业务流程的变量名称，用于在BPM流程中传递业务数据
  * 
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface OaProcessVariableConstants {
 

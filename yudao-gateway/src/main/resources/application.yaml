@@ -302,7 +302,7 @@ knife4j:
       - name: asset-server
         service-name: asset-server
         url: /admin-api/asset/v3/api-docs
---- #################### 芋道相关配置 ####################
+--- #################### 宇擎相关配置 ####################
 
 yudao:
   info:

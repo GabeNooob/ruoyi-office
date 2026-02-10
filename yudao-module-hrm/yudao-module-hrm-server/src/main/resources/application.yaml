@@ -36,7 +36,7 @@ spring:
       time-to-live: 1h # 设置过期时间为 1 小时
 
 server:
-  port: 48101
+  port: 48102
 
 logging:
   file:
@@ -95,7 +95,7 @@ xxl:
       logpath: ${user.home}/logs/xxl-job/${spring.application.name} # 执行器运行日志文件存储磁盘路径
     accessToken: default_token # 执行器通讯TOKEN
 
---- #################### 芋道相关配置 ####################
+--- #################### 宇擎相关配置 ####################
 
 yudao:
   info:

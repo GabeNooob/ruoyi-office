@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 /**
  * 首页组件定义表
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @TableName("system_home_component")
 @KeySequence("system_home_component_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。

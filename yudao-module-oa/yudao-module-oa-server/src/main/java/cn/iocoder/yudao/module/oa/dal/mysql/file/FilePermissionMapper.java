@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 企业云盘-文件权限 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface FilePermissionMapper extends BaseMapperX<FilePermissionDO> {

@@ -1,5 +1,5 @@
 # ================================
-# 芋道后端 yudao-server Docker Compose 配置
+# 宇擎后端 yudao-server Docker Compose 配置
 # ================================
 # 用于在目标服务器一键部署 MySQL、Redis 和后端应用
 #

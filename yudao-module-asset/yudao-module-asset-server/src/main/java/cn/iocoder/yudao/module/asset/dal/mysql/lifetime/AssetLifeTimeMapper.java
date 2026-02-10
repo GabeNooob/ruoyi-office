@@ -12,7 +12,7 @@ import cn.iocoder.yudao.module.asset.controller.admin.lifetime.vo.*;
 /**
  * 资产历史记录 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface AssetLifeTimeMapper extends BaseMapperX<AssetLifeTimeDO> {

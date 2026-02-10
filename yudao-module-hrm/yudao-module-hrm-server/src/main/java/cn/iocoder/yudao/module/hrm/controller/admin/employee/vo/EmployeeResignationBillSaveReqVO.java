@@ -52,7 +52,7 @@ public class EmployeeResignationBillSaveReqVO {
     @Schema(description = "员工所属公司ID", example = "1")
     private Long empCompanyId;
 
-    @Schema(description = "员工所属公司名称", example = "芋道科技")
+    @Schema(description = "员工所属公司名称", example = "宇擎科技")
     private String empCompanyName;
 
     @Schema(description = "职位", example = "产品经理")
@@ -109,7 +109,7 @@ public class EmployeeResignationBillSaveReqVO {
     @NotNull(message = "制单人公司ID不能为空")
     private Long companyId;
 
-    @Schema(description = "制单人公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @Schema(description = "制单人公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎科技")
     @NotEmpty(message = "制单人公司名称不能为空")
     private String companyName;
 

@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * IoT MQTT WebSocket 连接管理器
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 @Component

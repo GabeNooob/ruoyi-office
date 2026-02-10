@@ -7,7 +7,7 @@ import cn.iocoder.yudao.module.system.api.dept.dto.DeptRespDTO;
  * System 模块服务接口
  * 统一封装对 System 模块的远程调用
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface SystemService {
 

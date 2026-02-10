@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 项目启动成功后，提供文档相关的地址
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Component
 @Slf4j
@@ -44,11 +44,11 @@ public class BannerApplicationRunner implements ApplicationRunner {
             // 微信公众号
             System.out.println("[微信公众号 yudao-module-mp 教程][参考 https://cloud.iocoder.cn/mp/build/ 开启]");
             // 支付平台
-            System.out.println("[支付系统 yudao-module-pay - 教程][参考 https://doc.iocoder.cn/pay/build/ 开启]");
+            System.out.println("[支付系统 yudao-module-pay - 教程][参考 http://ruoyioffice.com/pay/build/ 开启]");
             // AI 大模型
             System.out.println("[AI 大模型 yudao-module-ai - 教程][参考 https://cloud.iocoder.cn/ai/build/ 开启]");
             // IOT 物联网
-            System.out.println("[IoT 物联网 yudao-module-iot - 教程][参考 https://doc.iocoder.cn/iot/build/ 开启]");
+            System.out.println("[IoT 物联网 yudao-module-iot - 教程][参考 http://ruoyioffice.com/iot/build/ 开启]");
         });
     }
 
