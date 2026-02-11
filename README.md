@@ -28,12 +28,6 @@
 
 <div align="center">
 
-### 💬 扫码添加微信，获取专属技术支持 & 定制方案
-
-<!-- 请替换为实际微信二维码图片 -->
-<img src="/.image/readme/wechat.jpg" width="200" alt="微信二维码">
-
-**微信号：17156169080** · 备注「**RuoYi Office**」即可
 
 [![在线演示](https://img.shields.io/badge/🌐_点击体验-在线演示-blue?style=for-the-badge)](http://ruoyioffice.com/web/)
 
