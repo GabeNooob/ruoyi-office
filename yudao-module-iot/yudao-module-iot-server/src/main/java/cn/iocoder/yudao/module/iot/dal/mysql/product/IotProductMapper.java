@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * IoT 产品 Mapper
@@ -26,15 +27,24 @@ public interface IotProductMapper extends BaseMapperX<IotProductDO> {
                 .orderByDesc(IotProductDO::getId));
     }
 
+    default List<IotProductDO> selectList(Integer deviceType) {
+        return selectList(new LambdaQueryWrapperX<IotProductDO>()
+                .eqIfPresent(IotProductDO::getDeviceType, deviceType)
+                .orderByDesc(IotProductDO::getId));
+    }
+
     default IotProductDO selectByProductKey(String productKey) {
         return selectOne(new LambdaQueryWrapper<IotProductDO>()
                 .apply("LOWER(product_key) = {0}", productKey.toLowerCase()));
+    }
+
+    default List<IotProductDO> selectListByStatus(Integer status) {
+        return selectList(IotProductDO::getStatus, status);
     }
 
     default Long selectCountByCreateTime(@Nullable LocalDateTime createTime) {
         return selectCount(new LambdaQueryWrapperX<IotProductDO>()
                 .geIfPresent(IotProductDO::getCreateTime, createTime));
     }
-
 
 }

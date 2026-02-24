@@ -124,6 +124,17 @@
             <artifactId>yudao-spring-boot-starter-excel</artifactId>
         </dependency>
 
+        <!-- OkHttp -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- 消息队列相关 -->
         <!-- TODO @芋艿：临时打开 -->
         <dependency>
@@ -141,18 +152,6 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
             <optional>true</optional>
         </dependency>
-
-        <!-- IoT 网络组件：接收来自设备的上行数据 -->
-        <!--        <dependency>-->
-        <!--            <groupId>cn.iocoder.cloud</groupId>-->
-        <!--            <artifactId>yudao-module-iot-net-component-http</artifactId>-->
-        <!--            <version>${revision}</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>cn.iocoder.cloud</groupId>-->
-        <!--            <artifactId>yudao-module-iot-net-component-emqx</artifactId>-->
-        <!--            <version>${revision}</version>-->
-        <!--        </dependency>-->
 
     </dependencies>
 
