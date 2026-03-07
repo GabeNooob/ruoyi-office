@@ -62,7 +62,7 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
         int colIndex = 0;
         boolean ignoreUnannotated = head.isAnnotationPresent(ExcelIgnoreUnannotated.class);
         for (Field field : head.getDeclaredFields()) {
-            // 关联 https://github.com/YunaiV/ruoyi-vue-pro/pull/853
+            // 关联 https://gitee.com/yqzy1688/ruoyi-office.git/pull/853
             // 1.1 忽略 static final 或 transient 的字段
             if (isStaticFinalOrTransient(field) ) {
                 continue;
