@@ -24,7 +24,7 @@ import static cn.iocoder.yudao.module.asset.enums.ErrorCodeConstants.*;
 /**
  * 物品信息 Service 实现类
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Service
 @Validated

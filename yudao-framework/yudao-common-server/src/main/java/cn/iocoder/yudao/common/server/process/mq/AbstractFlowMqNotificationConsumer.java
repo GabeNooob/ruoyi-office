@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * </ul>
  *
  * @param <T> 单据类型枚举
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 public abstract class AbstractFlowMqNotificationConsumer<T extends BillTypeEnum>

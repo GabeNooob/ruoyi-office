@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 日程管理 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface ScheduleMapper extends BaseMapperX<ScheduleDO> {

@@ -12,7 +12,7 @@ import cn.iocoder.yudao.module.wms.controller.admin.purchaseinwarehousing.vo.*;
 /**
  * 采购入库 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface PurchaseInWarehousingMapper extends BaseMapperX<PurchaseInWarehousingDO> {

@@ -23,7 +23,7 @@ import static cn.iocoder.yudao.module.bpm.enums.task.BpmnModelConstants.START_US
  * 通用 BPM 本地事件监听器抽象类
  *
  * @param <T> 单据类型枚举
- * @author 芋道
+ * @author 宇擎
  */
 @Slf4j
 public abstract class AbstractFlowLocalNotificationListener<T extends BillTypeEnum>

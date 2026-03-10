@@ -3,13 +3,13 @@ package cn.iocoder.yudao.module.iot.enums;
 /**
  * IoT 字典类型的枚举类
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public class DictTypeConstants {
 
     public static final String NET_TYPE = "iot_net_type";
-    public static final String LOCATION_TYPE = "iot_location_type";
-    public static final String CODEC_TYPE = "iot_codec_type";
+    public static final String PROTOCOL_TYPE = "iot_protocol_type";
+    public static final String SERIALIZE_TYPE = "iot_serialize_type";
 
     public static final String PRODUCT_STATUS = "iot_product_status";
     public static final String PRODUCT_DEVICE_TYPE = "iot_product_device_type";

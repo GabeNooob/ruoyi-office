@@ -5,7 +5,7 @@ import cn.iocoder.yudao.module.iot.dal.dataobject.device.IotDevicePropertyDO;
 /**
  * IoT Redis Key 枚举类
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface RedisKeyConstants {
 
@@ -83,5 +83,13 @@ public interface RedisKeyConstants {
      * VALUE 数据类型：String 数组(JSON)，即 {@link cn.iocoder.yudao.module.iot.dal.dataobject.rule.IotSceneRuleDO} 列表
      */
     String SCENE_RULE_LIST = "iot:scene_rule_list";
+
+    /**
+     * WebSocket 连接分布式锁
+     * <p>
+     * KEY 格式：websocket_connect_lock:${serverUrl}
+     * 用于保证 WebSocket 重连操作的线程安全
+     */
+    String WEBSOCKET_CONNECT_LOCK = "iot:websocket_connect_lock:%s";
 
 }

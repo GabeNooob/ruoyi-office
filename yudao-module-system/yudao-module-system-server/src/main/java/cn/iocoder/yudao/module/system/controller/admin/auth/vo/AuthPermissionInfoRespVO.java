@@ -38,7 +38,7 @@ public class AuthPermissionInfoRespVO {
         @Schema(description = "用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
         private Long id;
 
-        @Schema(description = "用户昵称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道源码")
+        @Schema(description = "用户昵称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎源码")
         private String nickname;
 
         @Schema(description = "用户头像", requiredMode = Schema.RequiredMode.REQUIRED, example = "https://www.iocoder.cn/xx.jpg")
@@ -56,7 +56,7 @@ public class AuthPermissionInfoRespVO {
         @Schema(description = "公司编号", example = "1024")
         private Long companyId;
 
-        @Schema(description = "公司名称", example = "芋道源码有限公司")
+        @Schema(description = "公司名称", example = "宇擎源码有限公司")
         private String companyName;
 
         @Schema(description = "部门名称", example = "研发部")
@@ -71,13 +71,13 @@ public class AuthPermissionInfoRespVO {
     @Builder
     public static class MenuVO {
 
-        @Schema(description = "菜单名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道")
+        @Schema(description = "菜单名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎")
         private Long id;
 
         @Schema(description = "父菜单 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
         private Long parentId;
 
-        @Schema(description = "菜单名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道")
+        @Schema(description = "菜单名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎")
         private String name;
 
         @Schema(description = "路由地址,仅菜单类型为菜单或者目录时，才需要传", example = "post")

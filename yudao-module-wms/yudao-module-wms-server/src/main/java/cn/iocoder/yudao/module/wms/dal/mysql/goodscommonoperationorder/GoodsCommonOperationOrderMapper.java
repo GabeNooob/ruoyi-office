@@ -12,7 +12,7 @@ import cn.iocoder.yudao.module.wms.controller.admin.goodscommonoperationorder.vo
 /**
  * 领用、退库、归还、借用、调拨主 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface GoodsCommonOperationOrderMapper extends BaseMapperX<GoodsCommonOperationOrderDO> {

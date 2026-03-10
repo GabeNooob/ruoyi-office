@@ -25,7 +25,7 @@ package cn.iocoder.yudao.framework.common.exception.enums;
  *       不限制规则。
  *       一般建议，每个模块自增。
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public class ServiceErrorCodeRange {
 

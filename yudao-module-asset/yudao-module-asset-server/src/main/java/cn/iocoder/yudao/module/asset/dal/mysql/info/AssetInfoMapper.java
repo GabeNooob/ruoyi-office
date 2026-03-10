@@ -12,7 +12,7 @@ import cn.iocoder.yudao.module.asset.controller.admin.info.vo.*;
 /**
  * 资产信息 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface AssetInfoMapper extends BaseMapperX<AssetInfoDO> {

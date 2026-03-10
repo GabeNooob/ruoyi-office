@@ -23,7 +23,7 @@ import static cn.iocoder.yudao.module.asset.enums.ErrorCodeConstants.*;
 /**
  * 资产类别 Service 实现类
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Service
 @Validated

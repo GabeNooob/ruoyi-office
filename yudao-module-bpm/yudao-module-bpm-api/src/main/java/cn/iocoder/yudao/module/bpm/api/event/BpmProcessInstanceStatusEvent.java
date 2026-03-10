@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * 流程实例的状态（结果）发生变化的 Event
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @SuppressWarnings("ALL")
 @Data

@@ -6,7 +6,7 @@ import cn.iocoder.yudao.module.bpm.api.event.BpmNotificationTypeEnum;
 /**
  * BPM 流程通知处理器接口
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface BpmNotificationHandler {
 

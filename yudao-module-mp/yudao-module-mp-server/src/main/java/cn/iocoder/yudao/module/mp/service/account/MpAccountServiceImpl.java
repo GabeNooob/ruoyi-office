@@ -60,7 +60,7 @@ public class MpAccountServiceImpl implements MpAccountService {
     private MpAccountMapper mpAccountMapper;
 
     @Resource
-    @Lazy // 延迟加载，解决循环依赖的问题
+    @Lazy // 延迟加载，解决循环依赖
     private MpServiceFactory mpServiceFactory;
 
     @Override
@@ -76,7 +76,7 @@ public class MpAccountServiceImpl implements MpAccountService {
                 if (!ex.getMessage().contains("doesn't exist")) {
                     throw ex;
                 }
-                log.error("[微信公众号 yudao-module-mp - 表结构未导入][参考 https://doc.iocoder.cn/mp/build/ 开启]");
+                log.error("[微信公众号 yudao-module-mp - 表结构未导入][参考 http://ruoyioffice.com/mp/build/ 开启]");
             }
             log.info("[initLocalCacheIfUpdate][缓存公众号账号，数量为:{}]", accounts.size());
 

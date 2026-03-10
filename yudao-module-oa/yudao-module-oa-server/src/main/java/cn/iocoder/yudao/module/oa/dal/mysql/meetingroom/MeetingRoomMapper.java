@@ -12,7 +12,7 @@ import cn.iocoder.yudao.module.oa.controller.admin.meetingroom.vo.*;
 /**
  * 会议室信息 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface MeetingRoomMapper extends BaseMapperX<MeetingRoomDO> {

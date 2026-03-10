@@ -38,7 +38,7 @@ import static cn.iocoder.yudao.module.iot.enums.ErrorCodeConstants.DATA_RULE_NOT
 /**
  * IoT 数据流转规则 Service 实现类
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Service
 @Validated
@@ -269,6 +269,10 @@ public class IotDataRuleServiceImpl implements IotDataRuleService {
     private void executeDataRuleAction(IotDeviceMessage message, IotDataSinkDO dataSink) {
         dataRuleActions.forEach(action -> {
             if (ObjUtil.notEqual(action.getType(), dataSink.getType())) {
+                return;
+            }
+            if (CommonStatusEnum.isDisable(dataSink.getStatus())) {
+                log.warn("[executeDataRuleAction][消息({}) 数据目的({}) 状态为禁用]", message.getId(), dataSink.getId());
                 return;
             }
             try {

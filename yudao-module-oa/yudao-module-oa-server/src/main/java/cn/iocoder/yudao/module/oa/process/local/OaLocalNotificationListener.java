@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * OA 模块统一BPM事件监听器
  * 支持流程实例事件和任务事件的统一处理
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Component
 public class OaLocalNotificationListener extends AbstractFlowLocalNotificationListener<OaBillTypeEnum> {

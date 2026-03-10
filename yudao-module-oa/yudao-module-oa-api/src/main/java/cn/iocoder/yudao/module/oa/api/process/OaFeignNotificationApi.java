@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * OA 流程回调 API 接口
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @FeignClient(name = ApiConstants.NAME, contextId = "oaProcessCallbackApi")
 public interface OaFeignNotificationApi {

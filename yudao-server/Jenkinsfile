@@ -1,5 +1,5 @@
 /**
- * 芋道后端 yudao-server 自动化部署 Pipeline
+ * 宇擎后端 yudao-server 自动化部署 Pipeline
  *
  * 功能：
  * - 从 Git 仓库拉取代码

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * WMS 流程状态通知消息消费者
  * 监听来自BPM服务的流程状态变化消息
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 @Component

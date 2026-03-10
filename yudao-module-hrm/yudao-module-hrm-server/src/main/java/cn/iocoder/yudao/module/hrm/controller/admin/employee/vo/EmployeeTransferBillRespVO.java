@@ -67,7 +67,7 @@ public class EmployeeTransferBillRespVO {
     @ExcelProperty("员工所属公司ID")
     private Long empCompanyId;
 
-    @Schema(description = "员工所属公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @Schema(description = "员工所属公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎科技")
     @ExcelProperty("员工所属公司名称")
     private String empCompanyName;
 
@@ -112,7 +112,7 @@ public class EmployeeTransferBillRespVO {
     @ExcelProperty("原公司ID")
     private Long originalCompanyId;
 
-    @Schema(description = "原公司名称", example = "芋道科技")
+    @Schema(description = "原公司名称", example = "宇擎科技")
     @ExcelProperty("原公司名称")
     private String originalCompanyName;
 
@@ -128,7 +128,7 @@ public class EmployeeTransferBillRespVO {
     @ExcelProperty("变更为公司ID")
     private Long newCompanyId;
 
-    @Schema(description = "变更为公司名称", example = "芋道科技（上海）")
+    @Schema(description = "变更为公司名称", example = "宇擎科技（上海）")
     @ExcelProperty("变更为公司名称")
     private String newCompanyName;
 
@@ -162,7 +162,7 @@ public class EmployeeTransferBillRespVO {
     @ExcelProperty("制单人公司ID")
     private Long companyId;
 
-    @Schema(description = "制单人公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @Schema(description = "制单人公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎科技")
     @ExcelProperty("制单人公司名称")
     private String companyName;
 

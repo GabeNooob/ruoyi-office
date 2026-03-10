@@ -5,7 +5,7 @@ package cn.iocoder.yudao.module.iot.core.messagebus.core;
  *
  * 用于处理从消息总线接收到的消息
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface IotMessageSubscriber<T> {
 
@@ -25,5 +25,17 @@ public interface IotMessageSubscriber<T> {
      * @param message 消息内容
      */
     void onMessage(T message);
+
+    /**
+     * 启动订阅
+     */
+    default void start() {
+    }
+
+    /**
+     * 停止订阅
+     */
+    default void stop() {
+    }
 
 }

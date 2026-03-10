@@ -12,7 +12,7 @@ import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.EmployeeResignat
 /**
  * 员工离职申请单 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface EmployeeResignationBillMapper extends BaseMapperX<EmployeeResignationBillDO> {

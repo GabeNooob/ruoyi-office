@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 员工教育经历 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface EmployeeEducationMapper extends BaseMapperX<EmployeeEducationDO> {

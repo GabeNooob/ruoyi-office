@@ -145,7 +145,7 @@ public class SealApplyBillRespVO {
     @ExcelProperty("公司ID")
     private Long companyId;
 
-    @Schema(description = "公司名称", example = "芋道科技")
+    @Schema(description = "公司名称", example = "宇擎科技")
     @ExcelProperty("公司名称")
     private String companyName;
 

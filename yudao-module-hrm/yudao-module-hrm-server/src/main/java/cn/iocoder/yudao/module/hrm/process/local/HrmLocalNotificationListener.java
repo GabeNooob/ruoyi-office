@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 /**
  * HRM 模块 BPM 本地事件监听
  *
- * @author 芋道
+ * @author 宇擎
  */
 @Component
 public class HrmLocalNotificationListener extends AbstractFlowLocalNotificationListener<HrmBillTypeEnum> {

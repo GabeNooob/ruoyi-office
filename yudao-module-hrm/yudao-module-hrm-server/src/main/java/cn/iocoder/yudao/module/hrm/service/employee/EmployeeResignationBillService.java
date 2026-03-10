@@ -9,7 +9,7 @@ import cn.iocoder.yudao.framework.common.pojo.PageResult;
 /**
  * 员工离职申请单 Service 接口
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface EmployeeResignationBillService {
 

@@ -38,7 +38,7 @@ public class EmployeeEntryBillPageReqVO extends PageParam {
     @Schema(description = "员工所属公司ID", example = "1")
     private Long empCompanyId;
 
-    @Schema(description = "员工所属公司名称", example = "芋道科技")
+    @Schema(description = "员工所属公司名称", example = "宇擎科技")
     private String empCompanyName;
 
     @Schema(description = "人员状态", example = "2")

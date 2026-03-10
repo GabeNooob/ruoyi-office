@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 用户应用配置 Response VO
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Schema(description = "管理后台 - 用户应用配置 Response VO")
 @Data

@@ -38,7 +38,7 @@ import static cn.iocoder.yudao.module.bpm.enums.task.BpmTaskStatusEnum.APPROVE;
 /**
  * 员工离职申请单 Service 实现类
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 @Service

@@ -7,7 +7,6 @@ import cn.iocoder.yudao.module.iot.controller.admin.statistics.vo.IotStatisticsD
 import cn.iocoder.yudao.module.iot.core.mq.message.IotDeviceMessage;
 import cn.iocoder.yudao.module.iot.dal.dataobject.device.IotDeviceDO;
 import cn.iocoder.yudao.module.iot.dal.dataobject.device.IotDeviceMessageDO;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import javax.annotation.Nullable;
@@ -17,7 +16,7 @@ import java.util.List;
 /**
  * IoT 设备消息 Service 接口
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface IotDeviceMessageService {
 
@@ -75,7 +74,7 @@ public interface IotDeviceMessageService {
      */
     List<IotDeviceMessageDO> getDeviceMessageListByRequestIdsAndReply(
             @NotNull(message = "设备编号不能为空") Long deviceId,
-            @NotEmpty(message = "请求编号不能为空") List<String> requestIds,
+            List<String> requestIds,
             Boolean reply);
 
     /**

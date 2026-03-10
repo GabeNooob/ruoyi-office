@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * IoT 设备信息 Response DTO
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Data
 public class IotDeviceRespDTO {
@@ -34,8 +34,12 @@ public class IotDeviceRespDTO {
      */
     private Long productId;
     /**
-     * 编解码器类型
+     * 协议类型
      */
-    private String codecType;
+    private String protocolType;
+    /**
+     * 序列化类型
+     */
+    private String serializeType;
 
 }

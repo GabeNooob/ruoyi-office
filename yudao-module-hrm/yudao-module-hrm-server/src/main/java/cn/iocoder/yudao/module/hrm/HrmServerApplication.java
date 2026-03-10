@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * 项目的启动类
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @SpringBootApplication
 public class HrmServerApplication {

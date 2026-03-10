@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 首页组件 Service 接口
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 public interface HomeComponentService {
 

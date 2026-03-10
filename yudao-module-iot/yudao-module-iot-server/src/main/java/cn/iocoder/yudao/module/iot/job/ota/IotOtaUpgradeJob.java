@@ -3,7 +3,7 @@ package cn.iocoder.yudao.module.iot.job.ota;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.iocoder.yudao.framework.tenant.core.job.TenantJob;
-import cn.iocoder.yudao.module.iot.core.enums.IotDeviceStateEnum;
+import cn.iocoder.yudao.module.iot.core.enums.device.IotDeviceStateEnum;
 import cn.iocoder.yudao.module.iot.dal.dataobject.device.IotDeviceDO;
 import cn.iocoder.yudao.module.iot.dal.dataobject.ota.IotOtaFirmwareDO;
 import cn.iocoder.yudao.module.iot.dal.dataobject.ota.IotOtaTaskRecordDO;
@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * IoT OTA 升级推送 Job：查询待推送的 OTA 升级记录，并推送给设备
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Component
 @Slf4j

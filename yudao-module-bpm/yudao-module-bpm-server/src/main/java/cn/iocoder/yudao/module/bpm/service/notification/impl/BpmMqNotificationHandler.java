@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * MQ 通知处理器
  * 适用于异步、高吞吐量的跨服务通信场景
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 @Component

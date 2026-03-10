@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * BPM 任务信息
  * 包含任务相关的所有字段
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Data
 @Builder

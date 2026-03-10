@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 采购入库、领用、退库、归还、借用、调拨明细 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface GoodsWarehousingDetailMapper extends BaseMapperX<GoodsWarehousingDetailDO> {

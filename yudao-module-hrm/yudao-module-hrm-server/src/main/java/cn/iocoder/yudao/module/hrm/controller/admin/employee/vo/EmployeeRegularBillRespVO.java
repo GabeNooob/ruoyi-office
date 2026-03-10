@@ -63,7 +63,7 @@ public class EmployeeRegularBillRespVO {
     @ExcelProperty("员工所属公司ID")
     private Long empCompanyId;
 
-    @Schema(description = "员工所属公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @Schema(description = "员工所属公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎科技")
     @ExcelProperty("员工所属公司名称")
     private String empCompanyName;
 
@@ -111,7 +111,7 @@ public class EmployeeRegularBillRespVO {
     @ExcelProperty("制单人公司ID")
     private Long companyId;
 
-    @Schema(description = "制单人公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "芋道科技")
+    @Schema(description = "制单人公司名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "宇擎科技")
     @ExcelProperty("制单人公司名称")
     private String companyName;
 

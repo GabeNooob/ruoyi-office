@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 首页组件 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface HomeComponentMapper extends BaseMapperX<HomeComponentDO> {

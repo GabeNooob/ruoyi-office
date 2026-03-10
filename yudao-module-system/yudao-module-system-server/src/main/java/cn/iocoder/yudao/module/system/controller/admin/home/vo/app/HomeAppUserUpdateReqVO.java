@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  * 用户应用配置 Update Request VO
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Schema(description = "管理后台 - 用户应用配置更新 Request VO")
 @Data

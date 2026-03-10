@@ -15,7 +15,7 @@
     <description>
         OpenFeign：提供 RESTful API 的调用
     </description>
-    <url>https://github.com/YunaiV/ruoyi-vue-pro</url>
+    <url>https://gitee.com/yqzy1688/ruoyi-office.git</url>
 
     <dependencies>
         <dependency>

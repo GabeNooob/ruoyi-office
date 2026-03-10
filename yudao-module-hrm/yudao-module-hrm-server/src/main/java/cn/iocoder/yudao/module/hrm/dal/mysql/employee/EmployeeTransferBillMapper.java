@@ -12,7 +12,7 @@ import cn.iocoder.yudao.module.hrm.controller.admin.employee.vo.EmployeeTransfer
 /**
  * 人事调动申请单 Mapper
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Mapper
 public interface EmployeeTransferBillMapper extends BaseMapperX<EmployeeTransferBillDO> {

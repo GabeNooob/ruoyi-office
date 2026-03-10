@@ -34,11 +34,11 @@
     </modules>
 
     <name>${project.artifactId}</name>
-    <description>芋道项目基础脚手架</description>
-    <url>https://github.com/YunaiV/ruoyi-vue-pro</url>
+    <description>宇擎项目基础脚手架</description>
+    <url>https://gitee.com/yqzy1688/ruoyi-office.git</url>
 
     <properties>
-        <revision>2025.12-SNAPSHOT</revision>
+        <revision>2026.01-SNAPSHOT</revision>
         <!-- Maven 相关 -->
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>

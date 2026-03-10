@@ -13,7 +13,7 @@ import static cn.iocoder.yudao.module.bpm.enums.BpmProcessVariableConstants.*;
  * BPM 流程变量工具类
  * 提供统一的流程变量创建方法，确保待办列表能够显示关键业务信息
  * 
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Slf4j
 public class BpmProcessVariableUtils {

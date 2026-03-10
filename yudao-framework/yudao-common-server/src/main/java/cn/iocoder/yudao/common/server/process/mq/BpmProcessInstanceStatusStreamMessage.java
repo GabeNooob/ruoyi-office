@@ -19,7 +19,7 @@ import java.util.Map;
  * <p>
  * 用于 MQ 消息传递，继承 {@link AbstractRedisStreamMessage} 以支持 Redis Stream
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @Data
 @Builder

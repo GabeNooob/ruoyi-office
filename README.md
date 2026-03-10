@@ -28,12 +28,6 @@
 
 <div align="center">
 
-### 💬 扫码添加微信，获取专属技术支持 & 定制方案
-
-<!-- 请替换为实际微信二维码图片 -->
-<img src="/.image/readme/wechat.jpg" width="200" alt="微信二维码">
-
-**微信号：17156169080** · 备注「**RuoYi Office**」即可
 
 [![在线演示](https://img.shields.io/badge/🌐_点击体验-在线演示-blue?style=for-the-badge)](http://ruoyioffice.com/web/)
 
@@ -636,7 +630,7 @@ npm run dev:antd
   Spring Cloud微服务, Spring Boot, Vue3前端框架, Vben Admin,
   多租户SaaS平台, 低代码开发平台, 代码生成器,
   开源办公系统, 企业信息化, 数字化转型, 企业数字化,
-  RuoYi, 芋道, ruoyi-office, 若依办公
+  RuoYi, 宇擎, ruoyi-office, 若依办公
   
   制造业ERP, 贸易公司管理系统, 中小企业管理软件,
   免费OA系统, 开源ERP, 开源CRM, Java企业管理系统

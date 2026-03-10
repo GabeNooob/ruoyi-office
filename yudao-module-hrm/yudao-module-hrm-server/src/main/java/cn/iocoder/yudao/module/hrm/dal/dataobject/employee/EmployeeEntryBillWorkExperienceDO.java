@@ -11,7 +11,7 @@ import java.time.LocalDate;
 /**
  * 员工入职申请单工作经历 DO
  *
- * @author 芋道源码
+ * @author 宇擎源码
  */
 @TableName("hrm_employee_entry_bill_work_experience")
 @KeySequence("hrm_employee_entry_bill_work_experience_seq")
