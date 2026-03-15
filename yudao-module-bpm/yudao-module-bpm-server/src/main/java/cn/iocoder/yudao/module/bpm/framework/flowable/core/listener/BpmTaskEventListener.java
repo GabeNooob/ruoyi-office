@@ -99,7 +99,7 @@ public class BpmTaskEventListener extends AbstractFlowableEngineEventListener {
         String processDefinitionId = event.getProcessDefinitionId();
         BpmnModel bpmnModel = modelService.getBpmnModelByDefinitionId(processDefinitionId);
         Job entity = (Job) event.getEntity();
-        // 特殊 from https://t.zsxq.com/h6oWr ：当 elementId 为空时，尝试从 JobHandlerConfiguration 中解析 JSON 获取
+        // 特殊 from https://ruoyioffice.com/h6oWr ：当 elementId 为空时，尝试从 JobHandlerConfiguration 中解析 JSON 获取
         String elementId = entity.getElementId();
         if (elementId == null && entity.getJobHandlerConfiguration() != null) {
             try {

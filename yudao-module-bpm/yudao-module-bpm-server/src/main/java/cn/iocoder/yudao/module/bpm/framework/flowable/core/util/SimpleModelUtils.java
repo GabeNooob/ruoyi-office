@@ -596,7 +596,7 @@ public class SimpleModelUtils {
     private static class ParallelBranchNodeConvert implements NodeConvert {
 
         /**
-         * 并行分支使用包容网关。需要设置所有出口条件表达式的值为 true 。原因是，解决 https://t.zsxq.com/m6GXh 反馈问题
+         * 并行分支使用包容网关。需要设置所有出口条件表达式的值为 true 。原因是，解决 https://ruoyioffice.com/m6GXh 反馈问题
          *
          * @see {@link ConditionNodeConvert#buildSequenceFlow}
          */

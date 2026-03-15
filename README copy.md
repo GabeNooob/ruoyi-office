@@ -14,15 +14,15 @@
 
 如果这个项目让你有所收获，记得 Star 关注哦，这对我是非常不错的鼓励与支持。
 
-可参考 [《迁移文档》](https://cloud.iocoder.cn/migrate-module/) ，只需要 5-10 分钟，即可将【完整版】按需迁移到【精简版】
+可参考 [《迁移文档》](https://ruoyioffice.com/migrate-module/) ，只需要 5-10 分钟，即可将【完整版】按需迁移到【精简版】
 
 ## 🐶 新手必读
 
 * 演示地址【Vue3 + element-plus】：<http://dashboard-vue3.yudao.iocoder.cn>
 * 演示地址【Vue3 + vben(ant-design-vue)】：<http://dashboard-vben.yudao.iocoder.cn>
 * 演示地址【Vue2 + element-ui】：<http://dashboard.yudao.iocoder.cn>
-* 启动文档：<https://cloud.iocoder.cn/quick-start/>
-* 视频教程：<https://cloud.iocoder.cn/video/>
+* 启动文档：<https://ruoyioffice.com/quick-start/>
+* 视频教程：<https://ruoyioffice.com/video/>
 
 ## 🐰 版本说明
 
@@ -34,7 +34,7 @@
 * 【完整版】：包括系统功能、基础设施、会员中心、数据报表、工作流程、商城系统、微信公众号、CRM、ERP 等功能
 * 【精简版】：只包括系统功能、基础设施功能，不包括会员中心、数据报表、工作流程、商城系统、微信公众号、CRM、ERP 等功能
 
-可参考 [《迁移文档》](https://cloud.iocoder.cn/migrate-module/) ，只需要 5-10 分钟，即可将【完整版】按需迁移到【精简版】
+可参考 [《迁移文档》](https://ruoyioffice.com/migrate-module/) ，只需要 5-10 分钟，即可将【完整版】按需迁移到【精简版】
 
 ## 🐯 平台简介
 
@@ -251,7 +251,7 @@
 
 ### 商城系统
 
-演示地址：<https://cloud.iocoder.cn/mall-preview/>
+演示地址：<https://ruoyioffice.com/mall-preview/>
 
 ![功能图](/.image/common/mall-feature.png)
 
@@ -269,19 +269,19 @@
 
 ### ERP 系统
 
-演示地址：<https://cloud.iocoder.cn/erp-preview/>
+演示地址：<https://ruoyioffice.com/erp-preview/>
 
 ![功能图](/.image/common/erp-feature.png)
 
 ### CRM 系统
 
-演示地址：<https://cloud.iocoder.cn/crm-preview/>
+演示地址：<https://ruoyioffice.com/crm-preview/>
 
 ![功能图](/.image/common/crm-feature.png)
 
 ### AI 大模型
 
-演示地址：<https://cloud.iocoder.cn/ai-preview/>
+演示地址：<https://ruoyioffice.com/ai-preview/>
 
 ![功能图](/.image/common/ai-feature.png)
 

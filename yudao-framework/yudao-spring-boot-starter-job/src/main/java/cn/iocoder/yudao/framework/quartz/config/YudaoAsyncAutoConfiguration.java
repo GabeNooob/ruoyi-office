@@ -30,7 +30,7 @@ public class YudaoAsyncAutoConfiguration {
                     return executor;
                 }
                 // 处理 SimpleAsyncTaskExecutor
-                // 参考 https://t.zsxq.com/CBoks 增加
+                // 参考 https://ruoyioffice.com/CBoks 增加
                 if (bean instanceof SimpleAsyncTaskExecutor) {
                     SimpleAsyncTaskExecutor executor = (SimpleAsyncTaskExecutor) bean;
                     executor.setTaskDecorator(TtlRunnable::get);

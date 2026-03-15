@@ -10,7 +10,7 @@
 
 ## 配置步骤
 
-根据 [XXL-Job 使用文档](https://cloud.iocoder.cn/job/#_4-%E6%9B%B4%E5%A4%9A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B)：
+根据 [XXL-Job 使用文档](https://ruoyioffice.com/job/#_4-%E6%9B%B4%E5%A4%9A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B)：
 
 ### 1. 确保 XXL-Job 调度中心已启动
 

@@ -168,7 +168,7 @@ public class JmReportTokenServiceImpl implements JmReportTokenServiceI {
 
         // 参见文档 https://help.jimureport.com/prodSafe/ 文档
         // 适配：如果是本系统的管理员，则返回积木报表（仪表盘/大屏设计器）的所有权限指令
-        // 如果不处理，会碰到 https://t.zsxq.com/yzlkA 反馈的问题
+        // 如果不处理，会碰到 https://ruoyioffice.com/yzlkA 反馈的问题
         Long userId = SecurityFrameworkUtils.getLoginUserId();
         if (permissionApi.hasAnyRoles(userId, RoleCodeEnum.SUPER_ADMIN.getCode()).getCheckedData()) {
             return new String[]{

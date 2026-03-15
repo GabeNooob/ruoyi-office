@@ -283,7 +283,7 @@ public class CouponServiceImpl implements CouponService {
             throw exception(COUPON_TEMPLATE_CANNOT_TAKE);
         }
         // 校验剩余发放数量是否充足（仅在 CouponTakeTypeEnum.USER 用户领取时）
-        // 关联案例：https://t.zsxq.com/mElGQ、https://t.zsxq.com/6pLzr
+        // 关联案例：https://ruoyioffice.com/mElGQ、https://ruoyioffice.com/6pLzr
         if (CouponTakeTypeEnum.isUser(couponTemplate.getTakeType())
                 && !couponTemplateService.isTotalCountUnlimited(couponTemplate.getTotalCount()) // 校验不限制总发放数量
                 && couponTemplate.getTakeCount() > couponTemplate.getTotalCount()) { // 已领取数量 > 总发放数量

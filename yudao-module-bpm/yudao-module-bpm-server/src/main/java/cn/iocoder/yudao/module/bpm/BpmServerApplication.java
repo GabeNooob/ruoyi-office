@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * 项目的启动类
  *
- * 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
- * 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
- * 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
+ * 如果你碰到启动的问题，请认真阅读 https://ruoyioffice.com/quick-start/ 文章
+ * 如果你碰到启动的问题，请认真阅读 https://ruoyioffice.com/quick-start/ 文章
+ * 如果你碰到启动的问题，请认真阅读 https://ruoyioffice.com/quick-start/ 文章
  *
  * @author 宇擎源码
  */
@@ -16,15 +16,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BpmServerApplication {
 
     public static void main(String[] args) {
-        // 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
-        // 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
-        // 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
+        // 如果你碰到启动的问题，请认真阅读 https://ruoyioffice.com/quick-start/ 文章
+        // 如果你碰到启动的问题，请认真阅读 https://ruoyioffice.com/quick-start/ 文章
+        // 如果你碰到启动的问题，请认真阅读 https://ruoyioffice.com/quick-start/ 文章
 
         SpringApplication.run(BpmServerApplication.class, args);
 
-        // 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
-        // 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
-        // 如果你碰到启动的问题，请认真阅读 https://cloud.iocoder.cn/quick-start/ 文章
+        // 如果你碰到启动的问题，请认真阅读 https://ruoyioffice.com/quick-start/ 文章
+        // 如果你碰到启动的问题，请认真阅读 https://ruoyioffice.com/quick-start/ 文章
+        // 如果你碰到启动的问题，请认真阅读 https://ruoyioffice.com/quick-start/ 文章
     }
 
 }

@@ -68,7 +68,7 @@ public class AiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ObservationRegistry observationRegistry() {
-        // 特殊：兜底有 ObservationRegistry Bean，避免相关的 ChatModel 创建报错。相关 issue：https://t.zsxq.com/CuPu4
+        // 特殊：兜底有 ObservationRegistry Bean，避免相关的 ChatModel 创建报错。相关 issue：https://ruoyioffice.com/CuPu4
         return ObservationRegistry.NOOP;
     }
 

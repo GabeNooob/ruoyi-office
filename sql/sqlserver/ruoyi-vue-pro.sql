@@ -5113,7 +5113,7 @@ INSERT INTO system_menu (id, name, permission, type, sort, parent_id, path, icon
 GO
 INSERT INTO system_menu (id, name, permission, type, sort, parent_id, path, icon, component, component_name, status, visible, keep_alive, always_show, creator, create_time, updater, update_time, deleted) VALUES (2159, N'Boot 开发文档', N'', 1, 1, 0, N'http://ruoyioffice.com/', N'ep:document', NULL, NULL, 0, N'1', N'1', N'1', N'1', N'2023-02-10 22:46:28', N'1', N'2024-07-28 11:36:48', N'0')
 GO
-INSERT INTO system_menu (id, name, permission, type, sort, parent_id, path, icon, component, component_name, status, visible, keep_alive, always_show, creator, create_time, updater, update_time, deleted) VALUES (2160, N'Cloud 开发文档', N'', 1, 2, 0, N'https://cloud.iocoder.cn', N'ep:document-copy', NULL, NULL, 0, N'1', N'1', N'1', N'1', N'2023-02-10 22:47:07', N'1', N'2023-12-02 21:32:29', N'0')
+INSERT INTO system_menu (id, name, permission, type, sort, parent_id, path, icon, component, component_name, status, visible, keep_alive, always_show, creator, create_time, updater, update_time, deleted) VALUES (2160, N'Cloud 开发文档', N'', 1, 2, 0, N'https://ruoyioffice.com', N'ep:document-copy', NULL, NULL, 0, N'1', N'1', N'1', N'1', N'2023-02-10 22:47:07', N'1', N'2023-12-02 21:32:29', N'0')
 GO
 INSERT INTO system_menu (id, name, permission, type, sort, parent_id, path, icon, component, component_name, status, visible, keep_alive, always_show, creator, create_time, updater, update_time, deleted) VALUES (2161, N'接入示例', N'', 1, 99, 1117, N'demo', N'fa-solid:dragon', N'pay/demo/index', NULL, 0, N'1', N'1', N'1', N'', N'2023-02-11 14:21:42', N'1', N'2024-01-18 23:50:00', N'0')
 GO
