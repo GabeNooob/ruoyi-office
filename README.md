@@ -457,7 +457,7 @@ pnpm install
 npm run dev:antd
 ```
 
-> 📖 更详细的部署文档请查看 [快速启动指南](https://cloud.iocoder.cn/quick-start/)
+> 📖 更详细的部署文档请查看 [快速启动指南](https://ruoyioffice.com/quick-start/)
 
 ---
 

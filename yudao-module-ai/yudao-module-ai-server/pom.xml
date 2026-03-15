@@ -270,7 +270,7 @@
                     <artifactId>agents-flex-store-elasticsearch</artifactId>
                 </exclusion>
                 <exclusion>
-                    <!-- 解决 https://t.zsxq.com/pCBZC 问题 -->
+                    <!-- 解决 https://ruoyioffice.com/pCBZC 问题 -->
                     <groupId>com.agentsflex</groupId>
                     <artifactId>agents-flex-search-engine-es</artifactId>
                 </exclusion>

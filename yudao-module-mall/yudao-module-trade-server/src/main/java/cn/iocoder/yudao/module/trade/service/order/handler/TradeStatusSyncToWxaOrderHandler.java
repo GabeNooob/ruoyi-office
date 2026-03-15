@@ -64,7 +64,7 @@ public class TradeStatusSyncToWxaOrderHandler implements TradeOrderHandler {
         }
 
         // 如果是门店自提订单，上传订单物流信息到微信小程序
-        // 原因是，门店自提订单没有 “afterDeliveryOrder” 阶段。可见 https://t.zsxq.com/KWD3u 反馈
+        // 原因是，门店自提订单没有 “afterDeliveryOrder” 阶段。可见 https://ruoyioffice.com/KWD3u 反馈
         if (DeliveryTypeEnum.PICK_UP.getType().equals(order.getDeliveryType())) {
             uploadWxaOrderShippingInfo(order);
         }

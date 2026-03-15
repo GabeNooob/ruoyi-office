@@ -82,7 +82,7 @@ public class BpmSequentialMultiInstanceBehavior extends SequentialMultiInstanceB
 
     @Override
     protected void executeOriginalBehavior(DelegateExecution execution, ExecutionEntity multiInstanceRootExecution, int loopCounter) {
-        // 参见 https://t.zsxq.com/53Meo 情况
+        // 参见 https://ruoyioffice.com/53Meo 情况
         if (execution.getCurrentFlowElement() instanceof CallActivity
             || execution.getCurrentFlowElement() instanceof SubProcess) {
             super.executeOriginalBehavior(execution, multiInstanceRootExecution, loopCounter);

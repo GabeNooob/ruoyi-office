@@ -64,7 +64,7 @@ def load_and_clean(sql_file: str) -> str:
         content = content.replace(*replace_pair)
     # 移除索引字段的前缀长度定义，例如: `name`(32) -> `name`
     # 移除索引定义上的 USING BTREE COMMENT 部分
-    # 相关 issue：https://t.zsxq.com/96IFc 、https://t.zsxq.com/rC3A3
+    # 相关 issue：https://ruoyioffice.com/96IFc 、https://ruoyioffice.com/rC3A3
     content = re.sub(r'`([^`]+)`\(\d+\)', r'`\1`', content)
     content = re.sub(r'\s+USING\s+BTREE\s+COMMENT\s+\'[^\']+\'', '', content)
     content = re.sub(r"ENGINE.*COMMENT", "COMMENT", content)

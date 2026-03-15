@@ -68,7 +68,7 @@ public abstract class AbstractWxPayClient extends AbstractPayClient<WxPayClientC
             payConfig.setKeyPath(FileUtils.createTempFile(Base64.decode(config.getKeyContent())).getPath());
         } else if (Objects.equals(config.getApiVersion(), API_VERSION_V3)) {
             payConfig.setPrivateKeyPath(FileUtils.createTempFile(config.getPrivateKeyContent()).getPath());
-            // 参考 https://gitee.com/yudaocode/yudao-ui-admin-vue3/issues/ICUE53 和 https://t.zsxq.com/ODR5V
+            // 参考 https://gitee.com/yudaocode/yudao-ui-admin-vue3/issues/ICUE53 和 https://ruoyioffice.com/ODR5V
             if (StrUtil.isNotBlank(config.getPublicKeyContent())) {
                 payConfig.setPublicKeyPath(FileUtils.createTempFile(config.getPublicKeyContent()).getPath());
             }

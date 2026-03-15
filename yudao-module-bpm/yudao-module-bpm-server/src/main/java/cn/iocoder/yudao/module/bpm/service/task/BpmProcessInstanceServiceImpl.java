@@ -199,7 +199,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
         if (CollUtil.isNotEmpty(reqVO.getProcessVariables())) {
             processVariables.putAll(reqVO.getProcessVariables());
         }
-        // 特殊：如果是未发起的场景，则设置发起用户，解决“发起流程”时，需要使用到该变量的问题。例如说：https://t.zsxq.com/fMw5g
+        // 特殊：如果是未发起的场景，则设置发起用户，解决“发起流程”时，需要使用到该变量的问题。例如说：https://ruoyioffice.com/fMw5g
         if (historicProcessInstance == null) {
             processVariables.put(BpmnVariableConstants.PROCESS_INSTANCE_VARIABLE_START_USER_ID, loginUserId);
         }
@@ -1208,7 +1208,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
         }
 
         // 1.3 如果子流程拒绝，设置其父流程也为拒绝状态，且结束父流程
-        // 相关问题链接：https://t.zsxq.com/kZhyb
+        // 相关问题链接：https://ruoyioffice.com/kZhyb
         if (Objects.equals(status, BpmProcessInstanceStatusEnum.REJECT.getStatus())
                 && StrUtil.isNotBlank(instance.getSuperExecutionId())) {
             // 1.3.1 获取父流程实例 并标记为不通过
@@ -1282,7 +1282,7 @@ public class BpmProcessInstanceServiceImpl implements BpmProcessInstanceService 
                 }
 
                 // 流程前置通知：需要在流程启动后(事务提交后)，保证 variables 已设置
-                // 相关问题链接：https://t.zsxq.com/DF7Kq
+                // 相关问题链接：https://ruoyioffice.com/DF7Kq
                 if (ObjUtil.isNull(processDefinitionInfo.getProcessBeforeTriggerSetting())) {
                     return;
                 }
